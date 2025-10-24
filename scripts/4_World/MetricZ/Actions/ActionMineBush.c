@@ -7,21 +7,11 @@
 #ifdef SERVER
 modded class ActionMineBush
 {
-	override void OnExecuteServer(ActionData action_data)
+	override void OnFinishProgress(ActionData action_data)
 	{
 		MetricZ_Storage.s_MinedBushes.Inc();
 
-		super.OnExecuteServer(action_data);
-	}
-}
-
-modded class ActionMineBushByHand
-{
-	override void OnExecuteServer(ActionData action_data)
-	{
-		MetricZ_Storage.s_MinedBushes.Inc();
-
-		super.OnExecuteServer(action_data);
+		super.OnFinishProgress(action_data);
 	}
 }
 #endif

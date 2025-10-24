@@ -7,11 +7,11 @@
 #ifdef SERVER
 modded class ActionUnpackGift
 {
-	override void OnFinishProgressServer(ActionData action_data)
+	override void OnFinishProgress(ActionData action_data)
 	{
 		MetricZ_Storage.s_GiftsUnpacked.Inc();
 
-		super.OnFinishProgressServer(action_data);
+		super.OnFinishProgress(action_data);
 	}
 }
 #endif
