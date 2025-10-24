@@ -1,0 +1,90 @@
+# astyle --project=.astylerc ./"*.c" ./"*.cpp" ./"*.rvmat" ./"*model.cfg"
+
+# For full docs:
+# http://astyle.sourceforge.net/astyle.html
+
+# General Options:
+# - Only display errors
+# - All files recursive
+# - Display only the files that have been formatted
+# - Redirect stderr to stdout
+# - Enforce linux lineendings
+# - Preserve file modification date
+# - Do not create file backups, everything should be VCSed anyway
+--quiet
+--recursive
+--formatted
+--errors-to-stdout
+--lineend=linux
+--preserve-date
+--suffix=none
+
+--style=kr
+# --attach-blocks
+# --break-blocks
+
+# Indent with 2 spaces, convert tabs to spaces
+# --indent=spaces=2
+# --convert-tabs
+--indent=tab
+
+# Indent preprocessor blocks, and defines
+--indent-preproc-block
+--indent-preproc-define
+
+# All comments have to be properly indented
+--indent-col1-comments
+--indent-preproc-block
+
+# Do not indent conditionals
+# --min-conditional-indent=0
+
+# Indent statements to be aligned up to 40 cols
+# --max-instatement-indent=40
+
+# Paddings around operators, parentheses, and a header
+# (header means `if`, `while`, etc. Example: `if (true)`, instead of `if(true)`)
+--pad-oper
+--pad-comma
+--pad-header
+
+# Do I like this? No, I don't.
+# Pad parens, and remove all not requested padding
+# --pad-paren-in
+--unpad-brackets
+--unpad-paren
+
+# doesn't seem to preserve any lines, will just remove any empty lines!
+# --delete-empty-lines
+
+# Pointer alignment
+--align-pointer=name
+--align-reference=name
+
+# Break elseifs / closing brackets
+# might be useful with style=kr
+#--break-closing-brackets
+#--break-elseifs
+
+# Make sure to always add brackets to if,for,while etc statements
+# we do not want to repeat goto fail;
+--keep-one-line-blocks
+--keep-one-line-statements
+
+# Obvious 120 col length maximum, not work for Enfusion
+# --max-code-length=180
+# --break-after-logical
+
+# Remove superfluous empty lines exceeding the given number.
+--squeeze-lines=2
+# Remove superfluous whitespace
+--squeeze-ws
+
+# Remove braces from conditional statements (e.g. 'if', 'for', 'while'...). The statement must be a single statement on a single line.
+--remove-braces
+
+# Remove the preceding '*' in a multi-line comment that begins a line. A trailing '*', if present, is also removed.
+--remove-comment-prefix
+
+# Attach a pointer or reference operator (*, &, or ^) to either the variable type (left) or variable name (right), or place it between the type and name (middle).
+--align-pointer=middle

@@ -1,0 +1,1 @@
+scripts/*.c;scripts/*.cpp;LICENSE

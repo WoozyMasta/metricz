@@ -1,0 +1,51 @@
+{
+  "cSpell.words": [
+    "metricz",
+  ],
+  "ctagsc.ctagsPath": "tags",
+  "search.exclude": {
+    "**/.git": true,
+    "**/tags": true,
+    "**/avatars": true
+  },
+  "files.associations": {
+    "*.rvmat": "c",
+    "*.imageset": "c",
+    "model.cfg": "cpp",
+    "server*.cfg": "c",
+    "*.gproj": "cpp",
+    "**/layouts/**/*.layout": "c",
+    "**/1_core/**/*.c": "csharp",
+    "**/2_gamelib/**/*.c": "csharp",
+    "**/3_game/**/*.c": "csharp",
+    "**/4_world/**/*.c": "csharp",
+    "**/5_mission/**/*.c": "csharp",
+    ".astylerc": "env",
+    "tags": "tsv"
+  },
+  "editor.formatOnSave": true,
+  "astyle.csharp.enable": true,
+  "astyle.astylerc": "${workspaceFolder}/.astylerc",
+  "[csharp]": {
+    "editor.defaultFormatter": "chiehyu.vscode-astyle"
+  },
+  "[csv]": {
+    "editor.wordWrap": "bounded",
+    "editor.rulers": [
+      {
+        "column": 240,
+        "color": "#7e1c8b"
+      },
+    ]
+  },
+  "editor.rulers": [
+    {
+      "column": 120,
+      "color": "#205a2a"
+    },
+    {
+      "column": 160,
+      "color": "#752525"
+    },
+  ],
+}
