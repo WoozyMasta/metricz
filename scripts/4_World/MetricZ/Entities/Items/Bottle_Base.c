@@ -10,6 +10,9 @@
 */
 modded class Bottle_Base
 {
+	/**
+	    \brief Increment bottles gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class Bottle_Base
 		MetricZ_Storage.s_Bottles.Inc();
 	}
 
+	/**
+	    \brief Decrement bottles gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Bottles.Dec();

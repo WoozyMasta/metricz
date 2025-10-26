@@ -10,6 +10,9 @@
 */
 modded class Clothing
 {
+	/**
+	    \brief Increment clothes gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class Clothing
 		MetricZ_Storage.s_Clothing.Inc();
 	}
 
+	/**
+	    \brief Decrement clothes gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Clothing.Dec();

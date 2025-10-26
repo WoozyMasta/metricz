@@ -12,6 +12,10 @@ modded class TerritoryFlag
 {
 	protected ref MetricZ_TerritoryMetrics m_MetricZ;
 
+	/**
+	    \brief Track territory flag and register metrics collector.
+	    \details Increments gauge, registers in registry unless disabled.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -28,6 +32,9 @@ modded class TerritoryFlag
 		}
 	}
 
+	/**
+	    \brief Unregister metrics and decrement gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		if (!MetricZ_Config.s_DisableTerritoryMetrics) {
@@ -40,6 +47,10 @@ modded class TerritoryFlag
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Accessor for per-territory metrics.
+	    \return \p MetricZ_TerritoryMetrics or null.
+	*/
 	ref MetricZ_TerritoryMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;

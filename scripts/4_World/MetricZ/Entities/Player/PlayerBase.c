@@ -12,6 +12,10 @@ modded class PlayerBase
 {
 	protected ref MetricZ_PlayerMetrics m_MetricZ;
 
+	/**
+	    \brief Register per-player metrics collector on init.
+	    \details No-op if player metrics disabled.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -25,6 +29,9 @@ modded class PlayerBase
 		}
 	}
 
+	/**
+	    \brief Drop metrics reference on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		m_MetricZ = null;
@@ -32,6 +39,9 @@ modded class PlayerBase
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Drop metrics reference on delete.
+	*/
 	override void EEKilled(Object killer)
 	{
 		if (!MetricZ_Config.s_DisablePlayerMetrics)
@@ -40,6 +50,10 @@ modded class PlayerBase
 		super.EEKilled(killer);
 	}
 
+	/**
+	    \brief Accessor for per-player metrics.
+	    \return \p MetricZ_PlayerMetrics or null if not initialized.
+	*/
 	ref MetricZ_PlayerMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;

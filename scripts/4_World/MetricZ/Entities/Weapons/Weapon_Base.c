@@ -10,6 +10,9 @@
 */
 modded class Weapon_Base
 {
+	/**
+	    \brief Increment weapons gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class Weapon_Base
 		MetricZ_Storage.s_Weapons.Inc();
 	}
 
+	/**
+	    \brief Decrement weapons gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Weapons.Dec();
@@ -24,6 +30,10 @@ modded class Weapon_Base
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Count weapon shot for stats.
+	    \details Calls base then forwards to MetricZ_WeaponStats unless disabled.
+	*/
 	override void OnFire(int muzzle_index)
 	{
 		super.OnFire(muzzle_index);

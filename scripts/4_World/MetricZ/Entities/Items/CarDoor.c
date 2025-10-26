@@ -10,6 +10,9 @@
 */
 modded class CarDoor
 {
+	/**
+	    \brief Increment car_parts gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class CarDoor
 		MetricZ_Storage.s_CarParts.Inc();
 	}
 
+	/**
+	    \brief Decrement car_parts gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_CarParts.Dec();

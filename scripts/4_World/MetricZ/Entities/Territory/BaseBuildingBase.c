@@ -10,6 +10,9 @@
 */
 modded class BaseBuildingBase
 {
+	/**
+	    \brief Increment base_buildings gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class BaseBuildingBase
 		MetricZ_Storage.s_BaseBuildings.Inc();
 	}
 
+	/**
+	    \brief Decrement base_buildings gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_BaseBuildings.Dec();

@@ -7,6 +7,9 @@
 #ifdef SERVER
 modded class ActionMineBush
 {
+	/**
+	    \brief Count mined bush on action completion.
+	*/
 	override void OnFinishProgress(ActionData action_data)
 	{
 		MetricZ_Storage.s_MinedBushes.Inc();

@@ -10,6 +10,9 @@
 */
 modded class CrashBase
 {
+	/**
+	    \brief Increment crash sites gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class CrashBase
 		MetricZ_Storage.s_CrashSites.Inc();
 	}
 
+	/**
+	    \brief Decrement crash sites gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_CrashSites.Dec();

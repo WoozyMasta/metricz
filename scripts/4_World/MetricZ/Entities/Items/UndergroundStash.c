@@ -10,6 +10,9 @@
 */
 modded class UndergroundStash
 {
+	/**
+	    \brief Increment stashes gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class UndergroundStash
 		MetricZ_Storage.s_Stashes.Inc();
 	}
 
+	/**
+	    \brief Decrement stashes gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Stashes.Dec();

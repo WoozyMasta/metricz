@@ -7,6 +7,9 @@
 #ifdef SERVER
 modded class ActionUnpackGift
 {
+	/**
+	    \brief Count opened gift on action completion.
+	*/
 	override void OnFinishProgress(ActionData action_data)
 	{
 		MetricZ_Storage.s_GiftsUnpacked.Inc();

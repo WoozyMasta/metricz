@@ -10,6 +10,9 @@
 */
 modded class TentBase
 {
+	/**
+	    \brief Increment tents gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class TentBase
 		MetricZ_Storage.s_Tents.Inc();
 	}
 
+	/**
+	    \brief Decrement tents gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Tents.Dec();

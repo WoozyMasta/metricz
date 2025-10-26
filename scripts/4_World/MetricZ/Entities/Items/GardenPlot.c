@@ -10,6 +10,9 @@
 */
 modded class GardenPlot
 {
+	/**
+	    \brief Increment gardens gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class GardenPlot
 		MetricZ_Storage.s_Gardens.Inc();
 	}
 
+	/**
+	    \brief Decrement gardens gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Gardens.Dec();

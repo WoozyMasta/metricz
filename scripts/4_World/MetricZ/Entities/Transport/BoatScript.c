@@ -12,6 +12,10 @@ modded class BoatScript
 {
 	protected ref MetricZ_TransportMetrics m_MetricZ;
 
+	/**
+	    \brief Register boat in transport registry and create metrics.
+	    \details No-op if transport metrics disabled.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -28,6 +32,9 @@ modded class BoatScript
 		}
 	}
 
+	/**
+	    \brief Unregister boat and decrement gauges on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		if (!MetricZ_Config.s_DisableTransportMetrics) {
@@ -39,6 +46,9 @@ modded class BoatScript
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Increment boats destroyed counter on kill if enabled.
+	*/
 	override void EEKilled(Object killer)
 	{
 		if (!MetricZ_Config.s_DisableTransportMetrics)
@@ -47,6 +57,10 @@ modded class BoatScript
 		super.EEKilled(killer);
 	}
 
+	/**
+	    \brief Accessor for per-boat metrics.
+	    \return \p MetricZ_TransportMetrics or null.
+	*/
 	ref MetricZ_TransportMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;

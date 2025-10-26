@@ -10,6 +10,9 @@
 */
 modded class Ammunition_Base
 {
+	/**
+	    \brief Increment ammo gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class Ammunition_Base
 		MetricZ_Storage.s_Ammo.Inc();
 	}
 
+	/** \brief
+	    Decrement ammo gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Ammo.Dec();

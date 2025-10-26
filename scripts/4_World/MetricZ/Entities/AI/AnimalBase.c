@@ -10,6 +10,9 @@
 */
 modded class AnimalBase
 {
+	/**
+	    \brief Increment animal gauge on entity init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class AnimalBase
 		MetricZ_Storage.s_Animals.Inc();
 	}
 
+	/**
+	    \brief Decrement animal gauge on entity delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Animals.Dec();
@@ -24,6 +30,9 @@ modded class AnimalBase
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Increment animal deaths counter on kill.
+	*/
 	override void EEKilled(Object killer)
 	{
 		MetricZ_Storage.s_AnimalsDeaths.Inc();

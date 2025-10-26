@@ -10,6 +10,9 @@
 */
 modded class MagazineStorage
 {
+	/**
+	    \brief Increment magazines gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class MagazineStorage
 		MetricZ_Storage.s_Magazines.Inc();
 	}
 
+	/**
+	    \brief Decrement magazines gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Magazines.Dec();

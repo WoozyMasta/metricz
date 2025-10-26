@@ -10,6 +10,9 @@
 */
 modded class Box_Base
 {
+	/**
+	    \brief Increment boxes or ammo_boxes gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -20,6 +23,9 @@ modded class Box_Base
 			MetricZ_Storage.s_Boxes.Inc();
 	}
 
+	/**
+	    \brief Decrement boxes or ammo_boxes gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		if (GetType().IndexOf("AmmoBox") != -1)

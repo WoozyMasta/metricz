@@ -7,6 +7,9 @@
 #ifdef SERVER
 modded class ActionMineRock
 {
+	/**
+	    \brief Count mined rock on action completion.
+	*/
 	override void OnFinishProgress(ActionData action_data)
 	{
 		MetricZ_Storage.s_MinedRocks.Inc();

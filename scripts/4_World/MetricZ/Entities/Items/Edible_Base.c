@@ -10,6 +10,9 @@
 */
 modded class Edible_Base
 {
+	/**
+	    \brief Increment food gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class Edible_Base
 		MetricZ_Storage.s_Food.Inc();
 	}
 
+	/**
+	    \brief Decrement food gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Food.Dec();

@@ -10,6 +10,9 @@
 */
 modded class ItemBase
 {
+	/**
+	    \brief Increment items gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class ItemBase
 		MetricZ_Storage.s_Items.Inc();
 	}
 
+	/**
+	    \brief Decrement items gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Items.Dec();

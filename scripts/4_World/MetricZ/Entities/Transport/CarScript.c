@@ -12,6 +12,9 @@ modded class CarScript
 {
 	protected ref MetricZ_TransportMetrics m_MetricZ;
 
+	/**
+	    \brief Register car in transport registry and create metrics.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -28,6 +31,9 @@ modded class CarScript
 		}
 	}
 
+	/**
+	    \brief Unregister car and decrement gauges on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		if (!MetricZ_Config.s_DisableTransportMetrics) {
@@ -39,6 +45,9 @@ modded class CarScript
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Increment cars destroyed counter on kill if enabled.
+	*/
 	override void EEKilled(Object killer)
 	{
 		if (!MetricZ_Config.s_DisableTransportMetrics)
@@ -47,6 +56,10 @@ modded class CarScript
 		super.EEKilled(killer);
 	}
 
+	/**
+	    \brief Accessor for per-car metrics.
+	    \return \p MetricZ_TransportMetrics or null.
+	*/
 	ref MetricZ_TransportMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;

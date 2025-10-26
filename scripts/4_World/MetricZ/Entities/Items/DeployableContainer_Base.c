@@ -10,6 +10,9 @@
 */
 modded class DeployableContainer_Base
 {
+	/**
+	    \brief Increment containers gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,6 +20,9 @@ modded class DeployableContainer_Base
 		MetricZ_Storage.s_Containers.Inc();
 	}
 
+	/**
+	    \brief Decrement containers gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Containers.Dec();
