@@ -42,6 +42,7 @@ class MetricZ_Storage
 	static ref MetricZ_MetricInt s_MaxPlayers = new MetricZ_MetricInt("max_players", "Configured max players", MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Infected = new MetricZ_MetricInt("infected", "Total infected in the world", MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Animals = new MetricZ_MetricInt("animals", "Total animals in the world", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_PathGraphUpdates = new MetricZ_MetricInt("path_graph_updates", "Total updates path graph regions by object in the world", MetricZ_MetricType.COUNTER);
 
 	// Weapon related
 	static ref MetricZ_MetricInt s_Weapons = new MetricZ_MetricInt("weapons", "Total weapons in the world", MetricZ_MetricType.GAUGE);
@@ -49,6 +50,7 @@ class MetricZ_Storage
 	static ref MetricZ_MetricInt s_Magazines = new MetricZ_MetricInt("magazines", "Total magazines in the world", MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Ammo = new MetricZ_MetricInt("ammo", "Total ammo piles in the world", MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Explosives = new MetricZ_MetricInt("explosives", "Total explosives (grenade, flash, smoke, claymore, plastic, improvised) in the world", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Exploded = new MetricZ_MetricInt("explosives_detonated", "Total explosives detonated (grenade, flash, smoke, claymore, plastic, improvised)", MetricZ_MetricType.COUNTER);
 
 	// Items
 	static ref MetricZ_MetricInt s_Items = new MetricZ_MetricInt("items", "Total items (ItemBase) in the world", MetricZ_MetricType.GAUGE);
@@ -130,6 +132,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_MaxPlayers);
 		s_Registry.Insert(s_Infected);
 		s_Registry.Insert(s_Animals);
+		s_Registry.Insert(s_PathGraphUpdates);
 
 		// Weapon related
 		s_Registry.Insert(s_Weapons);
@@ -137,6 +140,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_Magazines);
 		s_Registry.Insert(s_Ammo);
 		s_Registry.Insert(s_Explosives);
+		s_Registry.Insert(s_Exploded);
 
 		// Items
 		s_Registry.Insert(s_Items);
@@ -261,6 +265,9 @@ class MetricZ_Storage
 		array<Man> mans = new array<Man>();
 		g_Game.GetPlayers(mans);
 		s_PlayersOnline.Set(mans.Count());
+
+		// Path Graph
+		s_PathGraphUpdates.Set(g_Game.s_MetricZ_PathGraphUpdates);
 
 		// World temperature
 		m_Temperature.Set(MetricZ_WorldTemperature.Get());

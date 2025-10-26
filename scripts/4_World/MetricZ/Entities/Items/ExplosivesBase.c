@@ -10,6 +10,9 @@
 */
 modded class ExplosivesBase
 {
+	/**
+	    \brief Increment explosives gauge on init.
+	*/
 	override void EEInit()
 	{
 		super.EEInit();
@@ -17,11 +20,24 @@ modded class ExplosivesBase
 		MetricZ_Storage.s_Explosives.Inc();
 	}
 
+	/**
+	    \brief Decrement explosives gauge on delete.
+	*/
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Explosives.Dec();
 
 		super.EEDelete(parent);
+	}
+
+	/**
+	    \brief Increment detonations counter on explode.
+	*/
+	override protected void OnExplode()
+	{
+		super.OnExplode();
+
+		MetricZ_Storage.s_Exploded.Inc();
 	}
 }
 #endif

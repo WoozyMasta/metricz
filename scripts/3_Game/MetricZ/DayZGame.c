@@ -11,6 +11,8 @@
 */
 modded class DayZGame
 {
+	static int s_MetricZ_PathGraphUpdates; // just counter
+
 	/**
 	    \brief Hook incoming RPCs to count them.
 	    \details Increments per-id counter, then calls base.
@@ -35,6 +37,18 @@ modded class DayZGame
 			MetricZ_EventStats.Inc(eventTypeId);
 
 		super.OnEvent(eventTypeId, params);
+	}
+
+	/**
+	    \brief Hook CGame event for calculate path graph updates by placing objects.
+	    \details Increments static counter for reuse in MetricZ_Storage.
+	*/
+	override void UpdatePathgraphRegionByObject(Object object)
+	{
+		if (object)
+			s_MetricZ_PathGraphUpdates++;
+
+		super.UpdatePathgraphRegionByObject(object);
 	}
 }
 #endif
