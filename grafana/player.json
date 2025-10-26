@@ -373,7 +373,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "![${type}](https://woozymasta.ru/dayz/assets/faces/${type}.png)\n\n## ${name} \n\n${type} (${gender}) ${blood} `${steam_id}`\n\n`${guid}`",
+        "content": "![${type}](https://raw.githubusercontent.com/WoozyMasta/metricz/refs/heads/master/avatars/${type}.png)\n\n## ${name} \n\n${type} (${gender}) ${blood} `${steam_id}`\n\n`${guid}`",
         "mode": "markdown"
       },
       "pluginVersion": "11.4.0",
