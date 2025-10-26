@@ -16,6 +16,11 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_rpc_input_total`** (`COUNTER`) —
   Total input RPC calls
 
+## [Entities/AI/ZombieMindStats.c](./scripts/4_World/MetricZ/Entities/AI/ZombieMindStats.c)
+
+* **`dayz_metricz_infected_mind_state`** (`GAUGE`) —
+  Infected count by mind state
+
 ## [Entities/Player/Metrics.c](./scripts/4_World/MetricZ/Entities/Player/Metrics.c)
 
 * **`dayz_metricz_player_loaded`** (`GAUGE`) —
@@ -130,6 +135,8 @@ DayZ server. Each metric includes its identifier, type
   Total infected in the world
 * **`dayz_metricz_animals`** (`GAUGE`) —
   Total animals in the world
+* **`dayz_metricz_path_graph_updates_total`** (`COUNTER`) —
+  Total updates path graph regions by object in the world
 * **`dayz_metricz_weapons`** (`GAUGE`) —
   Total weapons in the world
 * **`dayz_metricz_ammo_boxes`** (`GAUGE`) —
@@ -141,6 +148,9 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_explosives`** (`GAUGE`) —
   Total explosives (grenade, flash, smoke, claymore, plastic, improvised) in
   the world
+* **`dayz_metricz_explosives_detonated_total`** (`COUNTER`) —
+  Total explosives detonated (grenade, flash, smoke, claymore, plastic,
+  improvised)
 * **`dayz_metricz_items`** (`GAUGE`) —
   Total items (ItemBase) in the world
 * **`dayz_metricz_food`** (`GAUGE`) —
