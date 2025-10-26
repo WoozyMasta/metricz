@@ -1,5 +1,8 @@
 # MetricZ for DayZ Server
 
+<!-- markdownlint-disable-next-line MD033 -->
+<img src="logo.png" alt="MetricZ" align="right" width="300">
+
 DayZ server instrumentation via the Prometheus textfile collector. The mod
 gathers engine and world metrics and writes atomically to
 `$profile:metricz.prom`. Integrates with node_exporter (Linux) or
@@ -15,6 +18,9 @@ windows_exporter (Windows).
   cardinality.
 * Self-hosted: full control over your data.
 * Free. Supporting the author is optional.
+
+<!-- markdownlint-disable-next-line MD033 -->
+<br clear="right"/>
 
 ## Architecture
 
@@ -50,6 +56,13 @@ dayz_metricz_players_online{world="chernarusplus",host="dz01",instance_id="1"} 2
 Details: [METRICS.md](./METRICS.md)
 
 ## Mod configuration
+
+> [!IMPORTANT]  
+> On the same host every server must have a unique `instanceId`.  
+> If multiple servers run the same map (`world`), time series will collide.  
+> Base labels are `{world, host, instance_id}`.
+> Ensure `instanceId` is unique per server;
+> together with the map name it forms metric identity.
 
 In `serverDZ.cfg` (prefix `MetricZ_`; values `0/1`):
 
@@ -176,38 +189,41 @@ scrape_configs:
 <!-- TODO -->
 
 | MetricZ Servers Overview                                    |
-| ----------------------------------------------------------- |
-| ![Overview](./grafana/servers_overview.png)                 |
-| [Grafana.com](https://grafana.com/grafana/dashboards/00000) |
-| Dashboard ID: `00000`                                       |
-| [Dashboard JSON](./grafana/servers_overview.json)           |
+| :---------------------------------------------------------: |
+| ![Overview](./grafana/servers-overview-1.png)               |
+| ![Overview](./grafana/servers-overview-2.png)               |
+| ![Overview](./grafana/servers-overview-3.png)               |
+| ![Overview](./grafana/servers-overview-4.png)               |
+| [grafana.com](https://grafana.com/grafana/dashboards/24291) |
+| Dashboard ID: `24291`                                       |
+| [Dashboard JSON](./grafana/servers-overview.json)           |
 
 ---
 
 | MetricZ Server Details                                      |
-| ----------------------------------------------------------- |
-| ![Details](./grafana/servers_details.png)                   |
-| [Grafana.com](https://grafana.com/grafana/dashboards/00000) |
-| Dashboard ID: `00000`                                       |
-| [Dashboard JSON](./grafana/servers_details.json)            |
+| :---------------------------------------------------------: |
+| ![Details](./grafana/server.png)                            |
+| [grafana.com](https://grafana.com/grafana/dashboards/24290) |
+| Dashboard ID: `24290`                                       |
+| [Dashboard JSON](./grafana/server.json)                     |
 
 ---
 
 | MetricZ Player Stats                                        |
-| ----------------------------------------------------------- |
-| ![Players](./grafana/player_stats.png)                      |
-| [Grafana.com](https://grafana.com/grafana/dashboards/00000) |
-| Dashboard ID: `00000`                                       |
-| [Dashboard JSON](./grafana/player_stats.json)               |
+| :---------------------------------------------------------: |
+| ![Players](./grafana/player.png)                            |
+| [grafana.com](https://grafana.com/grafana/dashboards/24289) |
+| Dashboard ID: `24289`                                       |
+| [Dashboard JSON](./grafana/player.json)                     |
 
 ---
 
 | MetricZ Transport Stats                                     |
-| ----------------------------------------------------------- |
-| ![Transport](./grafana/transport_stats.png)                 |
-| [Grafana.com](https://grafana.com/grafana/dashboards/00000) |
-| Dashboard ID: `00000`                                       |
-| [Dashboard JSON](./grafana/transport_stats.json)            |
+| :---------------------------------------------------------: |
+| ![Transport](./grafana/transport.png)                       |
+| [grafana.com](https://grafana.com/grafana/dashboards/24292) |
+| Dashboard ID: `24292`                                       |
+| [Dashboard JSON](./grafana/transport.json)                  |
 
 ## Debugging
 
