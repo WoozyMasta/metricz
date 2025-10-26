@@ -34,7 +34,7 @@ class MetricZ_EntitiesWriter
 			if (!Class.CastTo(player, man))
 				continue;
 
-			ref MetricZ_PlayerMetrics pm = player.MetricZ_GetMetrics();
+			MetricZ_PlayerMetrics pm = player.MetricZ_GetMetrics();
 			if (!pm)
 				continue;
 
@@ -82,7 +82,7 @@ class MetricZ_EntitiesWriter
 			if (!transport)
 				continue;
 
-			ref MetricZ_TransportMetrics tm;
+			MetricZ_TransportMetrics tm;
 
 			CarScript car;
 			if (Class.CastTo(car, transport))
@@ -138,7 +138,7 @@ class MetricZ_EntitiesWriter
 			if (!territory)
 				continue;
 
-			ref MetricZ_TerritoryMetrics fm = territory.MetricZ_GetMetrics();
+			MetricZ_TerritoryMetrics fm = territory.MetricZ_GetMetrics();
 			if (!fm)
 				continue;
 

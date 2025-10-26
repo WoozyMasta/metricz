@@ -54,7 +54,7 @@ modded class PlayerBase
 	    \brief Accessor for per-player metrics.
 	    \return \p MetricZ_PlayerMetrics or null if not initialized.
 	*/
-	ref MetricZ_PlayerMetrics MetricZ_GetMetrics()
+	MetricZ_PlayerMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;
 	}

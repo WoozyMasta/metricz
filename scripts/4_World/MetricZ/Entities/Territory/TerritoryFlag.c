@@ -51,7 +51,7 @@ modded class TerritoryFlag
 	    \brief Accessor for per-territory metrics.
 	    \return \p MetricZ_TerritoryMetrics or null.
 	*/
-	ref MetricZ_TerritoryMetrics MetricZ_GetMetrics()
+	MetricZ_TerritoryMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;
 	}

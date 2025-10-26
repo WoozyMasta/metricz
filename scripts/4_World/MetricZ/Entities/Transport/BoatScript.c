@@ -61,7 +61,7 @@ modded class BoatScript
 	    \brief Accessor for per-boat metrics.
 	    \return \p MetricZ_TransportMetrics or null.
 	*/
-	ref MetricZ_TransportMetrics MetricZ_GetMetrics()
+	MetricZ_TransportMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;
 	}

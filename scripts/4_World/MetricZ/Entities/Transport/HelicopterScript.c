@@ -60,7 +60,7 @@ modded class HelicopterScript
 	    \brief Accessor for per-helicopter metrics.
 	    \return \p MetricZ_TransportMetrics or null.
 	*/
-	ref MetricZ_TransportMetrics MetricZ_GetMetrics()
+	MetricZ_TransportMetrics MetricZ_GetMetrics()
 	{
 		return m_MetricZ;
 	}
