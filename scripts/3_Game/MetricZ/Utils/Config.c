@@ -24,13 +24,13 @@ class MetricZ_Config
 	// runtime overrides
 	static int s_InitDelayMs = INIT_DELAY;
 	static int s_ScrapeIntervalMs = SCRAPE_INTERVAL;
-	static bool s_DisablePlayerMetrics = false;
-	static bool s_DisableTransportMetrics = false;
-	static bool s_DisableWeaponMetrics = false;
-	static bool s_DisableTerritoryMetrics = false;
-	static bool s_EnableCoordinatesMetrics = false;
-	static bool s_DisableRPCMetrics = false;
-	static bool s_DisableEventMetrics = false;
+	static bool s_DisablePlayerMetrics;
+	static bool s_DisableTransportMetrics;
+	static bool s_DisableWeaponMetrics;
+	static bool s_DisableTerritoryMetrics;
+	static bool s_EnableCoordinatesMetrics;
+	static bool s_DisableRPCMetrics;
+	static bool s_DisableEventMetrics;
 
 	// server params -> metrics
 	static int s_MaxPlayers = 255; // from serverDZ.cfg:maxPlayers
@@ -51,25 +51,25 @@ class MetricZ_Config
 		s_ScrapeIntervalMs = Seconds("ScrapeInterval", "scrape-interval", SCRAPE_INTERVAL, 1000);
 
 		// Disable player-related metrics collection
-		s_DisablePlayerMetrics = Toggle("DisablePlayerMetrics", "disable-player", s_DisablePlayerMetrics);
+		s_DisablePlayerMetrics = Toggle("DisablePlayerMetrics", "disable-player");
 
 		// Disable vehicle and transport metrics collection
-		s_DisableTransportMetrics = Toggle("DisableTransportMetrics", "disable-transport", s_DisableTransportMetrics);
+		s_DisableTransportMetrics = Toggle("DisableTransportMetrics", "disable-transport");
 
 		// Disable weapon usage metrics collection
-		s_DisableWeaponMetrics = Toggle("DisableWeaponMetrics", "disable-weapon", s_DisableWeaponMetrics);
+		s_DisableWeaponMetrics = Toggle("DisableWeaponMetrics", "disable-weapon");
 
 		// Disable territory flag metrics collection
-		s_DisableTerritoryMetrics = Toggle("DisableTerritoryMetrics", "disable-territory", s_DisableTerritoryMetrics);
+		s_DisableTerritoryMetrics = Toggle("DisableTerritoryMetrics", "disable-territory");
 
 		// Enable player coordinate metrics (off by default)
-		s_EnableCoordinatesMetrics = Toggle("EnableCoordinatesMetrics", "enable-coordinates", s_EnableCoordinatesMetrics);
+		s_EnableCoordinatesMetrics = Toggle("EnableCoordinatesMetrics", "enable-coordinates");
 
 		// Disable RPC metrics collection
-		s_DisableRPCMetrics = Toggle("DisableRPCMetrics", "disable-rpc", s_DisableRPCMetrics);
+		s_DisableRPCMetrics = Toggle("DisableRPCMetrics", "disable-rpc");
 
 		// Disable event handler metrics collection
-		s_DisableEventMetrics = Toggle("DisableEventMetrics", "disable-event", s_DisableEventMetrics);
+		s_DisableEventMetrics = Toggle("DisableEventMetrics", "disable-event");
 
 		// server params
 		int v = GetGame().ServerConfigGetInt("maxPlayers");
@@ -122,43 +122,17 @@ class MetricZ_Config
 	    \param def     Default value when neither source is provided.
 	    \return bool   Resolved toggle value.
 	*/
-	private static bool Toggle(string cfgKey, string cliFlag, bool def)
+	private static bool Toggle(string cfgKey, string cliFlag)
 	{
-		bool result = def;
+
 		int configVal = GetGame().ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
-		if (configVal != 0)
-			result = true; // cfg only enables
+		bool result = (configVal != 0);
 
 		string cliVal;
 		if (GetCLIParam(CLI_FLAG_PREFIX + cliFlag, cliVal))
-			result = IsBool(cliVal, true); // CLI can enable/disable
+			result = (cliVal == "true" || cliVal == "1" || cliVal == string.Empty);
 
 		return result;
-	}
-
-	/**
-	    \brief Parse a string to bool.
-	    \details Case-insensitive. Trims whitespace. Accepts "1","true","0","false".
-	            Empty string returns \p emptyIsTrue.
-	    \param value         Input string (modified by ToLower/TrimInPlace).
-	    \param emptyIsTrue   Return value when input is empty.
-	    \return bool         Parsed result.
-	*/
-	private static bool IsBool(string value, bool emptyIsTrue = true)
-	{
-		value.ToLower();
-		value.TrimInPlace();
-
-		if (value == "1" || value == "true")
-			return true;
-
-		if (value == "0" || value == "false")
-			return false;
-
-		if (value == string.Empty && emptyIsTrue)
-			return true;
-
-		return false;
 	}
 }
 #endif
