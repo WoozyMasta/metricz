@@ -49,7 +49,7 @@ modded class ZombieBase
 	    \details When state changes, decrement old and increment new in MetricZ_ZombieMindStats.
 	    \return \p bool Base return value.
 	*/
-	bool HandleMindStateChange(int pCurrentCommandID, DayZInfectedInputController pInputController, float pDt)
+	override bool HandleMindStateChange(int pCurrentCommandID, DayZInfectedInputController pInputController, float pDt)
 	{
 		bool ret = super.HandleMindStateChange(pCurrentCommandID, pInputController, pDt);
 
