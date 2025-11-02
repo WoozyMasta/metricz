@@ -119,6 +119,14 @@ DayZ server. Each metric includes its identifier, type
   Total scrapes skipped because a previous scrape is still running
 * **`dayz_metricz_fps`** (`GAUGE`) —
   Mission updates per one second
+* **`dayz_metricz_fps_window_min`** (`GAUGE`) —
+  Min FPS over scrape window
+* **`dayz_metricz_fps_window_max`** (`GAUGE`) —
+  Max FPS over scrape window
+* **`dayz_metricz_fps_window_avg`** (`GAUGE`) —
+  Average FPS over scrape window
+* **`dayz_metricz_fps_window_samples`** (`GAUGE`) —
+  Number of 1s FPS samples in window
 * **`dayz_metricz_fps_limit`** (`GAUGE`) —
   Configured FPS cap
 * **`dayz_metricz_uptime_seconds`** (`GAUGE`) —

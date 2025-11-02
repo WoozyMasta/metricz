@@ -94,7 +94,6 @@ modded class MissionServer : MissionBase
 	*/
 	void MetricZ_Update()
 	{
-
 		// Schedule next tick for minimize drift
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.MetricZ_Update, MetricZ_Config.s_ScrapeIntervalMs, false);
 

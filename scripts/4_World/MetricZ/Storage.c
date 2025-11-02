@@ -30,7 +30,11 @@ class MetricZ_Storage
 
 	// FPS
 	static ref MetricZ_MetricFloat s_FPS = new MetricZ_MetricFloat("fps", "Mission updates per one second", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_LimitFPS = new MetricZ_MetricInt("fps_limit", "Configured FPS cap", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSMin = new MetricZ_MetricFloat("fps_window_min", "Min FPS over scrape window", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSMax = new MetricZ_MetricFloat("fps_window_max", "Max FPS over scrape window", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSAvg = new MetricZ_MetricFloat("fps_window_avg", "Average FPS over scrape window", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_FPSSamples = new MetricZ_MetricInt("fps_window_samples", "Number of 1s FPS samples in window", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_FPSLimit = new MetricZ_MetricInt("fps_limit", "Configured FPS cap", MetricZ_MetricType.GAUGE);
 
 	// Time
 	static ref MetricZ_MetricFloat s_ServerUptimeSec = new MetricZ_MetricFloat("uptime_seconds", "Server uptime since start, seconds", MetricZ_MetricType.GAUGE);
@@ -120,7 +124,11 @@ class MetricZ_Storage
 
 		// FPS
 		s_Registry.Insert(s_FPS);
-		s_Registry.Insert(s_LimitFPS);
+		s_Registry.Insert(s_FPSAvg);
+		s_Registry.Insert(s_FPSMin);
+		s_Registry.Insert(s_FPSMax);
+		s_Registry.Insert(s_FPSSamples);
+		s_Registry.Insert(s_FPSLimit);
 
 		// Time
 		s_Registry.Insert(s_ServerUptimeSec);
@@ -198,7 +206,7 @@ class MetricZ_Storage
 		s_Status.Set(1);
 		s_ScrapeInterval.Set(MetricZ_Config.s_ScrapeIntervalMs / 1000);
 		s_ScrapeSkippedTotal.Set(0);
-		s_LimitFPS.Set(MetricZ_Config.s_LimitFPS);
+		s_FPSLimit.Set(MetricZ_Config.s_LimitFPS);
 		s_MaxPlayers.Set(MetricZ_Config.s_MaxPlayers);
 
 		s_Initialized = true;
@@ -234,6 +242,15 @@ class MetricZ_Storage
 
 		// FPS
 		s_FPS.Set(MetricZ_FrameMonitor.GetFPS());
+
+		// FPS window stats for current scrape interval
+		float fpsMin, fpsMax, fpsAvg;
+		int fpsSamples;
+		MetricZ_FrameMonitor.SnapshotWindow(fpsMin, fpsMax, fpsAvg, fpsSamples);
+		s_FPSMin.Set(fpsMin);
+		s_FPSMax.Set(fpsMax);
+		s_FPSAvg.Set(fpsAvg);
+		s_FPSSamples.Set(fpsSamples);
 
 		// Time
 		s_ServerUptimeSec.Set(g_Game.GetTickTime());
