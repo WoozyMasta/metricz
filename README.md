@@ -99,7 +99,7 @@ More: [CONFIG.md](./CONFIG.md)
 
 * On busy servers keep scrape interval at 5–10 s or higher.
 * If you see a parallel scrape warning, increase the interval.
-* Align node_exporter/windows_exporter scrape interval with
+* Align [node_exporter]/[windows_exporter] scrape interval with
   `MetricZ_ScrapeInterval`. Polling an unchanged file more often has no
   benefit.
 
@@ -243,3 +243,7 @@ to donate! Every contribution helps to keep the work going. Thank you!
 * **USDT (TRC20)**: `TNGWLqM4Rw6F6QyfmnD3q8vLfKWEc87gZp`
 * **TON**: `UQDLfnJPUjOTHjnGLTY0i3ktmGBmUOJ0Qx30EBKWS3O0GrLR`
 <!-- cSpell:enable -->
+
+<!-- Links -->
+[node_exporter]: https://github.com/prometheus/node_exporter
+[windows_exporter]: https://github.com/prometheus-community/windows_exporter
