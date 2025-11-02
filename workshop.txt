@@ -1,0 +1,46 @@
+[h1]MetricZ — server-side mod for DayZ[/h1]
+
+[b]Where to install:[/b] [u]server only[/u].
+Do [i]not[/i] install on clients — it does nothing on the client.
+
+[hr][/hr]
+
+[h2]What it is[/h2]
+A simple observability and monitoring mod for DayZ server admins. It collects server and world [i]metrics[/i] (player count, FPS, weather, vehicles, events) and writes a Prometheus-compatible [i]textfile collector[/i] output to `metricz.prom`. Point [i]node_exporter[/i] or [i]windows_exporter[/i] at this file to let Prometheus scrape it. Visualize with Grafana using PromQL. Works with Prometheus-compatible TSDB backends (Prometheus, VictoriaMetrics, Mimir, Cortex, Thanos) for scalable telemetry.
+
+[b]Does not change gameplay[/b] and adds no items or loot.
+
+[hr][/hr]
+
+[h2]Who it’s for[/h2]
+[list]
+[*]Server owners who want to see load, health, and world state in Grafana
+[*]Anyone setting up Prometheus alerting and SLOs with Alertmanager
+[*]Those who need server-side metrics with zero client scripts
+[/list]
+
+[hr][/hr]
+
+[h2]Key points[/h2]
+[list]
+[*][b]Server-only[/b] — players don’t need the mod
+[*][b]Vanilla-compatible[/b] — works on clean servers
+[*][b]Low overhead[/b] — periodic scrape every N seconds
+[*][b]Safe writes[/b] — atomic metric file updates to the profile directory
+[*][b]Exporter-friendly[/b] — integrates via node_exporter/windows_exporter [i]textfile[/i] collector
+[*][b]Grafana/PromQL ready[/b] — build dashboards and alerts on Prometheus, VictoriaMetrics, Mimir, Cortex, or Thanos
+[/list]
+
+[hr][/hr]
+
+[h2]Quick install[/h2]
+[olist]
+[*]Add the mod to your DayZ server load order
+[*]Start the server — metrics file appears at: [code].../profiles/<profile>/metricz.prom[/code]
+[*]Configure your textfile collector: node_exporter (--collector.textfile.directory) or windows_exporter (textfile.directories), then scrape with Prometheus
+[/olist]
+
+[hr][/hr]
+
+[h2]Source & docs[/h2]
+GitHub: [url=https://github.com/WoozyMasta/metricz]WoozyMasta/metricz[/url]
