@@ -984,7 +984,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 3,
+        "h": 5,
         "w": 4,
         "x": 20,
         "y": 0
@@ -996,42 +996,12 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "## **${world}** ${game_version} `${save_version}`",
+        "content": "## **${world}** \r\n### ${game_version} `${save_version}`",
         "mode": "markdown"
       },
       "pluginVersion": "12.2.1",
       "title": "Game version",
       "type": "text"
-    },
-    {
-      "fieldConfig": {
-        "defaults": {},
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 4,
-        "x": 20,
-        "y": 3
-      },
-      "id": 67,
-      "options": {
-        "includeVars": false,
-        "keepTime": false,
-        "maxItems": 10,
-        "query": "",
-        "showFolderNames": false,
-        "showHeadings": false,
-        "showRecentlyViewed": false,
-        "showSearch": true,
-        "showStarred": false,
-        "tags": [
-          "dayz"
-        ]
-      },
-      "pluginVersion": "12.2.1",
-      "title": "Dashboards",
-      "type": "dashlist"
     },
     {
       "datasource": {
@@ -2055,10 +2025,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 20,
+        "h": 24,
         "w": 4,
         "x": 20,
-        "y": 9
+        "y": 5
       },
       "id": 7,
       "options": {
