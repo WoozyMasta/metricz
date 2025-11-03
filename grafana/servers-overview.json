@@ -60,7 +60,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -145,7 +145,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -260,7 +260,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -399,7 +399,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -513,7 +513,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -683,7 +683,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -795,7 +795,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -907,7 +907,7 @@
           "links": [
             {
               "title": "Server Dashboard",
-              "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+              "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
             }
           ],
           "mappings": [],
@@ -1871,7 +1871,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2012,7 +2012,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2104,7 +2104,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2212,7 +2212,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2652,7 +2652,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2793,7 +2793,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
@@ -2900,7 +2900,7 @@
               "links": [
                 {
                   "title": "Server Dashboard",
-                  "url": "${server_dash}?var-instance_id=${__field.labels.instance_id}"
+                  "url": "/d/${server_dash}?var-instance_id=${__field.labels.instance_id}"
                 }
               ],
               "mappings": [],
