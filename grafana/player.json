@@ -1,80 +1,49 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "dashlist",
-      "name": "Dashboard list",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.4.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "state-timeline",
-      "name": "State timeline",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "text",
-      "name": "Text",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
-  },
+  "description": "Per player detailed stats for MetricZ",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
-  "links": [],
+  "id": 0,
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [
+        "metricz"
+      ],
+      "targetBlank": false,
+      "title": "MetricZ Dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "GitHub",
+      "tooltip": "Source Code & Docs",
+      "type": "link",
+      "url": "https://github.com/WoozyMasta/metricz"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Steam",
+      "tooltip": "Steam WorkShop",
+      "type": "link",
+      "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002"
+    }
+  ],
   "panels": [
     {
       "datasource": {
@@ -95,7 +64,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -124,7 +93,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 4,
         "x": 0,
         "y": 0
@@ -147,12 +116,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -187,7 +156,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -216,7 +185,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 4,
         "x": 4,
         "y": 0
@@ -239,12 +208,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -279,7 +248,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -308,7 +277,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 4,
         "x": 8,
         "y": 0
@@ -331,12 +300,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -353,6 +322,10 @@
       "type": "stat"
     },
     {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 8,
         "w": 4,
@@ -373,10 +346,10 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "![${type}](https://raw.githubusercontent.com/WoozyMasta/metricz/refs/heads/master/avatars/${type}.png)\n\n## ${name} \n\n${type} (${gender}) ${blood} `${steam_id}`\n\n`${guid}`",
+        "content": "![${type}](https://raw.githubusercontent.com/WoozyMasta/metricz/refs/heads/master/avatars/${type}.png)\n\n## [${name}](https://steamcommunity.com/profiles/${steam_id})\n\n${type} (${gender}) ${blood} `${steam_id}`\n\n`${guid}`",
         "mode": "markdown"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "title": "Plyer Info",
       "type": "text"
     },
@@ -397,141 +370,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
-              },
-              {
-                "color": "light-yellow",
                 "value": 0
-              },
-              {
-                "color": "light-green",
-                "value": 300
-              },
-              {
-                "color": "green",
-                "value": 900
-              },
-              {
-                "color": "semi-dark-green",
-                "value": 1800
-              },
-              {
-                "color": "dark-green",
-                "value": 3600
-              },
-              {
-                "color": "blue",
-                "value": 7200
-              },
-              {
-                "color": "dark-blue",
-                "value": 14400
-              },
-              {
-                "color": "purple",
-                "value": 28800
-              },
-              {
-                "color": "red",
-                "value": 57600
-              }
-            ]
-          },
-          "unit": "s"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 4,
-        "x": 16,
-        "y": 0
-      },
-      "id": 11,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_player_lifetime_seconds{instance=~\"$instance\",instance_id=~\"$instance_id\",world=~\"$world\",steam_id=\"$steam_id\"}\r\nor\r\nlast_over_time(dayz_metricz_player_lifetime_seconds{instance=~\"$instance\",instance_id=~\"$instance_id\",world=~\"$world\",steam_id=\"$steam_id\"}[$__range])\r\n",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Session Time",
-      "type": "stat"
-    },
-    {
-      "gridPos": {
-        "h": 8,
-        "w": 4,
-        "x": 20,
-        "y": 0
-      },
-      "id": 26,
-      "options": {
-        "includeVars": false,
-        "keepTime": false,
-        "maxItems": 10,
-        "query": "",
-        "showFolderNames": false,
-        "showHeadings": false,
-        "showRecentlyViewed": false,
-        "showSearch": true,
-        "showStarred": false,
-        "tags": [
-          "dayz"
-        ]
-      },
-      "pluginVersion": "11.4.0",
-      "title": "Dashboards",
-      "type": "dashlist"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "decimals": 0,
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "text",
-                "value": null
               },
               {
                 "color": "light-yellow",
@@ -576,10 +415,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 4,
+        "h": 8,
         "w": 4,
         "x": 16,
-        "y": 4
+        "y": 0
       },
       "id": 12,
       "options": {
@@ -599,12 +438,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -634,6 +473,114 @@
           },
           "decimals": 0,
           "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "text",
+                "value": 0
+              },
+              {
+                "color": "light-yellow",
+                "value": 0
+              },
+              {
+                "color": "light-green",
+                "value": 300
+              },
+              {
+                "color": "green",
+                "value": 900
+              },
+              {
+                "color": "semi-dark-green",
+                "value": 1800
+              },
+              {
+                "color": "dark-green",
+                "value": 3600
+              },
+              {
+                "color": "blue",
+                "value": 7200
+              },
+              {
+                "color": "dark-blue",
+                "value": 14400
+              },
+              {
+                "color": "purple",
+                "value": 28800
+              },
+              {
+                "color": "red",
+                "value": 57600
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 4,
+        "x": 20,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_player_lifetime_seconds{instance=~\"$instance\",instance_id=~\"$instance_id\",world=~\"$world\",steam_id=\"$steam_id\"}\r\nor\r\nlast_over_time(dayz_metricz_player_lifetime_seconds{instance=~\"$instance\",instance_id=~\"$instance_id\",world=~\"$world\",steam_id=\"$steam_id\"}[$__range])\r\n",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Session Time",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "decimals": 0,
+          "mappings": [],
           "max": 1,
           "min": 0,
           "thresholds": {
@@ -641,7 +588,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -673,7 +620,7 @@
         "h": 7,
         "w": 4,
         "x": 0,
-        "y": 8
+        "y": 7
       },
       "id": 4,
       "options": {
@@ -693,12 +640,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -733,7 +680,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-red",
@@ -765,7 +712,7 @@
         "h": 7,
         "w": 4,
         "x": 4,
-        "y": 8
+        "y": 7
       },
       "id": 6,
       "options": {
@@ -785,12 +732,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -825,7 +772,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -857,7 +804,7 @@
         "h": 7,
         "w": 4,
         "x": 8,
-        "y": 8
+        "y": 7
       },
       "id": 7,
       "options": {
@@ -877,12 +824,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -909,6 +856,7 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisPlacement": "auto",
             "fillOpacity": 70,
             "hideFrom": {
               "legend": false,
@@ -925,7 +873,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -950,16 +898,17 @@
         "rowHeight": 0.9,
         "showValue": "auto",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -992,7 +941,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-blue",
@@ -1028,7 +977,7 @@
         "h": 7,
         "w": 4,
         "x": 0,
-        "y": 15
+        "y": 14
       },
       "id": 8,
       "options": {
@@ -1048,12 +997,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1086,7 +1035,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-green",
@@ -1126,7 +1075,7 @@
         "h": 7,
         "w": 4,
         "x": 4,
-        "y": 15
+        "y": 14
       },
       "id": 9,
       "options": {
@@ -1146,12 +1095,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1186,7 +1135,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -1218,7 +1167,7 @@
         "h": 7,
         "w": 4,
         "x": 8,
-        "y": 15
+        "y": 14
       },
       "id": 10,
       "options": {
@@ -1238,12 +1187,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1293,6 +1242,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1309,7 +1259,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "light-yellow",
@@ -1367,16 +1317,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1426,6 +1377,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1442,7 +1394,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "light-yellow",
@@ -1500,16 +1452,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1542,7 +1495,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -1561,7 +1514,7 @@
         "h": 5,
         "w": 4,
         "x": 0,
-        "y": 22
+        "y": 21
       },
       "id": 13,
       "options": {
@@ -1581,12 +1534,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1619,7 +1572,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -1638,7 +1591,7 @@
         "h": 5,
         "w": 4,
         "x": 4,
-        "y": 22
+        "y": 21
       },
       "id": 14,
       "options": {
@@ -1658,12 +1611,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1696,7 +1649,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "orange",
@@ -1716,7 +1669,7 @@
         "h": 5,
         "w": 4,
         "x": 8,
-        "y": 22
+        "y": 21
       },
       "id": 15,
       "options": {
@@ -1736,12 +1689,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1791,6 +1744,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1807,7 +1761,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "light-yellow",
@@ -1852,7 +1806,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 6,
         "x": 12,
         "y": 23
@@ -1866,16 +1820,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1925,6 +1880,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1934,14 +1890,13 @@
               "mode": "off"
             }
           },
-          "decimals": 0,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "light-yellow",
@@ -1986,7 +1941,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 7,
         "w": 6,
         "x": 18,
         "y": 23
@@ -2000,16 +1955,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2042,7 +1998,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -2062,7 +2018,7 @@
         "h": 4,
         "w": 3,
         "x": 0,
-        "y": 27
+        "y": 26
       },
       "id": 16,
       "options": {
@@ -2082,12 +2038,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2120,7 +2076,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -2140,7 +2096,7 @@
         "h": 4,
         "w": 3,
         "x": 3,
-        "y": 27
+        "y": 26
       },
       "id": 17,
       "options": {
@@ -2160,12 +2116,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2198,7 +2154,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -2218,7 +2174,7 @@
         "h": 4,
         "w": 3,
         "x": 6,
-        "y": 27
+        "y": 26
       },
       "id": 19,
       "options": {
@@ -2238,12 +2194,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2276,7 +2232,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -2296,7 +2252,7 @@
         "h": 4,
         "w": 3,
         "x": 9,
-        "y": 27
+        "y": 26
       },
       "id": 18,
       "options": {
@@ -2316,12 +2272,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2338,9 +2294,11 @@
       "type": "stat"
     }
   ],
-  "schemaVersion": 40,
+  "preload": false,
+  "schemaVersion": 42,
   "tags": [
-    "dayz"
+    "dayz",
+    "metricz"
   ],
   "templating": {
     "list": [
@@ -2360,7 +2318,7 @@
           "type": "prometheus",
           "uid": "${data_source}"
         },
-        "definition": "label_values(dayz_metricz_player_loaded,instance)",
+        "definition": "label_values(dayz_metricz_status,instance)",
         "includeAll": true,
         "label": "Instance",
         "multi": true,
@@ -2368,29 +2326,7 @@
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(dayz_metricz_player_loaded,instance)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 3,
-        "type": "query"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(dayz_metricz_player_loaded{instance=\"$instance\"},world)",
-        "includeAll": true,
-        "label": "World",
-        "multi": true,
-        "name": "world",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(dayz_metricz_player_loaded{instance=\"$instance\"},world)",
+          "query": "label_values(dayz_metricz_status,instance)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
@@ -2404,15 +2340,15 @@
           "type": "prometheus",
           "uid": "${data_source}"
         },
-        "definition": "label_values(dayz_metricz_player_loaded{instance=\"$instance\", world=~\"$world\"},instance_id)",
+        "definition": "label_values(dayz_metricz_status{instance=~\"$instance\"},world)",
         "includeAll": true,
-        "label": "Instance ID",
+        "label": "World",
         "multi": true,
-        "name": "instance_id",
+        "name": "world",
         "options": [],
         "query": {
           "qryType": 1,
-          "query": "label_values(dayz_metricz_player_loaded{instance=\"$instance\", world=~\"$world\"},instance_id)",
+          "query": "label_values(dayz_metricz_status{instance=~\"$instance\"},world)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 2,
@@ -2424,7 +2360,29 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
+        },
+        "definition": "label_values(dayz_metricz_status{world=~\"$world\"},instance_id)",
+        "includeAll": true,
+        "label": "Instance ID",
+        "multi": true,
+        "name": "instance_id",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(dayz_metricz_status{world=~\"$world\"},instance_id)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "sort": 3,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${data_source}"
         },
         "definition": "label_values(dayz_metricz_player_loaded,steam_id)",
         "includeAll": false,
@@ -2464,7 +2422,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
         },
         "definition": "query_result(dayz_metricz_player_loaded{steam_id=\"$steam_id\"} @ end() or  last_over_time(dayz_metricz_player_loaded{steam_id=\"$steam_id\"}[$__range]))",
         "hide": 2,
@@ -2504,7 +2462,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
         },
         "definition": "query_result(dayz_metricz_player_loaded{steam_id=\"$steam_id\"} @ end() or  last_over_time(dayz_metricz_player_loaded{steam_id=\"$steam_id\"}[$__range]))",
         "hide": 2,
@@ -2543,7 +2501,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {
@@ -2562,6 +2520,5 @@
   "timezone": "browser",
   "title": "MetricZ Player",
   "uid": "cf1vdc82xx1q8e",
-  "version": 1,
-  "weekStart": ""
+  "version": 2
 }

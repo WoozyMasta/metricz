@@ -1,87 +1,49 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "dashlist",
-      "name": "Dashboard list",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "11.4.0"
-    },
-    {
-      "type": "panel",
-      "id": "piechart",
-      "name": "Pie chart",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "text",
-      "name": "Text",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
-  "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": {
-          "type": "grafana",
-          "uid": "-- Grafana --"
-        },
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
-  },
-  "description": "DayZ server metrics",
+  "description": "Per server detailed stats for MetricZ",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": null,
-  "links": [],
+  "id": 0,
+  "links": [
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [
+        "metricz"
+      ],
+      "targetBlank": false,
+      "title": "MetricZ Dashboards",
+      "tooltip": "",
+      "type": "dashboards",
+      "url": ""
+    },
+    {
+      "asDropdown": false,
+      "icon": "doc",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "GitHub",
+      "tooltip": "Source Code & Docs",
+      "type": "link",
+      "url": "https://github.com/WoozyMasta/metricz"
+    },
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": false,
+      "keepTime": false,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Steam",
+      "tooltip": "Steam WorkShop",
+      "type": "link",
+      "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002"
+    }
+  ],
   "panels": [
     {
       "datasource": {
@@ -103,7 +65,7 @@
             "steps": [
               {
                 "color": "dark-red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "dark-green",
@@ -139,12 +101,12 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -178,7 +140,7 @@
             "steps": [
               {
                 "color": "dark-red",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-red",
@@ -238,12 +200,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -296,7 +258,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -309,7 +271,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "blue",
@@ -361,7 +323,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -404,7 +366,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -417,7 +379,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "purple",
@@ -473,7 +435,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -495,7 +457,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -547,7 +509,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               },
               {
                 "color": "blue",
@@ -599,12 +561,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -655,7 +617,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -687,12 +649,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -745,7 +707,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -776,12 +738,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -817,7 +779,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -848,12 +810,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -889,7 +851,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -920,12 +882,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -961,7 +923,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -992,12 +954,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1017,6 +979,10 @@
     },
     {
       "description": "Game version (save version)",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 3,
         "w": 4,
@@ -1033,11 +999,15 @@
         "content": "## **${world}** ${game_version} `${save_version}`",
         "mode": "markdown"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "title": "Game version",
       "type": "text"
     },
     {
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
       "gridPos": {
         "h": 6,
         "w": 4,
@@ -1059,7 +1029,7 @@
           "dayz"
         ]
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "title": "Dashboards",
       "type": "dashlist"
     },
@@ -1081,7 +1051,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "semi-dark-green",
@@ -1141,12 +1111,12 @@
         "textMode": "value_and_name",
         "wideLayout": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1195,7 +1165,7 @@
             "steps": [
               {
                 "color": "dark-green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -1238,12 +1208,12 @@
         "textMode": "value",
         "wideLayout": false
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1310,6 +1280,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1325,7 +1296,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1351,16 +1322,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1395,7 +1367,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1410,7 +1382,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -1442,9 +1414,13 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
@@ -1455,16 +1431,12 @@
           "legendFormat": "infected",
           "range": true,
           "refId": "A",
-          "useBackend": false,
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          }
+          "useBackend": false
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1501,7 +1473,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1532,12 +1504,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1573,7 +1545,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1604,12 +1576,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1645,7 +1617,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1676,12 +1648,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1717,7 +1689,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1748,12 +1720,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1789,7 +1761,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1820,12 +1792,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1861,7 +1833,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1892,12 +1864,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -1933,7 +1905,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -1964,12 +1936,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2005,7 +1977,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2036,12 +2008,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2075,7 +2047,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2113,12 +2085,12 @@
         "sizing": "auto",
         "valueMode": "text"
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2153,7 +2125,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2185,12 +2157,12 @@
         "textMode": "value",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2236,7 +2208,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#17299b",
@@ -2296,12 +2268,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2338,7 +2310,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#17299b",
@@ -2398,12 +2370,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2455,6 +2427,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -2470,7 +2443,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -2496,23 +2469,24 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
           "expr": "dayz_metricz_cars{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
-          "legendFormat": "{{world }} ({{instance_id}})",
+          "legendFormat": "Cars",
           "range": true,
           "refId": "A",
           "useBackend": false
@@ -2528,7 +2502,7 @@
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
-          "legendFormat": "{{world }} ({{instance_id}})",
+          "legendFormat": "Boats",
           "range": true,
           "refId": "B",
           "useBackend": false
@@ -2536,7 +2510,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2544,7 +2518,7 @@
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
-          "legendFormat": "{{world }} ({{instance_id}})",
+          "legendFormat": "Helicopters",
           "range": true,
           "refId": "C",
           "useBackend": false
@@ -2571,7 +2545,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -2603,12 +2577,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2642,7 +2616,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2678,7 +2652,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2709,12 +2683,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2750,7 +2724,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2781,12 +2755,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2822,7 +2796,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2853,12 +2827,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2894,7 +2868,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -2925,12 +2899,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -2966,7 +2940,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "green",
@@ -3014,12 +2988,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3162,7 +3136,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -3194,12 +3168,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3233,7 +3207,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3264,12 +3238,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3305,7 +3279,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3336,12 +3310,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3377,7 +3351,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3408,12 +3382,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3449,7 +3423,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3480,12 +3454,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3547,7 +3521,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3578,12 +3552,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3668,7 +3642,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3699,12 +3673,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3756,6 +3730,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -3771,7 +3746,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -3797,16 +3772,17 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3840,7 +3816,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3871,12 +3847,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3912,7 +3888,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -3943,12 +3919,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -3984,7 +3960,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4015,12 +3991,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4056,7 +4032,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4087,12 +4063,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4177,7 +4153,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4208,12 +4184,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4335,7 +4311,7 @@
             "steps": [
               {
                 "color": "text",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4366,12 +4342,12 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
+            "uid": "${data_source}"
           },
           "disableTextWrap": false,
           "editorMode": "code",
@@ -4450,7 +4426,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "description": "Increment per one action usage",
       "fieldConfig": {
@@ -4465,7 +4441,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4496,7 +4472,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4522,7 +4498,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "description": "Increment per one action usage",
       "fieldConfig": {
@@ -4537,7 +4513,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4568,7 +4544,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4594,7 +4570,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "description": "Increment per one action usage",
       "fieldConfig": {
@@ -4609,7 +4585,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4640,7 +4616,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4666,7 +4642,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "description": "",
       "fieldConfig": {
@@ -4681,7 +4657,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4712,7 +4688,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4738,7 +4714,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "description": "Total updates path graph regions by object in the world",
       "fieldConfig": {
@@ -4752,7 +4728,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -4783,7 +4759,7 @@
         "textMode": "auto",
         "wideLayout": true
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4809,7 +4785,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4840,6 +4816,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -4857,7 +4834,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -4883,11 +4860,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -4911,7 +4889,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4942,6 +4920,7 @@
               "type": "linear"
             },
             "showPoints": "auto",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -4957,7 +4936,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -4983,11 +4962,12 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -5011,7 +4991,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -5050,12 +5030,14 @@
           "fields": "",
           "values": false
         },
+        "sort": "desc",
         "tooltip": {
+          "hideZeros": false,
           "mode": "single",
           "sort": "none"
         }
       },
-      "pluginVersion": "11.4.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -5079,10 +5061,12 @@
       "type": "piechart"
     }
   ],
+  "preload": false,
   "refresh": "1m",
-  "schemaVersion": 40,
+  "schemaVersion": 42,
   "tags": [
-    "dayz"
+    "dayz",
+    "metricz"
   ],
   "templating": {
     "list": [
@@ -5100,7 +5084,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
         },
         "definition": "label_values(dayz_metricz_status,instance)",
         "includeAll": false,
@@ -5142,7 +5126,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
         },
         "definition": "label_values(dayz_metricz_status{instance_id=\"$instance_id\", instance=\"$instance\"},world)",
         "hide": 2,
@@ -5186,7 +5170,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
+          "uid": "${data_source}"
         },
         "definition": "label_values(dayz_metricz_status{instance_id=\"$instance_id\", instance=\"$instance\"},game_version)",
         "hide": 2,
@@ -5228,7 +5212,7 @@
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-12h",
     "to": "now"
   },
   "timepicker": {
@@ -5247,6 +5231,5 @@
   "timezone": "browser",
   "title": "MetricZ Server",
   "uid": "ff1kp4nh3cfeod",
-  "version": 1,
-  "weekStart": ""
+  "version": 2
 }
