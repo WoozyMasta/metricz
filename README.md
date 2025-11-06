@@ -186,8 +186,6 @@ scrape_configs:
 
 ## Dashboards (Grafana)
 
-<!-- TODO -->
-
 | MetricZ Servers Overview                                    |
 | :---------------------------------------------------------: |
 | ![Overview](./grafana/servers-overview-1.png)               |
