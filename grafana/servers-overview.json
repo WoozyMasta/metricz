@@ -2385,7 +2385,7 @@
                       },
                       {
                         "title": "Player Dashboard",
-                        "url": "${player_dash}?var-steam_id=${__value.raw}"
+                        "url": "/d/${player_dash}?var-steam_id=${__value.raw}"
                       }
                     ]
                   },
@@ -3136,7 +3136,7 @@
                       },
                       {
                         "title": "Player Dashboard",
-                        "url": "${player_dash}?var-steam_id=${__value.raw}"
+                        "url": "/d/${player_dash}?var-steam_id=${__value.raw}"
                       }
                     ]
                   }
