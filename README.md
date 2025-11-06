@@ -231,19 +231,4 @@ scrape_configs:
 * For detailed tracing use `DayZDiag_x64.exe` and a build with `DIAG` to get
   `INFO` logs from the code.
 
-## Support me 💖
-
-If you enjoy my projects and want to support further development, feel free
-to donate! Every contribution helps to keep the work going. Thank you!
-
-### Crypto Donations
-
-<!-- cSpell:disable -->
-* **BTC**: `bc1qgrj95gdhmauh5hx47etuk5lwfk7xgc8z9psw62`
-* **USDT (TRC20)**: `TNGWLqM4Rw6F6QyfmnD3q8vLfKWEc87gZp`
-* **TON**: `UQDLfnJPUjOTHjnGLTY0i3ktmGBmUOJ0Qx30EBKWS3O0GrLR`
-<!-- cSpell:enable -->
-
-<!-- Links -->
-[node_exporter]: https://github.com/prometheus/node_exporter
-[windows_exporter]: https://github.com/prometheus-community/windows_exporter
+## 👉 [Support Me](https://gist.github.com/WoozyMasta/7b0cabb538236b7307002c1fbc2d94ea)
