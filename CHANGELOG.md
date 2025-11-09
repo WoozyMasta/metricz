@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## [0.1.2][] - 2025-11-09
+
+### Added
+
+* [CONFIG.md](./CONFIG.md) and [METRICS.md](./METRICS.md) to workshop content
+* links to github and workshop in workshop content
+
+[0.1.2]: https://github.com/WoozyMasta/metricz/compare/0.1.1...0.1.2
+
 ## [0.1.1][] - 2025-11-03
 
 ### Added
