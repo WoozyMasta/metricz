@@ -19,6 +19,7 @@ class MetricZ_MetricBase
 {
 	protected string m_Name;
 	protected string m_Help;
+	protected string m_Labels;
 	protected MetricZ_MetricType m_Type;
 
 	/**
@@ -35,6 +36,32 @@ class MetricZ_MetricBase
 
 		m_Help = help;
 		m_Type = type;
+	}
+
+	/**
+	    \brief Set preformatted label block for this metric.
+	    \details Accepts a raw Prometheus label string including braces, e.g. "{k=\"v\"}".
+	             The string is used as-is: no escaping, merging, or validation is performed.
+	             Prefer MakeLabels(...) when you have a map of labels.
+	    \param raw Raw label block with surrounding braces, or empty string to clear.
+	*/
+	void SetLabels(string raw)
+	{
+		m_Labels = raw;
+	}
+
+	/**
+	    \brief Build and set labels from a key/value map.
+	    \details Uses MetricZ_LabelUtils::MakeLabels(labels) which:
+	             - always includes base labels {world,host,instance_id}
+	             - escapes values
+	             - ignores keys that overlap base labels
+	             Passing null or an empty map results in base labels only.
+	    \param labels Map of extra labels; may be null.
+	*/
+	void MakeLabels(map<string, string> labels)
+	{
+		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
 	}
 
 	/**
@@ -74,6 +101,21 @@ class MetricZ_MetricBase
 	}
 
 	/**
+	    \brief Get the effective label block for this metric.
+	    \details If labels were set via SetLabels/MakeLabels, returns them as-is.
+	             Otherwise returns MetricZ_LabelUtils::MakeLabels() (base labels only).
+	             The result always includes surrounding braces and is never empty.
+	    \return string Prometheus label block, e.g. "{world=\"...\",host=\"...\",instance_id=\"...\"}".
+	*/
+	string GetLabels()
+	{
+		if (m_Labels == string.Empty)
+			return MetricZ_LabelUtils.MakeLabels();
+
+		return m_Labels;
+	}
+
+	/**
 	    \brief Convert enum type to Prometheus text.
 	    \return "gauge" or "counter"; falls back to "gauge" on error
 	*/
@@ -109,7 +151,16 @@ class MetricZ_MetricBase
 	    \param fh Open file handle
 	    \param labels Optional preformatted label set "{k=\"v\"}"
 	*/
-	void Flush(FileHandle fh, string labels = "") {}
+	void Flush(FileHandle fh, string labels = "")
+	{
+		if (!fh)
+			return;
+
+		if (labels == string.Empty)
+			labels = GetLabels();
+
+		FPrint(fh, m_Name + labels + " 0\n");
+	}
 
 	/**
 	    \brief Write headers then value.
@@ -120,6 +171,9 @@ class MetricZ_MetricBase
 	{
 		if (!fh)
 			return;
+
+		if (labels == string.Empty)
+			labels = GetLabels();
 
 		WriteHeaders(fh);
 		Flush(fh, labels);

@@ -58,12 +58,15 @@ class MetricZ_MetricInt : MetricZ_MetricBase
 	/**
 	    \brief Write value line.
 	    \param fh Open file handle
-	    \param labels Optional labels
+	    \param labels Optional labels override, if blank try use internal labels
 	*/
 	override void Flush(FileHandle fh, string labels = "")
 	{
 		if (!fh)
 			return;
+
+		if (labels == string.Empty)
+			labels = GetLabels();
 
 		FPrint(fh, m_Name + labels + " " + m_Value.ToString() + "\n");
 	}
@@ -71,12 +74,15 @@ class MetricZ_MetricInt : MetricZ_MetricBase
 	/**
 	    \brief Write HELP/TYPE then value.
 	    \param fh Open file handle
-	    \param labels Optional labels
+	    \param labels Optional labels override, if blank try use internal labels
 	*/
 	override void FlushWithHead(FileHandle fh, string labels = "")
 	{
 		if (!fh)
 			return;
+
+		if (labels == string.Empty)
+			labels = GetLabels();
 
 		WriteHeaders(fh);
 		Flush(fh, labels);

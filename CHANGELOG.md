@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## Unreleased
+
+### Added
+
+* internal labels per metric with helpers `SetLabels()`, `MakeLabels()`
+  and `GetLabels()`
+
+### Changed
+
+* all metrics will now always have base labels if they have not been specified
+* `MetricZ_LabelUtils::MakeLabels()` map with labels now is optional parameter
+
 ## [0.1.2][] - 2025-11-09
 
 ### Added

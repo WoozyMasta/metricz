@@ -34,7 +34,7 @@ class MetricZ_LabelUtils
 	/**
 	    \brief Generate stable hash string from entity persistent ID.
 	    \details Combines four persistent-ID ints and hashes them.
-	            Falls back to a pseudo-unique hash for non-persistent entities.
+	             Falls back to a pseudo-unique hash for non-persistent entities.
 	    \param entity EntityAI with persistence
 	    \return \p string hash like "p:-123456789" or "n:987654321"
 	*/
@@ -60,12 +60,12 @@ class MetricZ_LabelUtils
 	/**
 	    \brief Build a Prometheus label set string.
 	    \details Auto-includes base labels {world, host, instance_id}.
-	                Merges user labels without overwriting base keys.
-	                Skips empty world/host. Order is unspecified.
+	             Merges user labels without overwriting base keys.
+	             Skips empty world/host. Order is unspecified.
 	    \param labels Optional map of extra key->value pairs
 	    \return \p string "{k="v",...}"
 	*/
-	static string MakeLabels(map<string, string> labels)
+	static string MakeLabels(map<string, string> labels = null)
 	{
 		if (!labels || labels.Count() == 0)
 			return "{" + BaseLabels() + "}";
@@ -130,12 +130,12 @@ class MetricZ_LabelUtils
 	}
 
 	/**
-	        \brief Canonical weapon base name used in labels.
-	        \details
-	          - remove any "sawedoff" token (case-insensitive, anywhere)
-	          - collapse "__" -> "_", then trim leading/trailing "_"
-	          - cut suffix after last "_"
-	          - lowercase; fallback to original lowercase if empty
+	    \brief Canonical weapon base name used in labels.
+	    \details
+	      - remove any "sawedoff" token (case-insensitive, anywhere)
+	      - collapse "__" -> "_", then trim leading/trailing "_"
+	      - cut suffix after last "_"
+	      - lowercase; fallback to original lowercase if empty
 	*/
 	static string WeaponLabelName(string type)
 	{
