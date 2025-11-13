@@ -22,7 +22,10 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 	*/
 	void MetricZ_TerritoryMetrics()
 	{
-		m_Lifetime = new MetricZ_MetricFloat("territory_lifetime", "Territory flag lifetime fraction 0..1", MetricZ_MetricType.GAUGE);
+		m_Lifetime = new MetricZ_MetricFloat(
+		    "territory_lifetime",
+		    "Territory flag lifetime fraction 0..1",
+		    MetricZ_MetricType.GAUGE);
 	}
 
 	/**

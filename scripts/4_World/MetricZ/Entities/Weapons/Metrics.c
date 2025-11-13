@@ -18,8 +18,14 @@ class MetricZ_WeaponStats
 	protected static ref map<string, string> s_LabelsByWeapon = new map<string, string>();
 
 	// metrics
-	protected static ref MetricZ_MetricInt s_ShotsByType = new MetricZ_MetricInt("weapon_shots", "Shots by weapon base type", MetricZ_MetricType.COUNTER);
-	protected static ref MetricZ_MetricInt s_ShotsAll = new MetricZ_MetricInt("weapon_shots_all", "Total shots on server", MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_ShotsByType = new MetricZ_MetricInt(
+	    "weapon_shots",
+	    "Shots by weapon base type",
+	    MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_ShotsAll = new MetricZ_MetricInt(
+	    "weapon_shots_all",
+	    "Total shots on server",
+	    MetricZ_MetricType.COUNTER);
 
 	/**
 	    \brief Increment counters for a fired weapon.

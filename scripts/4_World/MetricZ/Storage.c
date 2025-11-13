@@ -23,89 +23,278 @@ class MetricZ_Storage
 
 	// --- Gauges
 	// Core
-	static ref MetricZ_MetricInt s_Status = new MetricZ_MetricInt("status", "Exporter status", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_UpdateDurationSec = new MetricZ_MetricFloat("update_duration_seconds", "Duration of last MetricZ update, seconds", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_ScrapeInterval = new MetricZ_MetricInt("scrape_interval_seconds", "Configured scrape interval in seconds", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_ScrapeSkippedTotal = new MetricZ_MetricInt("scrape_skipped", "Total scrapes skipped because a previous scrape is still running", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_Status = new MetricZ_MetricInt(
+	    "status",
+	    "Exporter status",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_UpdateDurationSec = new MetricZ_MetricFloat(
+	    "update_duration_seconds",
+	    "Duration of last MetricZ update, seconds",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_ScrapeInterval = new MetricZ_MetricInt(
+	    "scrape_interval_seconds",
+	    "Configured scrape interval in seconds",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_ScrapeSkippedTotal = new MetricZ_MetricInt(
+	    "scrape_skipped",
+	    "Total scrapes skipped because a previous scrape is still running",
+	    MetricZ_MetricType.COUNTER);
 
 	// FPS
-	static ref MetricZ_MetricFloat s_FPS = new MetricZ_MetricFloat("fps", "Mission updates per one second", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_FPSMin = new MetricZ_MetricFloat("fps_window_min", "Min FPS over scrape window", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_FPSMax = new MetricZ_MetricFloat("fps_window_max", "Max FPS over scrape window", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_FPSAvg = new MetricZ_MetricFloat("fps_window_avg", "Average FPS over scrape window", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_FPSSamples = new MetricZ_MetricInt("fps_window_samples", "Number of 1s FPS samples in window", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_FPSLimit = new MetricZ_MetricInt("fps_limit", "Configured FPS cap", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPS = new MetricZ_MetricFloat(
+	    "fps",
+	    "Mission updates per one second",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSMin = new MetricZ_MetricFloat(
+	    "fps_window_min",
+	    "Min FPS over scrape window",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSMax = new MetricZ_MetricFloat(
+	    "fps_window_max",
+	    "Max FPS over scrape window",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_FPSAvg = new MetricZ_MetricFloat(
+	    "fps_window_avg",
+	    "Average FPS over scrape window",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_FPSSamples = new MetricZ_MetricInt(
+	    "fps_window_samples",
+	    "Number of 1s FPS samples in window",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_FPSLimit = new MetricZ_MetricInt(
+	    "fps_limit",
+	    "Configured FPS cap",
+	    MetricZ_MetricType.GAUGE);
 
 	// Time
-	static ref MetricZ_MetricFloat s_ServerUptimeSec = new MetricZ_MetricFloat("uptime_seconds", "Server uptime since start, seconds", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_TimeUnixSec = new MetricZ_MetricFloat("game_time_unix_seconds", "Current game Unix time seconds", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_TimeOfDay = new MetricZ_MetricInt("time_of_day", "Time of day: 0 dawn, 1 day, 2 dusk, 3 night", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_ServerUptimeSec = new MetricZ_MetricFloat(
+	    "uptime_seconds",
+	    "Server uptime since start, seconds",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat s_TimeUnixSec = new MetricZ_MetricFloat(
+	    "game_time_unix_seconds",
+	    "Current game Unix time seconds",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_TimeOfDay = new MetricZ_MetricInt(
+	    "time_of_day",
+	    "Time of day: 0 dawn, 1 day, 2 dusk, 3 night",
+	    MetricZ_MetricType.GAUGE);
 
 	// World totals
-	static ref MetricZ_MetricInt s_PlayersOnline = new MetricZ_MetricInt("players_online", "Total players online in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_MaxPlayers = new MetricZ_MetricInt("max_players", "Configured max players", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Infected = new MetricZ_MetricInt("infected", "Total infected in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Animals = new MetricZ_MetricInt("animals", "Total animals in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_PathGraphUpdates = new MetricZ_MetricInt("path_graph_updates", "Total updates path graph regions by object in the world", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_PlayersOnline = new MetricZ_MetricInt(
+	    "players_online",
+	    "Total players online in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_MaxPlayers = new MetricZ_MetricInt(
+	    "max_players",
+	    "Configured max players",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Infected = new MetricZ_MetricInt(
+	    "infected",
+	    "Total infected in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Animals = new MetricZ_MetricInt(
+	    "animals",
+	    "Total animals in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_PathGraphUpdates = new MetricZ_MetricInt(
+	    "path_graph_updates",
+	    "Total updates path graph regions by object in the world",
+	    MetricZ_MetricType.COUNTER);
 
 	// Weapon related
-	static ref MetricZ_MetricInt s_Weapons = new MetricZ_MetricInt("weapons", "Total weapons in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_AmmoBoxes = new MetricZ_MetricInt("ammo_boxes", "Total Box_Base with Ammo in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Magazines = new MetricZ_MetricInt("magazines", "Total magazines in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Ammo = new MetricZ_MetricInt("ammo", "Total ammo piles in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Explosives = new MetricZ_MetricInt("explosives", "Total explosives (grenade, flash, smoke, claymore, plastic, improvised) in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Exploded = new MetricZ_MetricInt("explosives_detonated", "Total explosives detonated (grenade, flash, smoke, claymore, plastic, improvised)", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_Weapons = new MetricZ_MetricInt(
+	    "weapons",
+	    "Total weapons in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_AmmoBoxes = new MetricZ_MetricInt(
+	    "ammo_boxes",
+	    "Total Box_Base with Ammo in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Magazines = new MetricZ_MetricInt(
+	    "magazines",
+	    "Total magazines in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Ammo = new MetricZ_MetricInt(
+	    "ammo",
+	    "Total ammo piles in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Explosives = new MetricZ_MetricInt(
+	    "explosives",
+	    "Total explosives (grenade, flash, smoke, claymore, plastic, improvised) in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Exploded = new MetricZ_MetricInt(
+	    "explosives_detonated",
+	    "Total explosives detonated (grenade, flash, smoke, claymore, plastic, improvised)",
+	    MetricZ_MetricType.COUNTER);
 
 	// Items
-	static ref MetricZ_MetricInt s_Items = new MetricZ_MetricInt("items", "Total items (ItemBase) in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Food = new MetricZ_MetricInt("food", "Total food items in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Bottles = new MetricZ_MetricInt("bottles", "Total Bottle_Base (pot, cauldron, canister, etc.) in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Clothing = new MetricZ_MetricInt("clothes", "Total clothes in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Boxes = new MetricZ_MetricInt("boxes", "Total not Ammo Box_Base (NailBox, HeadlightH7_Box) in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Cars = new MetricZ_MetricInt("cars", "Total cars in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Boats = new MetricZ_MetricInt("boats", "Total boats in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Helicopters = new MetricZ_MetricInt("helicopters", "Total helicopters in the world", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_TerritoryFlags = new MetricZ_MetricInt("territory_flags", "Total active bases (raised flagpole)", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_BaseBuildings = new MetricZ_MetricInt("base_buildings", "Total built player constructions (tower, fence, flag)", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Tents = new MetricZ_MetricInt("tents", "Total tents in the world (tents and shelters)", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Stashes = new MetricZ_MetricInt("stashes", "Total buried stashes", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Gardens = new MetricZ_MetricInt("gardens", "Total garden plots", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Containers = new MetricZ_MetricInt("containers", "Total deployable containers (crate, barrel, chest)", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_CarParts = new MetricZ_MetricInt("car_parts", "Total car parts (doors & trunks)", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Items = new MetricZ_MetricInt(
+	    "items",
+	    "Total items (ItemBase) in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Food = new MetricZ_MetricInt(
+	    "food",
+	    "Total food items in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Bottles = new MetricZ_MetricInt(
+	    "bottles",
+	    "Total Bottle_Base (pot, cauldron, canister, etc.) in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Clothing = new MetricZ_MetricInt(
+	    "clothes",
+	    "Total clothes in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Boxes = new MetricZ_MetricInt(
+	    "boxes",
+	    "Total not Ammo Box_Base (NailBox, HeadlightH7_Box) in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Cars = new MetricZ_MetricInt(
+	    "cars",
+	    "Total cars in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Boats = new MetricZ_MetricInt(
+	    "boats",
+	    "Total boats in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Helicopters = new MetricZ_MetricInt(
+	    "helicopters",
+	    "Total helicopters in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_TerritoryFlags = new MetricZ_MetricInt(
+	    "territory_flags",
+	    "Total active bases (raised flagpole)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_BaseBuildings = new MetricZ_MetricInt(
+	    "base_buildings",
+	    "Total built player constructions (tower, fence, flag)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Tents = new MetricZ_MetricInt(
+	    "tents",
+	    "Total tents in the world (tents and shelters)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Stashes = new MetricZ_MetricInt(
+	    "stashes",
+	    "Total buried stashes",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Gardens = new MetricZ_MetricInt(
+	    "gardens",
+	    "Total garden plots",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Containers = new MetricZ_MetricInt(
+	    "containers",
+	    "Total deployable containers (crate, barrel, chest)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_CarParts = new MetricZ_MetricInt(
+	    "car_parts",
+	    "Total car parts (doors & trunks)",
+	    MetricZ_MetricType.GAUGE);
 
 	// Mining
-	static ref MetricZ_MetricInt s_MinedBushes = new MetricZ_MetricInt("mined_bushes", "Count of mined bushes", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_MinedRocks = new MetricZ_MetricInt("mined_rocks", "Count of mined rocks", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_MinedTrees = new MetricZ_MetricInt("mined_trees", "Count of mined trees", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_MinedBushes = new MetricZ_MetricInt(
+	    "mined_bushes",
+	    "Count of mined bushes",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_MinedRocks = new MetricZ_MetricInt(
+	    "mined_rocks",
+	    "Count of mined rocks",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_MinedTrees = new MetricZ_MetricInt(
+	    "mined_trees",
+	    "Count of mined trees",
+	    MetricZ_MetricType.COUNTER);
 
 	// Fishing
-	static ref MetricZ_MetricInt s_FishingAttempts = new MetricZ_MetricInt("fishing_attempts", "Total fishing attempts", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_FishingCatches = new MetricZ_MetricInt("fishing_catches", "Total fish caught", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_FishingAttempts = new MetricZ_MetricInt(
+	    "fishing_attempts",
+	    "Total fishing attempts",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_FishingCatches = new MetricZ_MetricInt(
+	    "fishing_catches",
+	    "Total fish caught",
+	    MetricZ_MetricType.COUNTER);
 
 	// Events
-	static ref MetricZ_MetricInt s_Corpses = new MetricZ_MetricInt("corpses", "Corpses tracked on server", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Artillery = new MetricZ_MetricInt("artillery_barrages", "Artillery barrages on server", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_CrashSites = new MetricZ_MetricInt("crash_sites", "Total crash sites (mi8, uh1y, santa sleigh)", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_GiftsUnpacked = new MetricZ_MetricInt("gifts_unpacked", "Gifts unpacked on server", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_Corpses = new MetricZ_MetricInt(
+	    "corpses",
+	    "Corpses tracked on server",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Artillery = new MetricZ_MetricInt(
+	    "artillery_barrages",
+	    "Artillery barrages on server",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_CrashSites = new MetricZ_MetricInt(
+	    "crash_sites",
+	    "Total crash sites (mi8, uh1y, santa sleigh)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_GiftsUnpacked = new MetricZ_MetricInt(
+	    "gifts_unpacked",
+	    "Gifts unpacked on server",
+	    MetricZ_MetricType.COUNTER);
 
 	// Weather
-	static ref MetricZ_MetricFloat m_Temperature = new MetricZ_MetricFloat("weather_temperature", "Center of world temperature in celsius with weather factors", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_TemperatureBase = new MetricZ_MetricFloat("weather_temperature_base", "Base world temperature in celsius", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_WindSpeed = new MetricZ_MetricFloat("weather_wind_speed", "Wind speed meters per second", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_WindDirection = new MetricZ_MetricFloat("weather_wind_direction", "Wind xz angle degrees", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_Rain = new MetricZ_MetricFloat("weather_rain", "Rain 0..1", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_Snow = new MetricZ_MetricFloat("weather_snow", "Snow 0..1", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_Fog = new MetricZ_MetricFloat("weather_fog", "Fog 0..1", MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat m_Clouds = new MetricZ_MetricFloat("weather_clouds", "Clouds 0..1", MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_Temperature = new MetricZ_MetricFloat(
+	    "weather_temperature",
+	    "Center of world temperature in celsius with weather factors",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_TemperatureBase = new MetricZ_MetricFloat(
+	    "weather_temperature_base",
+	    "Base world temperature in celsius",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_WindSpeed = new MetricZ_MetricFloat(
+	    "weather_wind_speed",
+	    "Wind speed meters per second",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_WindDirection = new MetricZ_MetricFloat(
+	    "weather_wind_direction",
+	    "Wind xz angle degrees",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_Rain = new MetricZ_MetricFloat(
+	    "weather_rain",
+	    "Rain 0..1",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_Snow = new MetricZ_MetricFloat(
+	    "weather_snow",
+	    "Snow 0..1",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_Fog = new MetricZ_MetricFloat(
+	    "weather_fog",
+	    "Fog 0..1",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricFloat m_Clouds = new MetricZ_MetricFloat(
+	    "weather_clouds",
+	    "Clouds 0..1",
+	    MetricZ_MetricType.GAUGE);
 
 	// --- Counters
-	static ref MetricZ_MetricInt s_PlayersSpawns = new MetricZ_MetricInt("players_spawns", "Total new players spawns in the world", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_PlayersDeaths = new MetricZ_MetricInt("players_deaths", "Total players deaths by combat", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_InfectedDeaths = new MetricZ_MetricInt("infected_deaths", "Total infected deaths by combat", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_AnimalsDeaths = new MetricZ_MetricInt("animals_deaths", "Total animal deaths by combat", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_CarsDestroys = new MetricZ_MetricInt("cars_destroyed", "Total cars destroyed", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_BoatsDestroys = new MetricZ_MetricInt("boats_destroyed", "Total boats destroyed", MetricZ_MetricType.COUNTER);
-	static ref MetricZ_MetricInt s_HelicoptersDestroys = new MetricZ_MetricInt("helicopters_destroyed", "Total helicopters destroyed", MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_PlayersSpawns = new MetricZ_MetricInt(
+	    "players_spawns",
+	    "Total new players spawns in the world",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_PlayersDeaths = new MetricZ_MetricInt(
+	    "players_deaths",
+	    "Total players deaths by combat",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_InfectedDeaths = new MetricZ_MetricInt(
+	    "infected_deaths",
+	    "Total infected deaths by combat",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_AnimalsDeaths = new MetricZ_MetricInt(
+	    "animals_deaths",
+	    "Total animal deaths by combat",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_CarsDestroys = new MetricZ_MetricInt(
+	    "cars_destroyed",
+	    "Total cars destroyed",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_BoatsDestroys = new MetricZ_MetricInt(
+	    "boats_destroyed",
+	    "Total boats destroyed",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_HelicoptersDestroys = new MetricZ_MetricInt(
+	    "helicopters_destroyed",
+	    "Total helicopters destroyed",
+	    MetricZ_MetricType.COUNTER);
 
 	/**
 	    \brief One-time initialization and label build.

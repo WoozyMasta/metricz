@@ -62,40 +62,118 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_InitTick = g_Game.GetTickTime(); // seconds
 
 		// vitals
-		m_IsLoaded = new MetricZ_MetricInt("player_loaded", "Is player loaded (extra labels holder)", MetricZ_MetricType.GAUGE);
-		m_Health = new MetricZ_MetricFloat("player_health", "Player health 0..1", MetricZ_MetricType.GAUGE);
-		m_Blood = new MetricZ_MetricFloat("player_blood", "Player blood 0..1", MetricZ_MetricType.GAUGE);
-		m_Shock = new MetricZ_MetricFloat("player_shock", "Player shock 0..1", MetricZ_MetricType.GAUGE);
-		m_Energy = new MetricZ_MetricFloat("player_energy", "Player energy 0..1", MetricZ_MetricType.GAUGE);
-		m_Water = new MetricZ_MetricFloat("player_water", "Player hydration 0..1", MetricZ_MetricType.GAUGE);
-		m_Toxicity = new MetricZ_MetricFloat("player_toxicity", "Player toxicity 0..1", MetricZ_MetricType.GAUGE);
-		m_TempC = new MetricZ_MetricFloat("player_temperature_celsius", "Player body temperature in celsius", MetricZ_MetricType.GAUGE);
-		m_Weight = new MetricZ_MetricFloat("player_weight", "Player total weight in grams", MetricZ_MetricType.GAUGE);
-		m_Wetness = new MetricZ_MetricFloat("player_wetness", "Player wetness 0..1", MetricZ_MetricType.GAUGE);
-		m_LifeSeconds = new MetricZ_MetricFloat("player_lifetime_seconds", "Player lifetime since spawn or load in seconds", MetricZ_MetricType.GAUGE);
+		m_IsLoaded = new MetricZ_MetricInt(
+		    "player_loaded",
+		    "Is player loaded (extra labels holder)",
+		    MetricZ_MetricType.GAUGE);
+		m_Health = new MetricZ_MetricFloat(
+		    "player_health",
+		    "Player health 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Blood = new MetricZ_MetricFloat(
+		    "player_blood",
+		    "Player blood 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Shock = new MetricZ_MetricFloat(
+		    "player_shock",
+		    "Player shock 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Energy = new MetricZ_MetricFloat(
+		    "player_energy",
+		    "Player energy 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Water = new MetricZ_MetricFloat(
+		    "player_water",
+		    "Player hydration 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Toxicity = new MetricZ_MetricFloat(
+		    "player_toxicity",
+		    "Player toxicity 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_TempC = new MetricZ_MetricFloat(
+		    "player_temperature_celsius",
+		    "Player body temperature in celsius",
+		    MetricZ_MetricType.GAUGE);
+		m_Weight = new MetricZ_MetricFloat(
+		    "player_weight",
+		    "Player total weight in grams",
+		    MetricZ_MetricType.GAUGE);
+		m_Wetness = new MetricZ_MetricFloat(
+		    "player_wetness",
+		    "Player wetness 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_LifeSeconds = new MetricZ_MetricFloat(
+		    "player_lifetime_seconds",
+		    "Player lifetime since spawn or load in seconds",
+		    MetricZ_MetricType.GAUGE);
 
 		// position
 		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
-			m_PosX = new MetricZ_MetricFloat("player_position_x", "Player world X", MetricZ_MetricType.GAUGE);
-			m_PosY = new MetricZ_MetricFloat("player_position_y", "Player world Y", MetricZ_MetricType.GAUGE);
-			m_PosZ = new MetricZ_MetricFloat("player_position_z", "Player world Z", MetricZ_MetricType.GAUGE);
+			m_PosX = new MetricZ_MetricFloat(
+			    "player_position_x",
+			    "Player world X",
+			    MetricZ_MetricType.GAUGE);
+			m_PosY = new MetricZ_MetricFloat(
+			    "player_position_y",
+			    "Player world Y",
+			    MetricZ_MetricType.GAUGE);
+			m_PosZ = new MetricZ_MetricFloat(
+			    "player_position_z",
+			    "Player world Z",
+			    MetricZ_MetricType.GAUGE);
 		}
 
 		// extra stats
-		m_AgentsCount = new MetricZ_MetricInt("player_agents_active", "Number of active disease agents affecting the player", MetricZ_MetricType.GAUGE);
-		m_BleedingSources = new MetricZ_MetricInt("player_bleeding_active", "Number of active bleeding sources on player", MetricZ_MetricType.GAUGE);
-		m_ImmunityBoosted = new MetricZ_MetricInt("player_immunity_boosted", "Immunity boosted (0/1)", MetricZ_MetricType.GAUGE);
-		m_Unconscious = new MetricZ_MetricInt("player_unconscious", "Is unconscious (0/1)", MetricZ_MetricType.GAUGE);
-		m_Restrained = new MetricZ_MetricInt("player_restrained", "Is restrained (0/1)", MetricZ_MetricType.GAUGE);
-		m_ThirdPerson = new MetricZ_MetricInt("player_third_person", "Is in third person (0/1)", MetricZ_MetricType.GAUGE);
-		m_GodMode = new MetricZ_MetricInt("player_godmode", "Damage disabled (0/1)", MetricZ_MetricType.GAUGE);
+		m_AgentsCount = new MetricZ_MetricInt(
+		    "player_agents_active",
+		    "Number of active disease agents affecting the player",
+		    MetricZ_MetricType.GAUGE);
+		m_BleedingSources = new MetricZ_MetricInt(
+		    "player_bleeding_active",
+		    "Number of active bleeding sources on player",
+		    MetricZ_MetricType.GAUGE);
+		m_ImmunityBoosted = new MetricZ_MetricInt(
+		    "player_immunity_boosted",
+		    "Immunity boosted (0/1)",
+		    MetricZ_MetricType.GAUGE);
+		m_Unconscious = new MetricZ_MetricInt(
+		    "player_unconscious",
+		    "Is unconscious (0/1)",
+		    MetricZ_MetricType.GAUGE);
+		m_Restrained = new MetricZ_MetricInt(
+		    "player_restrained",
+		    "Is restrained (0/1)",
+		    MetricZ_MetricType.GAUGE);
+		m_ThirdPerson = new MetricZ_MetricInt(
+		    "player_third_person",
+		    "Is in third person (0/1)",
+		    MetricZ_MetricType.GAUGE);
+		m_GodMode = new MetricZ_MetricInt(
+		    "player_godmode",
+		    "Damage disabled (0/1)",
+		    MetricZ_MetricType.GAUGE);
 
 		// analytics
-		m_StatPlaytimeSeconds = new MetricZ_MetricFloat("player_stat_playtime_seconds", "Analytics playtime", MetricZ_MetricType.GAUGE);
-		m_StatDistanceMeters = new MetricZ_MetricFloat("player_stat_distance_meters", "Analytics distance", MetricZ_MetricType.GAUGE);
-		m_StatLongestSurvivorHitMeters = new MetricZ_MetricFloat("player_stat_longest_survivor_hit_m", "Analytics longest survivor hit", MetricZ_MetricType.GAUGE);
-		m_StatPlayersKilledTotal = new MetricZ_MetricInt("player_stat_players_killed", "Analytics players killed total", MetricZ_MetricType.COUNTER);
-		m_StatInfectedKilledTotal = new MetricZ_MetricInt("player_stat_infected_killed", "Analytics infected killed total", MetricZ_MetricType.COUNTER);
+		m_StatPlaytimeSeconds = new MetricZ_MetricFloat(
+		    "player_stat_playtime_seconds",
+		    "Analytics playtime",
+		    MetricZ_MetricType.GAUGE);
+		m_StatDistanceMeters = new MetricZ_MetricFloat(
+		    "player_stat_distance_meters",
+		    "Analytics distance",
+		    MetricZ_MetricType.GAUGE);
+		m_StatLongestSurvivorHitMeters = new MetricZ_MetricFloat(
+		    "player_stat_longest_survivor_hit_m",
+		    "Analytics longest survivor hit",
+		    MetricZ_MetricType.GAUGE);
+		m_StatPlayersKilledTotal = new MetricZ_MetricInt(
+		    "player_stat_players_killed",
+		    "Analytics players killed total",
+		    MetricZ_MetricType.COUNTER);
+		m_StatInfectedKilledTotal = new MetricZ_MetricInt(
+		    "player_stat_infected_killed",
+		    "Analytics infected killed total",
+		    MetricZ_MetricType.COUNTER);
 	}
 
 	/**

@@ -29,17 +29,41 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 	*/
 	void MetricZ_TransportMetrics()
 	{
-		m_Health = new MetricZ_MetricFloat("transport_health", "Transport health 0..1", MetricZ_MetricType.GAUGE);
-		m_Passengers = new MetricZ_MetricInt("transport_crew_occupied", "Number of occupied seats in transport", MetricZ_MetricType.GAUGE);
-		m_SpeedMS = new MetricZ_MetricFloat("transport_speed", "Transport speed, m/s", MetricZ_MetricType.GAUGE);
-		m_EngineOn = new MetricZ_MetricInt("transport_engine_on", "Engine is on (0/1)", MetricZ_MetricType.GAUGE);
-		m_FuelFraction = new MetricZ_MetricFloat("transport_fuel_fraction", "Fuel fraction 0..1", MetricZ_MetricType.GAUGE);
+		m_Health = new MetricZ_MetricFloat(
+		    "transport_health",
+		    "Transport health 0..1",
+		    MetricZ_MetricType.GAUGE);
+		m_Passengers = new MetricZ_MetricInt(
+		    "transport_crew_occupied",
+		    "Number of occupied seats in transport",
+		    MetricZ_MetricType.GAUGE);
+		m_SpeedMS = new MetricZ_MetricFloat(
+		    "transport_speed",
+		    "Transport speed, m/s",
+		    MetricZ_MetricType.GAUGE);
+		m_EngineOn = new MetricZ_MetricInt(
+		    "transport_engine_on",
+		    "Engine is on (0/1)",
+		    MetricZ_MetricType.GAUGE);
+		m_FuelFraction = new MetricZ_MetricFloat(
+		    "transport_fuel_fraction",
+		    "Fuel fraction 0..1",
+		    MetricZ_MetricType.GAUGE);
 
 		// position
 		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
-			m_PosX = new MetricZ_MetricFloat("transport_position_x", "Transport world X", MetricZ_MetricType.GAUGE);
-			m_PosY = new MetricZ_MetricFloat("transport_position_y", "Transport world Y", MetricZ_MetricType.GAUGE);
-			m_PosZ = new MetricZ_MetricFloat("transport_position_z", "Transport world Z", MetricZ_MetricType.GAUGE);
+			m_PosX = new MetricZ_MetricFloat(
+			    "transport_position_x",
+			    "Transport world X",
+			    MetricZ_MetricType.GAUGE);
+			m_PosY = new MetricZ_MetricFloat(
+			    "transport_position_y",
+			    "Transport world Y",
+			    MetricZ_MetricType.GAUGE);
+			m_PosZ = new MetricZ_MetricFloat(
+			    "transport_position_z",
+			    "Transport world Z",
+			    MetricZ_MetricType.GAUGE);
 		}
 	}
 

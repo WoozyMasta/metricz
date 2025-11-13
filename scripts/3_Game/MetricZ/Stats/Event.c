@@ -12,7 +12,10 @@ class MetricZ_EventStats
 {
 	protected static ref map<EventType, string> s_EventNames;
 	protected static ref map<EventType, int> s_EventsRegistry = new map<EventType, int>(); // eventTypeId -> count
-	protected static ref MetricZ_MetricInt s_EventTotal = new MetricZ_MetricInt("events", "Total events by EventType", MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_EventTotal = new MetricZ_MetricInt(
+	    "events",
+	    "Total events by EventType",
+	    MetricZ_MetricType.COUNTER);
 
 	/**
 	    \brief Increment counter for an EventType.

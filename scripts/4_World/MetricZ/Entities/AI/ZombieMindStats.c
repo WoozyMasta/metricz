@@ -14,7 +14,10 @@ class MetricZ_ZombieMindStats
 	protected static ref map<int, int> s_StareStorage = new map<int, int>(); //!< State -> current infected count.
 	protected static ref map<int, string> s_MindStates; //!< State -> human-readable name. Built lazily.
 
-	protected static ref MetricZ_MetricInt s_Gauge = new MetricZ_MetricInt("infected_mind_state", "Infected count by mind state", MetricZ_MetricType.GAUGE);
+	protected static ref MetricZ_MetricInt s_Gauge = new MetricZ_MetricInt(
+	    "infected_mind_state",
+	    "Infected count by mind state",
+	    MetricZ_MetricType.GAUGE);
 
 	/**
 	    \brief Fill name map once.

@@ -11,7 +11,10 @@
 class MetricZ_RpcStats
 {
 	protected static ref map<int, int> s_InputRPCsRegistry = new map<int, int>(); // rpc_type -> count
-	protected static ref MetricZ_MetricInt s_RpcTotal = new MetricZ_MetricInt("rpc_input", "Total input RPC calls", MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_RpcTotal = new MetricZ_MetricInt(
+	    "rpc_input",
+	    "Total input RPC calls",
+	    MetricZ_MetricType.COUNTER);
 
 	/**
 	    \brief Increment counter for an RPC type.
