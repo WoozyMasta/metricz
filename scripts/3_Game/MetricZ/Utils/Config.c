@@ -29,6 +29,7 @@ class MetricZ_Config
 	static bool s_DisableWeaponMetrics;
 	static bool s_DisableTerritoryMetrics;
 	static bool s_EnableCoordinatesMetrics;
+	static bool s_EnablePlayerDamageZonesMetrics;
 	static bool s_DisableRPCMetrics;
 	static bool s_DisableEventMetrics;
 
@@ -64,6 +65,9 @@ class MetricZ_Config
 
 		// Enable player coordinate metrics (off by default)
 		s_EnableCoordinatesMetrics = Toggle("EnableCoordinatesMetrics", "enable-coordinates");
+
+		// Enable player-related metrics collection
+		s_EnablePlayerDamageZonesMetrics = Toggle("EnablePlayerDamageZonesMetrics", "enable-player-zones");
 
 		// Disable RPC metrics collection
 		s_DisableRPCMetrics = Toggle("DisableRPCMetrics", "disable-rpc");

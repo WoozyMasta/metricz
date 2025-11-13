@@ -33,6 +33,9 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 	protected ref MetricZ_MetricFloat m_Wetness;
 	protected ref MetricZ_MetricFloat m_LifeSeconds;
 
+	// damage zones
+	protected ref map<string, ref MetricZ_MetricFloat> m_ZoneHealth;
+
 	// position
 	protected ref MetricZ_MetricFloat m_PosX;
 	protected ref MetricZ_MetricFloat m_PosY;
@@ -123,6 +126,23 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_Wetness);
 		m_Registry.Insert(m_LifeSeconds);
 
+		// zones registry
+		if (MetricZ_Config.s_EnablePlayerDamageZonesMetrics) {
+			m_ZoneHealth = new map<string, ref MetricZ_MetricFloat>();
+
+			array<string> damageZones = new array<string>();
+			m_Player.GetDamageZones(damageZones);
+
+			foreach (string zone : damageZones) {
+				ref MetricZ_MetricFloat zoneMetric = new MetricZ_MetricFloat(
+				    "player_health_zone",
+				    "Player damage zone health 0..1",
+				    MetricZ_MetricType.GAUGE);
+
+				m_ZoneHealth.Insert(zone, zoneMetric);
+			}
+		}
+
 		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
 			m_Registry.Insert(m_PosX);
 			m_Registry.Insert(m_PosY);
@@ -171,6 +191,12 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_Wetness.Set(m_Player.GetStatWet().Get());
 		m_LifeSeconds.Set(g_Game.GetTickTime() - m_InitTick);
 
+		// zones
+		if (MetricZ_Config.s_EnablePlayerDamageZonesMetrics && m_ZoneHealth) {
+			foreach (string zone, MetricZ_MetricFloat metric : m_ZoneHealth)
+				metric.Set(m_Player.GetHealth01(zone, "Health"));
+		}
+
 		// position
 		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
 			vector pos = m_Player.GetPosition();
@@ -196,6 +222,22 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_StatInfectedKilledTotal.Set(m_Player.StatGet(AnalyticsManagerServer.STAT_INFECTED_KILLED));
 	}
 
+	int ZoneCount()
+	{
+		if (!m_ZoneHealth)
+			return 0;
+
+		return m_ZoneHealth.Count();
+	}
+
+	MetricZ_MetricBase ZoneMetricAt(int idx)
+	{
+		if (!m_ZoneHealth || idx < 0 || idx >= m_ZoneHealth.Count())
+			return null;
+
+		return m_ZoneHealth.GetElement(idx);
+	}
+
 	/**
 	    \brief Build and cache player label sets.
 	*/
@@ -208,11 +250,25 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		if (!identity)
 			return;
 
+		// base labels
 		map<string, string> labels = new map<string, string>();
 
 		labels.Insert("steam_id", identity.GetPlainId());
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
 
+		// zones labels
+		if (MetricZ_Config.s_EnablePlayerDamageZonesMetrics && m_ZoneHealth) {
+			foreach (string zone, MetricZ_MetricFloat metric : m_ZoneHealth) {
+				map<string, string> zoneLabels = new map<string, string>();
+				foreach (string k, string v : labels)
+					zoneLabels.Insert(k, v);
+
+				zoneLabels.Insert("zone", zone);
+				metric.SetLabels(MetricZ_LabelUtils.MakeLabels(zoneLabels));
+			}
+		}
+
+		// extra labels
 		string playerType = m_Player.GetType();
 		playerType.TrimInPlace();
 

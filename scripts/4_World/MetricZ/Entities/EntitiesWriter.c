@@ -45,12 +45,38 @@ class MetricZ_EntitiesWriter
 		if (pms.Count() == 0)
 			return;
 
+		// regular per-index metrics
 		int metricsCount = pms[0].Count();
 		for (int i = 0; i < metricsCount; i++) {
 			pms[0].WriteHeaderAt(fh, i);
 
 			foreach (MetricZ_PlayerMetrics pmCurrent : pms)
 				pmCurrent.FlushAt(fh, i);
+		}
+
+		// damage zones family: one header, then all samples
+		if (MetricZ_Config.s_EnablePlayerDamageZonesMetrics) {
+			MetricZ_MetricBase headerMetric = null;
+
+			foreach (MetricZ_PlayerMetrics pmH : pms) {
+				if (pmH.ZoneCount() > 0) {
+					headerMetric = pmH.ZoneMetricAt(0);
+					break;
+				}
+			}
+
+			if (headerMetric) {
+				headerMetric.WriteHeaders(fh); // "# HELP" + "# TYPE" once
+
+				foreach (MetricZ_PlayerMetrics pmZ : pms) {
+					int metricsZoneCount = pmZ.ZoneCount();
+					for (int z = 0; z < metricsZoneCount; z++) {
+						MetricZ_MetricBase zm = pmZ.ZoneMetricAt(z);
+						if (zm)
+							zm.Flush(fh); // uses metric's own labels
+					}
+				}
+			}
 		}
 
 #ifdef DIAG

@@ -36,6 +36,8 @@ Each entry below shows:
   Disable territory flag metrics collection
 * **`MetricZ_EnableCoordinatesMetrics`** (`-metricz-enable-coordinates`) —
   Enable player coordinate metrics (off by default)
+* **`MetricZ_EnablePlayerDamageZonesMetrics`** (`-metricz-enable-player-zones`) —
+  Enable player-related metrics collection
 * **`MetricZ_DisableRPCMetrics`** (`-metricz-disable-rpc`) —
   Disable RPC metrics collection
 * **`MetricZ_DisableEventMetrics`** (`-metricz-disable-event`) —

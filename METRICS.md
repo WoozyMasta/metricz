@@ -75,6 +75,8 @@ DayZ server. Each metric includes its identifier, type
   Analytics players killed total
 * **`dayz_metricz_player_stat_infected_killed_total`** (`COUNTER`) —
   Analytics infected killed total
+* **`dayz_metricz_player_health_zone`** (`GAUGE`) —
+  Player damage zone health 0..1
 
 ## [Entities/Territory/Metrics.c](./scripts/4_World/MetricZ/Entities/Territory/Metrics.c)
 
