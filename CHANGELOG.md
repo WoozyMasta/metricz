@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning][].
   `p` or `n` prefix ⚠️
 * fixed `hash` label in transport metrics,
   previously it was not unique and changed between server restarts
+* earlier initialization of the metrics store to avoid collisions
 
 ## [0.1.2][] - 2025-11-09
 

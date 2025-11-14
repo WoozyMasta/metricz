@@ -17,11 +17,11 @@ modded class MissionServer : MissionBase
 	*/
 	override void OnInit()
 	{
-		super.OnInit();
-
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
 		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
+
+		super.OnInit();
 
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(this.MetricZ_Update, MetricZ_Config.s_InitDelayMs, false);
 	}
