@@ -55,9 +55,7 @@ modded class AnimalBase
 
 	/**
 	    \brief Public helper for MetricZ: returns cached canonical label name for this animal.
-	    \details
-	      You can override this for set some beauty label name for your animal.
-	      Must be lower_underscored string.
+	    \details You can override this for set some beauty label name for your animal.
 	*/
 	string MetricZ_GetAnimalName()
 	{

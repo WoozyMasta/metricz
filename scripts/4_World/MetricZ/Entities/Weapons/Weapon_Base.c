@@ -53,9 +53,7 @@ modded class Weapon_Base
 
 	/**
 	    \brief Public helper for MetricZ: returns cached label name for this animal.
-	    \details
-	      You can override this for set some beauty label name for your weapon.
-	      Must be lower_underscored string.
+	    \details You can override this for set some beauty label name for your weapon.
 	*/
 	string MetricZ_GetWeaponName()
 	{
