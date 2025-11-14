@@ -126,11 +126,15 @@ modded class MissionServer : MissionBase
 #endif
 
 		// infected mind state
-		MetricZ_ZombieMindStats.Flush(fh);
+		MetricZ_ZombieStats.Flush(fh);
 
 		// per-player
 		if (!MetricZ_Config.s_DisablePlayerMetrics)
 			MetricZ_EntitiesWriter.FlushPlayers(fh);
+
+		// per-animal type
+		if (!MetricZ_Config.s_DisableAnimalMetrics)
+			MetricZ_AnimalStats.Flush(fh);
 
 		// per-vehicle
 		if (!MetricZ_Config.s_DisableTransportMetrics)

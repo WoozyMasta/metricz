@@ -93,9 +93,17 @@ class MetricZ_Storage
 	    "infected",
 	    "Total infected in the world",
 	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_InfectedCorpses = new MetricZ_MetricInt(
+	    "infected_dead_bodies",
+	    "Infected death corpses count in the world",
+	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Animals = new MetricZ_MetricInt(
 	    "animals",
 	    "Total animals in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_AnimalsCorpses = new MetricZ_MetricInt(
+	    "animals_dead_bodies",
+	    "Animals death corpses count in the world",
 	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_PathGraphUpdates = new MetricZ_MetricInt(
 	    "path_graph_updates",
@@ -328,7 +336,9 @@ class MetricZ_Storage
 		s_Registry.Insert(s_PlayersOnline);
 		s_Registry.Insert(s_MaxPlayers);
 		s_Registry.Insert(s_Infected);
+		s_Registry.Insert(s_InfectedCorpses);
 		s_Registry.Insert(s_Animals);
+		s_Registry.Insert(s_AnimalsCorpses);
 		s_Registry.Insert(s_PathGraphUpdates);
 
 		// Weapon related

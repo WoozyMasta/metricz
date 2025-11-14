@@ -16,10 +16,17 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_rpc_input_total`** (`COUNTER`) —
   Total input RPC calls
 
-## [Entities/AI/ZombieMindStats.c](./scripts/4_World/MetricZ/Entities/AI/ZombieMindStats.c)
+## [Entities/AI/AnimalStats.c](./scripts/4_World/MetricZ/Entities/AI/AnimalStats.c)
+
+* **`dayz_metricz_animals_by_type`** (`GAUGE`) —
+  Animals in world grouped by canonical type
+
+## [Entities/AI/ZombieStats.c](./scripts/4_World/MetricZ/Entities/AI/ZombieStats.c)
 
 * **`dayz_metricz_infected_mind_state`** (`GAUGE`) —
   Infected count by mind state
+* **`dayz_metricz_infected_by_type`** (`GAUGE`) —
+  Infected count by zombie type
 
 ## [Entities/Player/Metrics.c](./scripts/4_World/MetricZ/Entities/Player/Metrics.c)
 
@@ -100,12 +107,14 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_transport_position_z`** (`GAUGE`) —
   Transport world Z
 
-## [Entities/Weapons/Metrics.c](./scripts/4_World/MetricZ/Entities/Weapons/Metrics.c)
+## [Entities/Weapons/WeaponStats.c](./scripts/4_World/MetricZ/Entities/Weapons/WeaponStats.c)
 
 * **`dayz_metricz_weapon_shots_total`** (`COUNTER`) —
   Shots by weapon base type
 * **`dayz_metricz_weapon_shots_all_total`** (`COUNTER`) —
   Total shots on server
+* **`dayz_metricz_weapons_by_type`** (`GAUGE`) —
+  Weapons in world grouped by canonical type
 
 ## [Storage.c](./scripts/4_World/MetricZ/Storage.c)
 
@@ -141,8 +150,12 @@ DayZ server. Each metric includes its identifier, type
   Configured max players
 * **`dayz_metricz_infected`** (`GAUGE`) —
   Total infected in the world
+* **`dayz_metricz_infected_dead_bodies`** (`GAUGE`) —
+  Infected death corpses count in the world
 * **`dayz_metricz_animals`** (`GAUGE`) —
   Total animals in the world
+* **`dayz_metricz_animals_dead_bodies`** (`GAUGE`) —
+  Animals death corpses count in the world
 * **`dayz_metricz_path_graph_updates_total`** (`COUNTER`) —
   Total updates path graph regions by object in the world
 * **`dayz_metricz_weapons`** (`GAUGE`) —

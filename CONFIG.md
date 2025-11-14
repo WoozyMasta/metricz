@@ -28,6 +28,10 @@ Each entry below shows:
   Interval between metric updates in seconds (default 15, min 1)
 * **`MetricZ_DisablePlayerMetrics`** (`-metricz-disable-player`) —
   Disable player-related metrics collection
+* **`MetricZ_DisableZombieMetrics`** (`-metricz-disable-zombie`) —
+  Disable zombie per-type and mind states metrics collection
+* **`MetricZ_DisableAnimalMetrics`** (`-metricz-disable-animal`) —
+  Disable animal per-type metrics collection
 * **`MetricZ_DisableTransportMetrics`** (`-metricz-disable-transport`) —
   Disable vehicle and transport metrics collection
 * **`MetricZ_DisableWeaponMetrics`** (`-metricz-disable-weapon`) —

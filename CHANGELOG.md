@@ -20,8 +20,30 @@ and this project adheres to [Semantic Versioning][].
 * internal labels per metric with helpers `SetLabels()`, `MakeLabels()`
   and `GetLabels()`
 
+#### New metrics
+
+* **`dayz_metricz_animals_by_type`** (`GAUGE`) —
+  Animals in world grouped by canonical type
+* **`dayz_metricz_animals_dead_bodies`** (`GAUGE`) —
+  Animals death corpses count in the world
+* **`dayz_metricz_infected_by_type`** (`GAUGE`) —
+  Infected count by zombie type
+* **`dayz_metricz_infected_dead_bodies`** (`GAUGE`) —
+  Infected death corpses count in the world
+* **`dayz_metricz_weapons_by_type`** (`GAUGE`) —
+  Weapons in world grouped by canonical type
+
+#### New options
+
+* **`MetricZ_DisableZombieMetrics`** (`-metricz-disable-zombie`) —
+  Disable zombie per-type and mind states metrics collection
+* **`MetricZ_DisableAnimalMetrics`** (`-metricz-disable-animal`) —
+  Disable animal per-type metrics collection
+
 ### Changed
 
+* class `MetricZ_ZombieMindStats` renamed to `MetricZ_ZombieStats` and now
+  hold mind state and per type metrics
 * all metrics will now always have base labels if they have not been specified
 * `MetricZ_LabelUtils::MakeLabels()` map with labels now is optional parameter
 

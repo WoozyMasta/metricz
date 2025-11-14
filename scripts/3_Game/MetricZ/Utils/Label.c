@@ -13,9 +13,6 @@ class MetricZ_LabelUtils
 	protected static bool s_BaseLabelReady;
 	protected static string s_BaseLabel; // raw: key="val",key2="val2"
 
-	// cache for canonical weapon names used in labels: original -> canonical
-	protected static ref map<string, string> s_WeaponLabelNames = new map<string, string>();
-
 	/**
 	    \brief Escape backslash and quote for Prometheus label values.
 	    \param s Input string
@@ -127,79 +124,6 @@ class MetricZ_LabelUtils
 
 		s_BaseLabelReady = true;
 		return s_BaseLabel;
-	}
-
-	/**
-	    \brief Canonical weapon base name used in labels.
-	    \details
-	      - remove any "sawedoff" token (case-insensitive, anywhere)
-	      - collapse "__" -> "_", then trim leading/trailing "_"
-	      - cut suffix after last "_"
-	      - lowercase; fallback to original lowercase if empty
-	*/
-	static string WeaponLabelName(string type)
-	{
-		if (type == string.Empty)
-			return type;
-
-		// cache hit
-		string cached;
-		if (s_WeaponLabelNames && s_WeaponLabelNames.Find(type, cached))
-			return cached;
-
-		string s = type;
-
-		// remove all case-insensitive "sawedoff" occurrences
-		string pat = "sawedoff";
-		string low = s; low.ToLower();
-		int plen = pat.Length();
-		int pos = low.IndexOf(pat);
-		while (pos != -1) {
-			// delete substring [pos, pos+plen)
-			string pre = s.Substring(0, pos);
-			string post = s.Substring(pos + plen, s.Length() - (pos + plen));
-			s = pre + post;
-
-			// recalc lowercase view
-			low = s; low.ToLower();
-			pos = low.IndexOf(pat);
-		}
-
-		// collapse repeated underscores
-		while (s.Contains("__"))
-			s.Replace("__", "_");
-
-		// trim leading underscores
-		while (s.Length() > 0 && s.Get(0) == "_")
-			s = s.Substring(1, s.Length() - 1);
-
-		// trim trailing underscores
-		while (s.Length() > 0 && s.Get(s.Length() - 1) == "_")
-			s = s.Substring(0, s.Length() - 1);
-
-		// cut after last underscore (drop variant)
-		if (s != string.Empty) {
-			int last = s.LastIndexOf("_");
-			if (last != -1) {
-				if (last > 0)
-					s = s.Substring(0, last);
-				else
-					s = "";
-			}
-		}
-
-		// fallback
-		if (s == string.Empty)
-			s = type;
-
-		s.ToLower();
-
-		// cache store
-		if (!s_WeaponLabelNames)
-			s_WeaponLabelNames = new map<string, string>();
-		s_WeaponLabelNames.Set(type, s);
-
-		return s;
 	}
 
 	/**

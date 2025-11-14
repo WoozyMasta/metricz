@@ -25,6 +25,8 @@ class MetricZ_Config
 	static int s_InitDelayMs = INIT_DELAY;
 	static int s_ScrapeIntervalMs = SCRAPE_INTERVAL;
 	static bool s_DisablePlayerMetrics;
+	static bool s_DisableZombieMetrics;
+	static bool s_DisableAnimalMetrics;
 	static bool s_DisableTransportMetrics;
 	static bool s_DisableWeaponMetrics;
 	static bool s_DisableTerritoryMetrics;
@@ -52,6 +54,12 @@ class MetricZ_Config
 
 		// Disable player-related metrics collection
 		s_DisablePlayerMetrics = Toggle("DisablePlayerMetrics", "disable-player");
+
+		// Disable zombie per-type and mind states metrics collection
+		s_DisableZombieMetrics = Toggle("DisableZombieMetrics", "disable-zombie");
+
+		// Disable animal per-type metrics collection
+		s_DisableAnimalMetrics = Toggle("DisableAnimalMetrics", "disable-animal");
 
 		// Disable vehicle and transport metrics collection
 		s_DisableTransportMetrics = Toggle("DisableTransportMetrics", "disable-transport");
