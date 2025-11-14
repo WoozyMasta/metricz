@@ -43,9 +43,13 @@ and this project adheres to [Semantic Versioning][].
 ### Changed
 
 * class `MetricZ_ZombieMindStats` renamed to `MetricZ_ZombieStats` and now
-  hold mind state and per type metrics
+  hold mind state and per type metrics ⚠️
 * all metrics will now always have base labels if they have not been specified
 * `MetricZ_LabelUtils::MakeLabels()` map with labels now is optional parameter
+* `MetricZ_LabelUtils::PersistentHash()` now return hash integer without
+  `p` or `n` prefix ⚠️
+* fixed `hash` label in transport metrics,
+  previously it was not unique and changed between server restarts
 
 ## [0.1.2][] - 2025-11-09
 

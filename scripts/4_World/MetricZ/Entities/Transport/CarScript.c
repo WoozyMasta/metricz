@@ -13,6 +13,23 @@ modded class CarScript
 	protected ref MetricZ_TransportMetrics m_MetricZ;
 
 	/**
+	    \brief Register loaded form save car in transport registry.
+	*/
+	override void EEOnAfterLoad()
+	{
+		super.EEOnAfterLoad();
+
+		if (MetricZ_Config.s_DisableTransportMetrics)
+			return;
+
+		if (!m_MetricZ)
+			m_MetricZ = new MetricZ_TransportMetrics();
+
+		// Init metrics for a persistent transport loaded from save with the actual persistence hash.
+		m_MetricZ.Init(this);
+	}
+
+	/**
 	    \brief Register car in transport registry and create metrics.
 	*/
 	override void EEInit()
@@ -25,10 +42,13 @@ modded class CarScript
 		MetricZ_Storage.s_Cars.Inc();
 		MetricZ_TransportRegistry.Register(this);
 
-		if (!m_MetricZ) {
+		if (!m_MetricZ)
 			m_MetricZ = new MetricZ_TransportMetrics();
-			m_MetricZ.Init(this);
-		}
+
+		// Scheduled init of metrics for the created transport.
+		// In this state, the persistence hash is not guaranteed and must be loaded later.
+		// However, if the transport was not loaded but created via debug, this is the only reliable place for integration.
+		m_MetricZ.InitLater(this);
 	}
 
 	/**

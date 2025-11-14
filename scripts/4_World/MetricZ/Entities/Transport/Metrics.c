@@ -72,10 +72,33 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 	*/
 	void Init(Transport transport)
 	{
-		if (!transport || m_Registry.Count() > 0)
-			return;
+		if (transport) {
+			m_Transport = transport;
+			InitMetricsRegistry();
+		}
+	}
 
-		m_Transport = transport;
+	/**
+	    \brief One-time registry fill called later.
+	*/
+	void InitLater(Transport transport)
+	{
+		if (transport) {
+			m_Transport = transport;
+			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
+			    InitMetricsRegistry,
+			    MetricZ_Config.s_ScrapeIntervalMs,
+			    false);
+		}
+	}
+
+	/**
+	    \brief One-time registry fill.
+	*/
+	protected void InitMetricsRegistry()
+	{
+		if (!m_Transport || m_Transport.IsDamageDestroyed() || m_Registry.Count() > 0)
+			return;
 
 		m_Registry.Insert(m_Health);
 		m_Registry.Insert(m_Passengers);
@@ -91,7 +114,6 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 
 		SetLabels();
 	}
-
 
 	/**
 	    \brief Update all metrics from the transport state.
@@ -170,7 +192,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 
 		labels.Insert("class", cls);
 		labels.Insert("type", type);
-		labels.Insert("hash", MetricZ_LabelUtils.PersistentHash(m_Transport));
+		labels.Insert("hash", MetricZ_LabelUtils.PersistentHash(m_Transport).ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
 	}

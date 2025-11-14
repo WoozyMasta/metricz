@@ -29,16 +29,16 @@ class MetricZ_LabelUtils
 	}
 
 	/**
-	    \brief Generate stable hash string from entity persistent ID.
+	    \brief Generate stable hash int from entity persistent ID.
 	    \details Combines four persistent-ID ints and hashes them.
 	             Falls back to a pseudo-unique hash for non-persistent entities.
 	    \param entity EntityAI with persistence
-	    \return \p string hash like "p:-123456789" or "n:987654321"
+	    \return \p int hash like -123456789 or 987654321
 	*/
-	static string PersistentHash(EntityAI entity)
+	static int PersistentHash(EntityAI entity)
 	{
 		if (!entity)
-			return "none";
+			return 0;
 
 		string seed;
 		int p1, p2, p3, p4;
@@ -47,11 +47,11 @@ class MetricZ_LabelUtils
 		// Non-persistent objects assign random but consistent per runtime
 		if (p1 == 0 && p2 == 0 && p3 == 0 && p4 == 0) {
 			seed = entity.GetType() + "_" + Math.RandomInt(1, int.MAX).ToString();
-			return "n:" + seed.Hash().ToString();
+			return seed.Hash();
 		}
 
 		seed = p1.ToString() + "_" + p2.ToString() + "_" + p3.ToString() + "_" + p4.ToString();
-		return "p:" + seed.Hash().ToString();
+		return seed.Hash();
 	}
 
 	/**
