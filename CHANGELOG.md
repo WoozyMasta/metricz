@@ -17,8 +17,9 @@ and this project adheres to [Semantic Versioning][].
 
 ### Added
 
-* internal labels per metric with helpers `SetLabels()`, `MakeLabels()`
-  and `GetLabels()`
+* internal labels per metric in `MetricZ_MetricBase` with helpers
+  `SetLabels()`,`MakeLabels()`, `MakeLabel()` and getters
+  `GetLabels()`, `GetLabelsRaw()` and `HasLabels()`
 
 #### New metrics
 

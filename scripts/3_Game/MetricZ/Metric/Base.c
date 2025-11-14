@@ -65,6 +65,21 @@ class MetricZ_MetricBase
 	}
 
 	/**
+	    \brief Build and set labels from a single key/value pair.
+	    \details
+	      Equivalent to MakeLabels(...) with a one-element map:
+	        { key = value } plus base labels {world,host,instance_id}.
+	    \param key   Label key (e.g. "weapon")
+	    \param value Label value (will be escaped inside MakeLabels)
+	*/
+	void MakeLabel(string key, string value)
+	{
+		map<string, string> labels = new map<string, string>();
+		labels.Insert(key, value);
+		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+	}
+
+	/**
 	    \brief Get metric name.
 	    \return \p string
 	*/
@@ -113,6 +128,24 @@ class MetricZ_MetricBase
 			return MetricZ_LabelUtils.MakeLabels();
 
 		return m_Labels;
+	}
+
+	/**
+	    \brief Get raw labels for this metric, unchanged and without presetting default values.
+	        \return string Prometheus label block, e.g. "{world=\"...\",...}" or empty string.
+	*/
+	string GetLabelsRaw()
+	{
+		return m_Labels;
+	}
+
+	/**
+	    \brief Checks whether there is an explicitly defined label for the given metric.
+	        \return bool true if there is a label.
+	*/
+	bool HasLabels()
+	{
+		return (m_Labels != string.Empty);
 	}
 
 	/**
