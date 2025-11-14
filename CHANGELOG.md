@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning][].
   hold mind state and per type metrics ⚠️
 * all metrics will now always have base labels if they have not been specified
 * `MetricZ_LabelUtils::MakeLabels()` map with labels now is optional parameter
+* `MetricZ_LabelUtils::MakeLabels()` now trim key and value, and make lower
+  case and replace spaces with underscores for label key
 * `MetricZ_LabelUtils::PersistentHash()` now return hash integer without
   `p` or `n` prefix ⚠️
 * fixed `hash` label in transport metrics,

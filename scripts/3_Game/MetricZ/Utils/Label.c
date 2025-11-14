@@ -69,6 +69,15 @@ class MetricZ_LabelUtils
 
 		string result = "{" + BaseLabels();
 		foreach (string k, string v : labels) {
+			k.TrimInPlace();
+			v.TrimInPlace();
+
+			if (k == string.Empty || v == string.Empty)
+				continue;
+
+			k.ToLower();
+			k.Replace(" ", "_");
+
 			if (k == "host" || k == "world" || k == "instance_id")
 				continue;
 
