@@ -115,6 +115,14 @@ class MetricZ_Storage
 	    "weapons",
 	    "Total weapons in the world",
 	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Suppressors = new MetricZ_MetricInt(
+	    "suppressors",
+	    "Total weapon suppressors in the world",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_Optics = new MetricZ_MetricInt(
+	    "optics",
+	    "Total item optics in the world",
+	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_AmmoBoxes = new MetricZ_MetricInt(
 	    "ammo_boxes",
 	    "Total Box_Base with Ammo in the world",
@@ -196,6 +204,10 @@ class MetricZ_Storage
 	static ref MetricZ_MetricInt s_CarParts = new MetricZ_MetricInt(
 	    "car_parts",
 	    "Total car parts (doors & trunks)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_CarWheels = new MetricZ_MetricInt(
+	    "car_wheels",
+	    "Total car wheels in the world",
 	    MetricZ_MetricType.GAUGE);
 
 	// Mining
@@ -343,6 +355,8 @@ class MetricZ_Storage
 
 		// Weapon related
 		s_Registry.Insert(s_Weapons);
+		s_Registry.Insert(s_Suppressors);
+		s_Registry.Insert(s_Optics);
 		s_Registry.Insert(s_AmmoBoxes);
 		s_Registry.Insert(s_Magazines);
 		s_Registry.Insert(s_Ammo);
@@ -365,6 +379,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_Gardens);
 		s_Registry.Insert(s_Containers);
 		s_Registry.Insert(s_CarParts);
+		s_Registry.Insert(s_CarWheels);
 
 		// Mining
 		s_Registry.Insert(s_MinedBushes);

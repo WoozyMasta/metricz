@@ -160,6 +160,10 @@ DayZ server. Each metric includes its identifier, type
   Total updates path graph regions by object in the world
 * **`dayz_metricz_weapons`** (`GAUGE`) —
   Total weapons in the world
+* **`dayz_metricz_suppressors`** (`GAUGE`) —
+  Total weapon suppressors in the world
+* **`dayz_metricz_optics`** (`GAUGE`) —
+  Total item optics in the world
 * **`dayz_metricz_ammo_boxes`** (`GAUGE`) —
   Total Box_Base with Ammo in the world
 * **`dayz_metricz_magazines`** (`GAUGE`) —
@@ -202,6 +206,8 @@ DayZ server. Each metric includes its identifier, type
   Total deployable containers (crate, barrel, chest)
 * **`dayz_metricz_car_parts`** (`GAUGE`) —
   Total car parts (doors & trunks)
+* **`dayz_metricz_car_wheels`** (`GAUGE`) —
+  Total car wheels in the world
 * **`dayz_metricz_mined_bushes_total`** (`COUNTER`) —
   Count of mined bushes
 * **`dayz_metricz_mined_rocks_total`** (`COUNTER`) —

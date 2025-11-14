@@ -32,6 +32,12 @@ and this project adheres to [Semantic Versioning][].
   Infected death corpses count in the world
 * **`dayz_metricz_weapons_by_type`** (`GAUGE`) —
   Weapons in world grouped by canonical type
+* **`dayz_metricz_suppressors`** (`GAUGE`) —
+  Total weapon suppressors in the world
+* **`dayz_metricz_optics`** (`GAUGE`) —
+  Total item optics in the world
+* **`dayz_metricz_car_wheels`** (`GAUGE`) —
+  Total car wheels in the world
 
 #### New options
 

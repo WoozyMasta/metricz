@@ -18,6 +18,13 @@ modded class ItemBase
 		super.EEInit();
 
 		MetricZ_Storage.s_Items.Inc();
+
+		if (IsInherited(ItemSuppressor))
+			MetricZ_Storage.s_Suppressors.Inc();
+		else if (IsInherited(ItemOptics))
+			MetricZ_Storage.s_Optics.Inc();
+		else if (IsInherited(CarWheel))
+			MetricZ_Storage.s_CarWheels.Inc();
 	}
 
 	/**
@@ -26,6 +33,13 @@ modded class ItemBase
 	override void EEDelete(EntityAI parent)
 	{
 		MetricZ_Storage.s_Items.Dec();
+
+		if (IsInherited(ItemSuppressor))
+			MetricZ_Storage.s_Suppressors.Dec();
+		else if (IsInherited(ItemOptics))
+			MetricZ_Storage.s_Optics.Dec();
+		else if (IsInherited(CarWheel))
+			MetricZ_Storage.s_CarWheels.Dec();
 
 		super.EEDelete(parent);
 	}
