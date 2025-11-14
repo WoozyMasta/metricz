@@ -49,6 +49,9 @@ and this project adheres to [Semantic Versioning][].
 
 ### Changed
 
+* metric `dayz_metricz_animals_by_type` extended with type-based labels:
+  other, fruit, mushroom, corpse, worm, guts, meat, human_meat, disinfectant,
+  pills, drink, snack, candy, canned_small, canned_medium, canned_big, jar
 * class `MetricZ_ZombieMindStats` renamed to `MetricZ_ZombieStats` and now
   hold mind state and per type metrics ⚠️
 * all metrics will now always have base labels if they have not been specified

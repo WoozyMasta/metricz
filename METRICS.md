@@ -178,8 +178,6 @@ DayZ server. Each metric includes its identifier, type
   improvised)
 * **`dayz_metricz_items`** (`GAUGE`) —
   Total items (ItemBase) in the world
-* **`dayz_metricz_food`** (`GAUGE`) —
-  Total food items in the world
 * **`dayz_metricz_bottles`** (`GAUGE`) —
   Total Bottle_Base (pot, cauldron, canister, etc.) in the world
 * **`dayz_metricz_clothes`** (`GAUGE`) —
@@ -256,3 +254,5 @@ DayZ server. Each metric includes its identifier, type
   Total boats destroyed
 * **`dayz_metricz_helicopters_destroyed_total`** (`COUNTER`) —
   Total helicopters destroyed
+* **`dayz_metricz_food`** (`GAUGE`) —
+  Total edible base items in the world with static labeled types

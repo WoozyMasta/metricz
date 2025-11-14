@@ -21,6 +21,9 @@ class MetricZ_Storage
 	// Metrics storage registry
 	protected static ref array<ref MetricZ_MetricBase> s_Registry = new array<ref MetricZ_MetricBase>();
 
+	// Food metrics map: enum -> metric
+	protected static ref map<MetricZ_FoodTypes, ref MetricZ_MetricInt> s_FoodMetricByType;
+
 	// --- Gauges
 	// Core
 	static ref MetricZ_MetricInt s_Status = new MetricZ_MetricInt(
@@ -149,10 +152,6 @@ class MetricZ_Storage
 	    "items",
 	    "Total items (ItemBase) in the world",
 	    MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricInt s_Food = new MetricZ_MetricInt(
-	    "food",
-	    "Total food items in the world",
-	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Bottles = new MetricZ_MetricInt(
 	    "bottles",
 	    "Total Bottle_Base (pot, cauldron, canister, etc.) in the world",
@@ -209,6 +208,26 @@ class MetricZ_Storage
 	    "car_wheels",
 	    "Total car wheels in the world",
 	    MetricZ_MetricType.GAUGE);
+
+	// Food
+	static ref MetricZ_MetricInt s_Food = NewFoodMetric(MetricZ_FoodTypes.NONE); // total of all Edible_Base
+	static ref MetricZ_MetricInt s_FoodOther = NewFoodMetric(MetricZ_FoodTypes.OTHER);
+	static ref MetricZ_MetricInt s_FoodFruit = NewFoodMetric(MetricZ_FoodTypes.FRUIT);
+	static ref MetricZ_MetricInt s_FoodMushroom = NewFoodMetric(MetricZ_FoodTypes.MUSHROOM);
+	static ref MetricZ_MetricInt s_FoodCorpse = NewFoodMetric(MetricZ_FoodTypes.CORPSE);
+	static ref MetricZ_MetricInt s_FoodWorm = NewFoodMetric(MetricZ_FoodTypes.WORM);
+	static ref MetricZ_MetricInt s_FoodGuts = NewFoodMetric(MetricZ_FoodTypes.GUTS);
+	static ref MetricZ_MetricInt s_FoodMeat = NewFoodMetric(MetricZ_FoodTypes.MEAT);
+	static ref MetricZ_MetricInt s_FoodHumanMeat = NewFoodMetric(MetricZ_FoodTypes.HUMAN_MEAT);
+	static ref MetricZ_MetricInt s_FoodDisinfectant = NewFoodMetric(MetricZ_FoodTypes.DISINFECTANT);
+	static ref MetricZ_MetricInt s_FoodPills = NewFoodMetric(MetricZ_FoodTypes.PILLS);
+	static ref MetricZ_MetricInt s_FoodDrink = NewFoodMetric(MetricZ_FoodTypes.DRINK);
+	static ref MetricZ_MetricInt s_FoodSnack = NewFoodMetric(MetricZ_FoodTypes.SNACK);
+	static ref MetricZ_MetricInt s_FoodCandy = NewFoodMetric(MetricZ_FoodTypes.CANDY);
+	static ref MetricZ_MetricInt s_FoodCannedSmall = NewFoodMetric(MetricZ_FoodTypes.CANNED_SMALL);
+	static ref MetricZ_MetricInt s_FoodCannedMedium = NewFoodMetric(MetricZ_FoodTypes.CANNED_MEDIUM);
+	static ref MetricZ_MetricInt s_FoodCannedBig = NewFoodMetric(MetricZ_FoodTypes.CANNED_BIG);
+	static ref MetricZ_MetricInt s_FoodCannedJar = NewFoodMetric(MetricZ_FoodTypes.JAR);
 
 	// Mining
 	static ref MetricZ_MetricInt s_MinedBushes = new MetricZ_MetricInt(
@@ -365,7 +384,6 @@ class MetricZ_Storage
 
 		// Items
 		s_Registry.Insert(s_Items);
-		s_Registry.Insert(s_Food);
 		s_Registry.Insert(s_Bottles);
 		s_Registry.Insert(s_Clothing);
 		s_Registry.Insert(s_Boxes);
@@ -380,6 +398,9 @@ class MetricZ_Storage
 		s_Registry.Insert(s_Containers);
 		s_Registry.Insert(s_CarParts);
 		s_Registry.Insert(s_CarWheels);
+
+		// Food
+		InitFoodMetric();
 
 		// Mining
 		s_Registry.Insert(s_MinedBushes);
@@ -553,9 +574,113 @@ class MetricZ_Storage
 		foreach (MetricZ_MetricBase metric : s_Registry) {
 			if (metric == s_Status)
 				metric.FlushWithHead(fh, s_LabelsExtra);
+			else if (metric.HasLabels())
+				metric.Flush(fh);
 			else
 				metric.FlushWithHead(fh, s_Labels);
 		}
+	}
+
+	static void FoodMetricChange(MetricZ_FoodTypes foodType, bool increase)
+	{
+		if (foodType == MetricZ_FoodTypes.NONE)
+			return;
+
+		MetricZ_MetricInt metric;
+		if (s_FoodMetricByType && s_FoodMetricByType.Find(foodType, metric)) {
+			if (increase)
+				metric.Inc();
+			else
+				metric.Dec();
+
+			return;
+		}
+
+		if (!s_Food)
+			return;
+
+		if (increase)
+			s_Food.Inc();
+		else
+			s_Food.Dec();
+	}
+
+	protected static MetricZ_MetricInt NewFoodMetric(MetricZ_FoodTypes foodType)
+	{
+		MetricZ_MetricInt metric = new MetricZ_MetricInt(
+		    "food",
+		    "Total edible base items in the world with static labeled types",
+		    MetricZ_MetricType.GAUGE);
+
+		if (foodType == MetricZ_FoodTypes.NONE)
+			return metric;
+
+		string labelValue = EnumTools.EnumToString(MetricZ_FoodTypes, foodType);
+		labelValue.ToLower();
+		metric.MakeLabel("food_type", labelValue);
+
+		return metric;
+	}
+
+	protected static void InitFoodMetric()
+	{
+		if (s_FoodMetricByType)
+			return;
+
+		s_FoodMetricByType = new map<MetricZ_FoodTypes, ref MetricZ_MetricInt>();
+
+		s_Registry.Insert(s_Food);
+
+		s_Registry.Insert(s_FoodOther);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.OTHER, s_FoodOther);
+
+		s_Registry.Insert(s_FoodFruit);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.FRUIT, s_FoodFruit);
+
+		s_Registry.Insert(s_FoodMushroom);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.MUSHROOM, s_FoodMushroom);
+
+		s_Registry.Insert(s_FoodCorpse);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.CORPSE, s_FoodCorpse);
+
+		s_Registry.Insert(s_FoodWorm);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.WORM, s_FoodWorm);
+
+		s_Registry.Insert(s_FoodGuts);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.GUTS, s_FoodGuts);
+
+		s_Registry.Insert(s_FoodMeat);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.MEAT, s_FoodMeat);
+
+		s_Registry.Insert(s_FoodHumanMeat);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.HUMAN_MEAT, s_FoodHumanMeat);
+
+		s_Registry.Insert(s_FoodDisinfectant);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.DISINFECTANT, s_FoodDisinfectant);
+
+		s_Registry.Insert(s_FoodPills);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.PILLS, s_FoodPills);
+
+		s_Registry.Insert(s_FoodDrink);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.DRINK, s_FoodDrink);
+
+		s_Registry.Insert(s_FoodSnack);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.SNACK, s_FoodSnack);
+
+		s_Registry.Insert(s_FoodCandy);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.CANDY, s_FoodCandy);
+
+		s_Registry.Insert(s_FoodCannedSmall);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.CANNED_SMALL, s_FoodCannedSmall);
+
+		s_Registry.Insert(s_FoodCannedMedium);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.CANNED_MEDIUM, s_FoodCannedMedium);
+
+		s_Registry.Insert(s_FoodCannedBig);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.CANNED_BIG, s_FoodCannedBig);
+
+		s_Registry.Insert(s_FoodCannedJar);
+		s_FoodMetricByType.Insert(MetricZ_FoodTypes.JAR, s_FoodCannedJar);
 	}
 }
 #endif
