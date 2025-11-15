@@ -20,7 +20,7 @@ function wrap(str, width, out, n, w, i) {
 }
 
 {
-  re = "MetricZ_Metric(Int|Float)[[:space:]]*\\(" \
+  re = "new MetricZ_Metric(Int|Float)[[:space:]]*\\(" \
        "[[:space:]]*\"([^\"]+)\"" \
        "(" \
          "[[:space:]]*,[[:space:]]*\"([^\"]*)\"" \
