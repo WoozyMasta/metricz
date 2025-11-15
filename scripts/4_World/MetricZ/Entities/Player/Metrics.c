@@ -296,7 +296,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 
 		bool _p;
 		string _t;
-		string bloodType = BloodTypes.GetBloodTypeName(m_Player.GetBloodType(), _t, _p);
+		string bloodType = BloodTypes.GetBloodTypeName(m_Player.GetStatBloodType().Get(), _t, _p);
 
 		labels.Insert("guid", identity.GetId());
 
