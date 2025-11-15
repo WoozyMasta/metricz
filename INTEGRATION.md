@@ -192,6 +192,89 @@ static void InitMyMetrics()
 #endif
 ```
 
+## Override labels
+
+By default, typed metrics derive their label values dynamically.
+If your mod introduces custom entities, you can override label
+resolution and provide your own value.
+
+### Zombie
+
+For `dayz_metricz_infected_by_type`, the zombie type is derived
+from the `aiAgentTemplate` name.
+If you use a vanilla agent or a custom one that maps incorrectly,
+you can override it:
+
+```cpp
+class MySuperZombie : ZombieBase
+{
+#ifdef METRICZ
+  override string MetricZ_GetLabelTypeName()
+  {
+    return "my_super_zombie";
+  }
+#endif
+}
+```
+
+### Animal
+
+For `dayz_metricz_animals_by_type`, the animal type is resolved from the
+`Skinning` config (`ObtainedSteaks` / `ObtainedPelt`).
+If your animal drops items that map it to the wrong vanilla type
+(e.g. a crow mapped as `chicken`), override the label:
+
+```cpp
+class MySuperAnimal : AnimalBase
+{
+#ifdef METRICZ
+  override string MetricZ_GetLabelTypeName()
+  {
+    return "my_super_animal";
+  }
+#endif
+}
+```
+
+### Weapon
+
+For `dayz_metricz_weapons_by_type` and `dayz_metricz_weapon_shots_total`,
+the weapon type is derived from the class name by trimming common suffixes.
+This works well for vanilla weapons but may produce unexpected names
+for modded classes. Override and provide a stable, generic name for
+all variants of the same weapon:
+
+```cpp
+class MySuperWeapon : Weapon_Base
+{
+#ifdef METRICZ
+  override string MetricZ_GetLabelTypeName()
+  {
+    return "my_super_weapon";
+  }
+#endif
+}
+```
+
+### Food
+
+For `Edible_Base`, food categories are static and defined in
+`enum MetricZ_FoodTypes`. The default resolver uses many heuristics:
+boolean flags, inheritance, liquid type, stack unit, impact sound, etc.
+If you want to classify your item explicitly, override the getter:
+
+```cpp
+class MySuperJarFood : Edible_Base
+{
+#ifdef METRICZ
+  override MetricZ_FoodTypes MetricZ_GetFoodType()
+  {
+    return MetricZ_FoodTypes.JAR;
+  }
+#endif
+}
+```
+
 ## Advance
 
 For more advanced scenarios, see the built-in MetricZ implementations:
