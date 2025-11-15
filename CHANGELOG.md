@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning][].
 * internal labels per metric in `MetricZ_MetricBase` with helpers
   `SetLabels()`,`MakeLabels()`, `MakeLabel()` and getters
   `GetLabels()`, `GetLabelsRaw()` and `HasLabels()`
+* [INTEGRATION.md](./INTEGRATION.md) with info how to use MetricZ in your mods
 
 #### New metrics
 

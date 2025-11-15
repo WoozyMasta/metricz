@@ -223,6 +223,17 @@ scrape_configs:
 | Dashboard ID: `24292`                                       |
 | [Dashboard JSON](./grafana/transport.json)                  |
 
+## Mod Integration (for modders)
+
+See: [INTEGRATION.md](./INTEGRATION.md)
+
+Covers:
+
+* optional `#ifdef METRICZ` integration
+* adding custom metrics
+* registering metrics via `modded class MetricZ_Storage`
+* examples for player actions and item interactions
+
 ## Debugging
 
 * Enable `-dologs` and `-filePatching` if needed.
