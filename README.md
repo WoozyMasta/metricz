@@ -223,6 +223,12 @@ scrape_configs:
 | Dashboard ID: `24292`                                       |
 | [Dashboard JSON](./grafana/transport.json)                  |
 
+## Mod support
+
+Built-in support for modifications:
+
+* [DayZ-Expansion-AI](https://steamcommunity.com/sharedfiles/filedetails/?id=2792982069)
+
 ## Mod Integration (for modders)
 
 See: [INTEGRATION.md](./INTEGRATION.md)

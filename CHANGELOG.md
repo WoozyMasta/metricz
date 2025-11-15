@@ -40,6 +40,10 @@ and this project adheres to [Semantic Versioning][].
   Total item optics in the world
 * **`dayz_metricz_car_wheels`** (`GAUGE`) —
   Total car wheels in the world
+* **`dayz_metricz_eai`** (`GAUGE`) —
+  Total Expansion AI in the world (optional)
+* **`dayz_metricz_eai_npc`** (`GAUGE`) —
+  Total Expansion AI NPCs in the world (optional)
 
 #### New options
 
@@ -50,7 +54,7 @@ and this project adheres to [Semantic Versioning][].
 
 ### Changed
 
-* metric `dayz_metricz_animals_by_type` extended with type-based labels:
+* metric `dayz_metricz_food` extended with type-based labels:
   other, fruit, mushroom, corpse, worm, guts, meat, human_meat, disinfectant,
   pills, drink, snack, candy, canned_small, canned_medium, canned_big, jar
 * class `MetricZ_ZombieMindStats` renamed to `MetricZ_ZombieStats` and now

@@ -254,5 +254,9 @@ DayZ server. Each metric includes its identifier, type
   Total boats destroyed
 * **`dayz_metricz_helicopters_destroyed_total`** (`COUNTER`) —
   Total helicopters destroyed
+* **`dayz_metricz_eai`** (`GAUGE`) —
+  Total Expansion AI in the world (optional)
+* **`dayz_metricz_eai_npc`** (`GAUGE`) —
+  Total Expansion AI NPCs in the world (optional)
 * **`dayz_metricz_food`** (`GAUGE`) —
   Total edible base items in the world with static labeled types

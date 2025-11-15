@@ -20,6 +20,17 @@ modded class PlayerBase
 	{
 		super.EEInit();
 
+#ifdef EXPANSIONMODAI
+		if (IsInherited(eAIBase)) {
+			if (IsInherited(eAINPCBase))
+				MetricZ_Storage.s_ExpansionAINPC.Inc();
+			else
+				MetricZ_Storage.s_ExpansionAI.Inc();
+
+			return;
+		}
+#endif
+
 		if (MetricZ_Config.s_DisablePlayerMetrics)
 			return;
 
@@ -34,6 +45,15 @@ modded class PlayerBase
 	*/
 	override void EEDelete(EntityAI parent)
 	{
+#ifdef EXPANSIONMODAI
+		if (IsInherited(eAIBase)) {
+			if (IsInherited(eAINPCBase))
+				MetricZ_Storage.s_ExpansionAINPC.Dec();
+			else
+				MetricZ_Storage.s_ExpansionAI.Dec();
+		}
+#endif
+
 		m_MetricZ = null;
 
 		super.EEDelete(parent);
@@ -44,6 +64,13 @@ modded class PlayerBase
 	*/
 	override void EEKilled(Object killer)
 	{
+#ifdef EXPANSIONMODAI
+		if (IsInherited(eAIBase)) {
+			super.EEKilled(killer);
+			return;
+		}
+#endif
+
 		if (!MetricZ_Config.s_DisablePlayerMetrics)
 			MetricZ_Storage.s_PlayersDeaths.Inc();
 

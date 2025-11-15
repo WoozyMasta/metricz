@@ -335,6 +335,17 @@ class MetricZ_Storage
 	    "Total helicopters destroyed",
 	    MetricZ_MetricType.COUNTER);
 
+#ifdef EXPANSIONMODAI
+	static ref MetricZ_MetricInt s_ExpansionAI = new MetricZ_MetricInt(
+	    "eai",
+	    "Total Expansion AI in the world (optional)",
+	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_ExpansionAINPC = new MetricZ_MetricInt(
+	    "eai_npc",
+	    "Total Expansion AI NPCs in the world (optional)",
+	    MetricZ_MetricType.GAUGE);
+#endif
+
 	/**
 	    \brief One-time initialization and label build.
 	    \details Populates registry and sets status=1.
@@ -435,6 +446,11 @@ class MetricZ_Storage
 		s_Registry.Insert(s_CarsDestroys);
 		s_Registry.Insert(s_BoatsDestroys);
 		s_Registry.Insert(s_HelicoptersDestroys);
+
+#ifdef EXPANSIONMODAI
+		s_Registry.Insert(s_ExpansionAI);
+		s_Registry.Insert(s_ExpansionAINPC);
+#endif
 
 		SetLabels();
 
