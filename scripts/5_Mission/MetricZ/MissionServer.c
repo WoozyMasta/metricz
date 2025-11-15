@@ -125,12 +125,13 @@ modded class MissionServer : MissionBase
 		ErrorEx("MetricZ base metrics scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 
-		// infected mind state
-		MetricZ_ZombieStats.Flush(fh);
-
 		// per-player
 		if (!MetricZ_Config.s_DisablePlayerMetrics)
 			MetricZ_EntitiesWriter.FlushPlayers(fh);
+
+		// per-infected AI type and mind state
+		if (!MetricZ_Config.s_DisableZombieMetrics)
+			MetricZ_ZombieStats.Flush(fh);
 
 		// per-animal type
 		if (!MetricZ_Config.s_DisableAnimalMetrics)
