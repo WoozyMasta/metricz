@@ -127,7 +127,6 @@ class MetricZ_Config
 	            "true"/"false"/"1"/"0" and can disable. CLI takes precedence.
 	    \param cfgKey  Key suffix in serverDZ.cfg (without "MetricZ_").
 	    \param cliFlag CLI flag suffix (without "metricz-").
-	    \param def     Default value when neither source is provided.
 	    \return bool   Resolved toggle value.
 	*/
 	private static bool Toggle(string cfgKey, string cliFlag)

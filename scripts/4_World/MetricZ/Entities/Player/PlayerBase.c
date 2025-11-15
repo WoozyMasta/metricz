@@ -40,7 +40,7 @@ modded class PlayerBase
 	}
 
 	/**
-	    \brief Drop metrics reference on delete.
+	    \brief Increment players_deaths counter on kill.
 	*/
 	override void EEKilled(Object killer)
 	{

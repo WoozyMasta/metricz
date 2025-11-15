@@ -13,7 +13,7 @@ modded class BoatScript
 	protected ref MetricZ_TransportMetrics m_MetricZ;
 
 	/**
-	    \brief Register loaded form save car in transport registry.
+	    \brief Initialize transport metrics for boat loaded from persistence.
 	*/
 	override void EEOnAfterLoad()
 	{

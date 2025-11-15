@@ -35,6 +35,9 @@ modded class Edible_Base
 		super.EEDelete(parent);
 	}
 
+	/**
+	    \brief Classify edible item into MetricZ_FoodTypes based on inheritance and config properties.
+	*/
 	MetricZ_FoodTypes MetricZ_GetFoodType()
 	{
 		// skip bottle base by exists "bottles" metric
@@ -93,9 +96,15 @@ modded class Edible_Base
 	}
 }
 
+/**
+    \brief Canonical food categories for MetricZ.
+    \details
+      - Mapped from Edible_Base runtime type to stable labeled groups.
+      - Order is fixed; values are static and used as map keys in MetricZ_Storage.
+*/
 enum MetricZ_FoodTypes {
-	NONE = -1,
-	OTHER = 0,
+	NONE = -1, // skip (not counted or tracked elsewhere)
+	OTHER = 0, // fallback category
 	FRUIT,
 	MUSHROOM,
 	CORPSE,

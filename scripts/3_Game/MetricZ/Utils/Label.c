@@ -44,7 +44,8 @@ class MetricZ_LabelUtils
 		int p1, p2, p3, p4;
 		entity.GetPersistentID(p1, p2, p3, p4);
 
-		// Non-persistent objects assign random but consistent per runtime
+		// Non-persistent objects get a random hash;
+		// stability is guaranteed only if called once per instance for labels.
 		if (p1 == 0 && p2 == 0 && p3 == 0 && p4 == 0) {
 			seed = entity.GetType() + "_" + Math.RandomInt(1, int.MAX).ToString();
 			return seed.Hash();

@@ -46,7 +46,7 @@ class MetricZ_TransportRegistry
 	/**
 	    \brief Create a snapshot copy of current registered transports.
 	    \details Used to safely iterate without modifying the live registry.
-	    \param[out] transport Output array with snapshot of transports
+	    \param[out] transport Output array with snapshot of transport objects
 	*/
 	static void Snapshot(out array<Transport> transport)
 	{

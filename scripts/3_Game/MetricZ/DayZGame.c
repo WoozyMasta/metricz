@@ -11,7 +11,8 @@
 */
 modded class DayZGame
 {
-	static int s_MetricZ_PathGraphUpdates; // just counter
+	// number of calls to UpdatePathgraphRegionByObject() on server
+	static int s_MetricZ_PathGraphUpdates;
 
 	/**
 	    \brief Hook incoming RPCs to count them.

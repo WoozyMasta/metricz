@@ -52,7 +52,7 @@ modded class Weapon_Base
 	}
 
 	/**
-	    \brief Public helper for MetricZ: returns cached label name for this animal.
+	    \brief Public helper for MetricZ: returns cached canonical label name for this weapon.
 	    \details You can override this for set some beauty label name for your weapon.
 	*/
 	string MetricZ_GetWeaponName()

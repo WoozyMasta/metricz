@@ -581,6 +581,15 @@ class MetricZ_Storage
 		}
 	}
 
+	/**
+	    \brief Adjust per-type food metric on spawn/delete.
+	    \details
+	      - Ignores NONE (untracked / skipped types).
+	      - If a typed metric exists in s_FoodMetricByType, increments/decrements it.
+	      - Otherwise falls back to global s_Food gauge.
+	    \param foodType MetricZ_FoodTypes bucket for this Edible_Base.
+	    \param increase true on spawn, false on delete.
+	*/
 	static void FoodMetricChange(MetricZ_FoodTypes foodType, bool increase)
 	{
 		if (foodType == MetricZ_FoodTypes.NONE)
@@ -605,6 +614,15 @@ class MetricZ_Storage
 			s_Food.Dec();
 	}
 
+	/**
+	    \brief Factory for food metrics with static type label.
+	    \details
+	      - Always creates a "food" gauge metric.
+	      - For NONE returns unlabeled total "food" metric.
+	      - For other types attaches "food_type=<enum name>" label.
+	    \param foodType MetricZ_FoodTypes bucket for this metric instance.
+	    \return \p MetricZ_MetricInt New metric instance.
+	*/
 	protected static MetricZ_MetricInt NewFoodMetric(MetricZ_FoodTypes foodType)
 	{
 		MetricZ_MetricInt metric = new MetricZ_MetricInt(
@@ -622,6 +640,14 @@ class MetricZ_Storage
 		return metric;
 	}
 
+	/**
+	    \brief Initialize typed food metrics registry once.
+	    \details
+	      - Registers global s_Food metric.
+	      - Registers each typed food metric in s_Registry.
+	      - Fills s_FoodMetricByType map: MetricZ_FoodTypes -> MetricZ_MetricInt.
+	      Safe to call multiple times.
+	*/
 	protected static void InitFoodMetric()
 	{
 		if (s_FoodMetricByType)
