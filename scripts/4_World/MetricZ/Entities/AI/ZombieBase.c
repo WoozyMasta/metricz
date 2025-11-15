@@ -107,7 +107,7 @@ modded class ZombieBase
 	{
 		// contamination has highest priority
 		if (ResistContaminatedEffect())
-			return "contaminated";
+			return "nbc";
 
 		string type = GetType();
 
