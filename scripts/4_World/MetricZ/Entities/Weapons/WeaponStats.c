@@ -10,7 +10,7 @@
     \details
       - counts total shots and per-weapon shots
       - tracks live weapons count per canonical type
-      Weapon key is canonicalized and lowercased via Weapon_Base::MetricZ_GetWeaponName().
+      Weapon key is canonicalized and lowercased via Weapon_Base::MetricZ_GetLabelTypeName().
 */
 class MetricZ_WeaponStats
 {
@@ -43,7 +43,7 @@ class MetricZ_WeaponStats
 		if (!wpn)
 			return;
 
-		string type = wpn.MetricZ_GetWeaponName();
+		string type = wpn.MetricZ_GetLabelTypeName();
 
 		int v;
 		if (s_ShotsByWeapon.Find(type, v))
@@ -65,7 +65,7 @@ class MetricZ_WeaponStats
 		if (!weapon)
 			return;
 
-		string type = weapon.MetricZ_GetWeaponName();
+		string type = weapon.MetricZ_GetLabelTypeName();
 
 		int v;
 		if (s_CountByType.Find(type, v))
@@ -85,7 +85,7 @@ class MetricZ_WeaponStats
 		if (!weapon)
 			return;
 
-		string type = weapon.MetricZ_GetWeaponName();
+		string type = weapon.MetricZ_GetLabelTypeName();
 
 		int v;
 		if (!s_CountByType.Find(type, v))

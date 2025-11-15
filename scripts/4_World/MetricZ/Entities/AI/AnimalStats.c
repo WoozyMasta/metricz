@@ -27,7 +27,7 @@ class MetricZ_AnimalStats
 		if (!animal)
 			return;
 
-		string type = animal.MetricZ_GetAnimalName();
+		string type = animal.MetricZ_GetLabelTypeName();
 
 		int v;
 		if (s_CountByType.Find(type, v))
@@ -50,7 +50,7 @@ class MetricZ_AnimalStats
 		if (!animal)
 			return;
 
-		string type = animal.MetricZ_GetAnimalName();
+		string type = animal.MetricZ_GetLabelTypeName();
 
 		int v;
 		if (!s_CountByType.Find(type, v))

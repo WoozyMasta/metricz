@@ -82,7 +82,7 @@ modded class ZombieBase
 	    \brief Public helper for MetricZ: returns cached canonical zombie type.
 	    \details You can override this for set some beauty label name for your zombie.
 	*/
-	string MetricZ_GetZombieType()
+	string MetricZ_GetLabelTypeName()
 	{
 		return MetricZ_GetZombieTypeFromConfig();
 	}

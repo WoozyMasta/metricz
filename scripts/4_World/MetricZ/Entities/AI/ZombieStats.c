@@ -110,7 +110,7 @@ class MetricZ_ZombieStats
 		if (!zombie)
 			return;
 
-		string type = zombie.MetricZ_GetZombieType();
+		string type = zombie.MetricZ_GetLabelTypeName();
 		AddType(type, 1);
 	}
 
@@ -124,7 +124,7 @@ class MetricZ_ZombieStats
 		AddState(state, -1);
 
 		if (zombie) {
-			string type = zombie.MetricZ_GetZombieType();
+			string type = zombie.MetricZ_GetLabelTypeName();
 			AddType(type, -1);
 		}
 	}

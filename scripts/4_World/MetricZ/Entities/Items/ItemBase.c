@@ -43,5 +43,14 @@ modded class ItemBase
 
 		super.EEDelete(parent);
 	}
+
+	/**
+	    \brief Public helper for MetricZ: returns cached canonical label name for this item.
+	    \details You can override this for set some beauty label name for your item.
+	*/
+	string MetricZ_GetLabelTypeName()
+	{
+		return MetricZ_ObjectName.GetName(this, true);
+	}
 }
 #endif
