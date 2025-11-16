@@ -86,6 +86,8 @@ and this project adheres to [Semantic Versioning][].
 * all I/O moved to separate `MetricZ_Exporter` class
 * replace all `GetGame()` calls to static `g_Game` instance
 
+[0.2.0]: https://github.com/WoozyMasta/metricz/compare/0.1.2...0.2.2
+
 ## [0.1.2][] - 2025-11-09
 
 ### Added
