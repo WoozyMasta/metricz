@@ -60,7 +60,7 @@ Details: [METRICS.md](./METRICS.md)
 > [!IMPORTANT]  
 > On the same host every server must have a unique `instanceId`.  
 > If multiple servers run the same map (`world`), time series will collide.  
-> Base labels are `{world, host, instance_id, game_port}`.
+> Base labels are `{world, host, instance_id}`.
 > Ensure `instanceId` is unique per server;
 > together with the map name it forms metric identity.
 

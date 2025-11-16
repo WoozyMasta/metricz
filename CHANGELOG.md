@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## Unreleased
+
+### Added
+
+* in class `MetricZ_Exporter` moved all data writers into new
+  `bool Flush(FileHandle fh)` to support modded custom metric registries
+
 ## [0.2.1][] - 2025-11-16
 
 ### Changed

@@ -71,13 +71,66 @@ class MetricZ_Exporter
 		CloseFile(fh);
 	}
 
+
+	/**
+	    \brief Flush all enabled collectors into an open file.
+	    \details
+	        - Writes world-level metrics from MetricZ_Storage.
+	        - Appends per-player, per-entity and event metrics depending on config.
+	        - Does not close the file handle.
+	    \param fh Open file handle to write to (TEMP file).
+	    \return true on success, false if fh is invalid.
+	*/
+	protected static bool Flush(FileHandle fh)
+	{
+		if (!fh)
+			return false;
+
+		// world metrics
+		MetricZ_Storage.Flush(fh);
+
+		// per-player
+		if (!MetricZ_Config.s_DisablePlayerMetrics)
+			MetricZ_EntitiesWriter.FlushPlayers(fh);
+
+		// per-infected AI type and mind state
+		if (!MetricZ_Config.s_DisableZombieMetrics)
+			MetricZ_ZombieStats.Flush(fh);
+
+		// per-animal type
+		if (!MetricZ_Config.s_DisableAnimalMetrics)
+			MetricZ_AnimalStats.Flush(fh);
+
+		// per-vehicle
+		if (!MetricZ_Config.s_DisableTransportMetrics)
+			MetricZ_EntitiesWriter.FlushTransport(fh);
+
+		// weapon shots
+		if (!MetricZ_Config.s_DisableWeaponMetrics)
+			MetricZ_WeaponStats.Flush(fh);
+
+		// per-territory
+		if (!MetricZ_Config.s_DisableTerritoryMetrics)
+			MetricZ_EntitiesWriter.FlushTerritory(fh);
+
+		// dayz game RPC inputs
+		if (!MetricZ_Config.s_DisableRPCMetrics)
+			MetricZ_RpcStats.Flush(fh);
+
+		// dayz game events
+		if (!MetricZ_Config.s_DisableEventMetrics)
+			MetricZ_EventStats.Flush(fh);
+
+		return true;
+	}
+
 	/**
 	    \brief Periodic scrape task. Writes temp file and atomically publishes it.
 	    \details
-	        - Reschedules itself each call (fixed interval, minimal drift).
-	        - Skips run if a previous scrape is still running (s_Busy).
-	        - Scrapes world metrics and all enabled collectors into TEMP,
-	          then atomically publishes to FILE.
+	        - Reschedules itself each call using fixed interval (minimizes drift).
+	        - Skips execution if a previous scrape is still running (s_Busy).
+	        - Calls MetricZ_Storage.Update() to refresh gauges.
+	        - Flushes all collectors into TEMP and atomically replaces FILE.
 	*/
 	protected static void Update()
 	{
@@ -113,45 +166,16 @@ class MetricZ_Exporter
 			return;
 		}
 
-		// world metrics
+		// refresh world gauges before flush
 		MetricZ_Storage.Update();
-		MetricZ_Storage.Flush(fh);
 
-#ifdef DIAG
-		ErrorEx("MetricZ base metrics scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
-
-		// per-player
-		if (!MetricZ_Config.s_DisablePlayerMetrics)
-			MetricZ_EntitiesWriter.FlushPlayers(fh);
-
-		// per-infected AI type and mind state
-		if (!MetricZ_Config.s_DisableZombieMetrics)
-			MetricZ_ZombieStats.Flush(fh);
-
-		// per-animal type
-		if (!MetricZ_Config.s_DisableAnimalMetrics)
-			MetricZ_AnimalStats.Flush(fh);
-
-		// per-vehicle
-		if (!MetricZ_Config.s_DisableTransportMetrics)
-			MetricZ_EntitiesWriter.FlushTransport(fh);
-
-		// weapon shots
-		if (!MetricZ_Config.s_DisableWeaponMetrics)
-			MetricZ_WeaponStats.Flush(fh);
-
-		// per-territory
-		if (!MetricZ_Config.s_DisableTerritoryMetrics)
-			MetricZ_EntitiesWriter.FlushTerritory(fh);
-
-		// dayz game RPC inputs
-		if (!MetricZ_Config.s_DisableRPCMetrics)
-			MetricZ_RpcStats.Flush(fh);
-
-		// dayz game events
-		if (!MetricZ_Config.s_DisableEventMetrics)
-			MetricZ_EventStats.Flush(fh);
+		// write full snapshot into TEMP
+		if (!Flush(fh)) {
+			CloseFile(fh);
+			s_Busy = false;
+			ErrorEx("MetricZ flush failed", ErrorExSeverity.ERROR);
+			return;
+		}
 
 		CloseFile(fh);
 

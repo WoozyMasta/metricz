@@ -6,8 +6,10 @@ Dependency is optional: wrap all calls in `#ifdef METRICZ`.
 ## Compile-time guard
 
 ```cpp
+#ifdef SERVER
 #ifdef METRICZ
 // Code using MetricZ classes
+#endif
 #endif
 ```
 
@@ -286,3 +288,32 @@ For more advanced scenarios, see the built-in MetricZ implementations:
   time series, examine `territory_lifetime` and `transport_health`;
 * for **a fixed, predefined label set**, follow the pattern used by the
   `food` metric with its `food_type` label.
+
+### Custom exporter flush
+
+If you maintain your own exporter or want to append additional metrics
+after MetricZ has written its snapshot, you can extend the exporter
+instead of touching MetricZ internals.
+
+Example: call your own registry after the built-in flush completes:
+
+```cpp
+#ifdef SERVER
+#ifdef METRICZ
+modded class MetricZ_Exporter
+{
+  protected static bool Flush(FileHandle fh)
+  {
+    // run MetricZ built-in collectors first
+    if (!super.Flush(fh))
+      return false;
+
+    // then append your own metrics
+    MyMetricsStorage.FlushMetrics(fh);
+
+    return true;
+  }
+}
+#endif
+#endif
+```
