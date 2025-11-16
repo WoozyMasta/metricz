@@ -838,7 +838,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "ZomieBase + AnimalBase",
+      "description": "ZomieBase",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -892,7 +892,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_infected{instance=\"$instance\",instance_id=\"$instance_id\"} + dayz_metricz_animals{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_infected{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -902,7 +902,7 @@
           "useBackend": false
         }
       ],
-      "title": "AI",
+      "title": "Infected",
       "type": "stat"
     },
     {
@@ -910,7 +910,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "",
+      "description": "AnimalBase",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -936,7 +936,7 @@
         "x": 18,
         "y": 0
       },
-      "id": 64,
+      "id": 73,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -964,7 +964,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_weapon_shots_all_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_animals{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -974,7 +974,7 @@
           "useBackend": false
         }
       ],
-      "title": "Weapon Shoots",
+      "title": "Animals",
       "type": "stat"
     },
     {
@@ -1220,7 +1220,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Include death bodies",
+      "description": "Include death bodies\n* ZombieBase\n* AnimalBase\n* eAIBase\n* eAINPCBase",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1306,7 +1306,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "dayz_metricz_infected{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_infected{instance=\"$instance\",instance_id=\"$instance_id\"} > 0",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "infected",
@@ -1321,7 +1321,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "dayz_metricz_animals{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_animals{instance=\"$instance\",instance_id=\"$instance_id\"} > 0",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -1329,6 +1329,32 @@
           "range": true,
           "refId": "B",
           "useBackend": false
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "editorMode": "code",
+          "expr": "dayz_metricz_eai{instance=\"$instance\",instance_id=\"$instance_id\"} > 0",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "AI",
+          "range": true,
+          "refId": "C"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "editorMode": "code",
+          "expr": "dayz_metricz_eai_npc{instance=\"$instance\",instance_id=\"$instance_id\"} > 0",
+          "hide": false,
+          "instant": false,
+          "legendFormat": "NPC",
+          "range": true,
+          "refId": "D"
         }
       ],
       "title": "AI Count",
@@ -1430,294 +1456,6 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 12,
-        "y": 5
-      },
-      "id": 53,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_clothes{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Clothes",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "description": "Edible_Base",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 14,
-        "y": 5
-      },
-      "id": 40,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_food{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Food",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "description": "Bottle_Base",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 16,
-        "y": 5
-      },
-      "id": 52,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_bottles{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Bottles",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "description": "doors & trunks",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 18,
-        "y": 5
-      },
-      "id": 55,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_car_parts{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Car Parts",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
       "description": "Weapon_Base",
       "fieldConfig": {
         "defaults": {
@@ -1742,7 +1480,7 @@
         "h": 4,
         "w": 2,
         "x": 12,
-        "y": 9
+        "y": 5
       },
       "id": 21,
       "options": {
@@ -1790,7 +1528,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Ammunition_Base",
+      "description": "",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1814,9 +1552,9 @@
         "h": 4,
         "w": 2,
         "x": 14,
-        "y": 9
+        "y": 5
       },
-      "id": 50,
+      "id": 71,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -1844,7 +1582,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_ammo{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_suppressors{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1854,7 +1592,7 @@
           "useBackend": false
         }
       ],
-      "title": "Ammo Piles",
+      "title": "Suppressors",
       "type": "stat"
     },
     {
@@ -1862,7 +1600,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Total Box_Base with Ammo",
+      "description": "scopes, rangefinders, binoculars",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1886,9 +1624,9 @@
         "h": 4,
         "w": 2,
         "x": 16,
-        "y": 9
+        "y": 5
       },
-      "id": 48,
+      "id": 72,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -1916,7 +1654,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_ammo_boxes{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_optics{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -1926,7 +1664,7 @@
           "useBackend": false
         }
       ],
-      "title": "Ammo Boxes",
+      "title": "Optics",
       "type": "stat"
     },
     {
@@ -1958,7 +1696,7 @@
         "h": 4,
         "w": 2,
         "x": 18,
-        "y": 9
+        "y": 5
       },
       "id": 49,
       "options": {
@@ -2077,6 +1815,294 @@
       ],
       "title": "Server Envents",
       "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Ammunition_Base",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 12,
+        "y": 9
+      },
+      "id": 50,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_ammo{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Ammo Piles",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Total Box_Base with Ammo",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 14,
+        "y": 9
+      },
+      "id": 48,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_ammo_boxes{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Ammo Boxes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "grenade, flash, smoke, claymore, plastic, improvised",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 16,
+        "y": 9
+      },
+      "id": 51,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_explosives{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Explosives",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 18,
+        "y": 9
+      },
+      "id": 53,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_clothes{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Clothes",
+      "type": "stat"
     },
     {
       "datasource": {
@@ -2609,222 +2635,6 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "grenade, flash, smoke, claymore, plastic, improvised",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 12,
-        "y": 13
-      },
-      "id": 51,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_explosives{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Explosives",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "description": "TentBase (Shelter, CarTent, LargeTent, PartyTent, MediumTent)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 14,
-        "y": 13
-      },
-      "id": 25,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_tents{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Tents",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "description": "DeployableContainer_Base (Barrel, SeaChest, WoodenCrate)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic-by-name"
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 2,
-        "x": 16,
-        "y": 13
-      },
-      "id": 23,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "dayz_metricz_containers{instance=\"$instance\",instance_id=\"$instance_id\"}",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Containers",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
       "description": "NailBox, HeadlightH7_Box",
       "fieldConfig": {
         "defaults": {
@@ -2848,7 +2658,7 @@
       "gridPos": {
         "h": 4,
         "w": 2,
-        "x": 18,
+        "x": 12,
         "y": 13
       },
       "id": 54,
@@ -2890,6 +2700,222 @@
         }
       ],
       "title": "Boxes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Edible_Base",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 14,
+        "y": 13
+      },
+      "id": 40,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_food{instance=\"$instance\",instance_id=\"$instance_id\",food_type=\"\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Food",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Bottle_Base",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 16,
+        "y": 13
+      },
+      "id": 52,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_bottles{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Bottles",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "doors & trunks",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 18,
+        "y": 13
+      },
+      "id": 55,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_car_parts{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Car Parts",
       "type": "stat"
     },
     {
@@ -3236,7 +3262,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "TerritoryFlag",
+      "description": "TentBase (Shelter, CarTent, LargeTent, PartyTent, MediumTent)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3262,7 +3288,7 @@
         "x": 14,
         "y": 17
       },
-      "id": 26,
+      "id": 25,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -3290,7 +3316,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_territory_flags{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_tents{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -3300,7 +3326,7 @@
           "useBackend": false
         }
       ],
-      "title": "Territory Flag",
+      "title": "Tents",
       "type": "stat"
     },
     {
@@ -3308,7 +3334,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Digged items (DrysackBag, SeaChest, WoodenCrate, FirstAidKit, AmmoBox, Pot, Bear, etc.)",
+      "description": "DeployableContainer_Base (Barrel, SeaChest, WoodenCrate)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3334,7 +3360,7 @@
         "x": 16,
         "y": 17
       },
-      "id": 24,
+      "id": 23,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -3362,7 +3388,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_stashes{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_containers{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -3372,7 +3398,7 @@
           "useBackend": false
         }
       ],
-      "title": "Stashes",
+      "title": "Containers",
       "type": "stat"
     },
     {
@@ -3380,7 +3406,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "GardenPlot (Digged)",
+      "description": "wheels",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3406,7 +3432,7 @@
         "x": 18,
         "y": 17
       },
-      "id": 28,
+      "id": 70,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -3434,7 +3460,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_gardens{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_car_wheels{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -3444,7 +3470,7 @@
           "useBackend": false
         }
       ],
-      "title": "Gardens",
+      "title": "Car Wheels",
       "type": "stat"
     },
     {
@@ -3685,7 +3711,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 25,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -3699,12 +3725,12 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -3736,9 +3762,11 @@
       "id": 63,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
+          "calcs": [
+            "max"
+          ],
+          "displayMode": "table",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -3845,7 +3873,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Artillery barrages on server",
+      "description": "TerritoryFlag",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3871,7 +3899,7 @@
         "x": 14,
         "y": 21
       },
-      "id": 29,
+      "id": 26,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -3899,7 +3927,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_artillery_barrages_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_territory_flags{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -3909,7 +3937,7 @@
           "useBackend": false
         }
       ],
-      "title": "Artillery Strikes",
+      "title": "Territory Flag",
       "type": "stat"
     },
     {
@@ -3917,7 +3945,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "",
+      "description": "Digged items (DrysackBag, SeaChest, WoodenCrate, FirstAidKit, AmmoBox, Pot, Bear, etc.)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -3943,7 +3971,7 @@
         "x": 16,
         "y": 21
       },
-      "id": 59,
+      "id": 24,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -3971,7 +3999,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_fishing_attempts_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_stashes{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -3981,7 +4009,7 @@
           "useBackend": false
         }
       ],
-      "title": "Fishing Attempts",
+      "title": "Stashes",
       "type": "stat"
     },
     {
@@ -3989,7 +4017,7 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "",
+      "description": "GardenPlot (Digged)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4015,7 +4043,7 @@
         "x": 18,
         "y": 21
       },
-      "id": 60,
+      "id": 28,
       "options": {
         "colorMode": "value",
         "graphMode": "area",
@@ -4043,7 +4071,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_fishing_catches_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "dayz_metricz_gardens{instance=\"$instance\",instance_id=\"$instance_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -4053,7 +4081,7 @@
           "useBackend": false
         }
       ],
-      "title": "Fishing Catches",
+      "title": "Gardens",
       "type": "stat"
     },
     {
@@ -4686,38 +4714,36 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
-      "description": "Total updates path graph regions by object in the world",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "thresholds"
+            "mode": "palette-classic"
           },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          }
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 4,
         "x": 0,
         "y": 29
       },
-      "id": 69,
+      "id": 43,
       "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "pieType": "donut",
         "reduceOptions": {
           "calcs": [
             "lastNotNull"
@@ -4725,9 +4751,12 @@
           "fields": "",
           "values": false
         },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
+        "sort": "desc",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "pluginVersion": "12.2.1",
       "targets": [
@@ -4739,18 +4768,18 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_path_graph_updates_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "sum by(id) (dayz_metricz_rpc_input_total{instance=\"$instance\",instance_id=\"$instance_id\"})",
           "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "{{world}} ({{instance_id}})",
-          "range": true,
+          "includeNullMetadata": false,
+          "instant": true,
+          "legendFormat": "{{ id }}",
+          "range": false,
           "refId": "A",
           "useBackend": false
         }
       ],
-      "title": "Path Graph Updates",
-      "type": "stat"
+      "title": "RPC Inputs",
+      "type": "piechart"
     },
     {
       "datasource": {
@@ -4816,7 +4845,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 8,
         "x": 4,
         "y": 29
@@ -4861,6 +4890,365 @@
         "type": "prometheus",
         "uid": "${data_source}"
       },
+      "description": "Artillery barrages on server",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 12,
+        "y": 29
+      },
+      "id": 29,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_artillery_barrages_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Artillery Strikes",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 14,
+        "y": 29
+      },
+      "id": 59,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_fishing_attempts_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Fishing Attempts",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 16,
+        "y": 29
+      },
+      "id": 60,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_fishing_catches_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Fishing Catches",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Expansion AI",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic-by-name"
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 2,
+        "x": 18,
+        "y": 29
+      },
+      "id": 74,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_eai{instance=\"$instance\",instance_id=\"$instance_id\"} + dayz_metricz_eai_npc{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "eAI / NPC",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
+      "description": "Total updates path graph regions by object in the world",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 29
+      },
+      "id": 69,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.2.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "disableTextWrap": false,
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "dayz_metricz_path_graph_updates_total{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "fullMetaSearch": false,
+          "includeNullMetadata": true,
+          "instant": false,
+          "legendFormat": "{{world}} ({{instance_id}})",
+          "range": true,
+          "refId": "A",
+          "useBackend": false
+        }
+      ],
+      "title": "Path Graph Updates",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${data_source}"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4875,7 +5263,7 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
+            "fillOpacity": 25,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
@@ -4889,12 +5277,12 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "auto",
+            "showPoints": "never",
             "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
-              "mode": "none"
+              "mode": "normal"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -4918,18 +5306,24 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 8,
+        "h": 6,
+        "w": 12,
         "x": 12,
-        "y": 29
+        "y": 33
       },
       "id": 65,
       "options": {
         "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
+          "calcs": [
+            "lastNotNull",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true,
+          "sortBy": "Last *",
+          "sortDesc": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -4957,78 +5351,6 @@
       ],
       "title": "RPC Inputs",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${data_source}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            }
-          },
-          "mappings": []
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 4,
-        "x": 20,
-        "y": 29
-      },
-      "id": 43,
-      "options": {
-        "legend": {
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true
-        },
-        "pieType": "donut",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "sort": "desc",
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.2.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "sum by(id) (dayz_metricz_rpc_input_total{instance=\"$instance\",instance_id=\"$instance_id\"})",
-          "fullMetaSearch": false,
-          "includeNullMetadata": false,
-          "instant": true,
-          "legendFormat": "{{ id }}",
-          "range": false,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "RPC Inputs",
-      "type": "piechart"
     }
   ],
   "preload": false,
@@ -5201,5 +5523,5 @@
   "timezone": "browser",
   "title": "MetricZ Server",
   "uid": "ff1kp4nh3cfeod",
-  "version": 3
+  "version": 4
 }
