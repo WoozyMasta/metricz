@@ -302,7 +302,7 @@ Example: call your own registry after the built-in flush completes:
 #ifdef METRICZ
 modded class MetricZ_Exporter
 {
-  protected static bool Flush(FileHandle fh)
+  override bool Flush(FileHandle fh)
   {
     // run MetricZ built-in collectors first
     if (!super.Flush(fh))
