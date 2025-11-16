@@ -79,7 +79,7 @@ class MetricZ_LabelUtils
 			k.ToLower();
 			k.Replace(" ", "_");
 
-			if (k == "world" || k == "host" || k == "instance_id" || k == "game_port")
+			if (k == "world" || k == "host" || k == "instance_id")
 				continue;
 
 			result += "," + k + "=\"" + Escape(v) + "\"";
@@ -129,22 +129,30 @@ class MetricZ_LabelUtils
 			s_BaseLabel += "host=\"" + Escape(host) + "\",";
 
 		// base: instance id (allowed to be "0")
-		int instanceId = g_Game.ServerConfigGetInt("instanceId");
+		string instanceId = g_Game.ServerConfigGetInt("instanceId").ToString();
 
-		// base: game port (optional, can provide the desired uniqueness when instanceId is not set)
-		if (instanceId == 0) {
-			string gamePort;
-			GetCLIParam("port", gamePort);
-			if (gamePort.ToInt() > 0)
-				s_BaseLabel += "game_port=\"" + gamePort + "\",";
-
-			ErrorEx(
-			    "MetricZ instanceId is 0. Set unique 'instanceId' in server.cfg!",
-			    ErrorExSeverity.WARNING);
+		// fallback instance id
+		if (instanceId == "0") {
+			GetCLIParam("port", instanceId);
+			if (instanceId != "0") {
+				ErrorEx(
+				    "MetricZ instanceId is 0. Used game port " + instanceId + " as instanceId.",
+				    ErrorExSeverity.INFO);
+			} else {
+				instanceId = g_Game.ServerConfigGetInt("steamQueryPort").ToString();
+				if (instanceId != "0") {
+					ErrorEx(
+					    "MetricZ instanceId and game port is 0. Used steam query port " + instanceId + " as instanceId.",
+					    ErrorExSeverity.INFO);
+				} else
+					ErrorEx(
+					    "MetricZ instanceId is 0. Set unique 'instanceId' in server.cfg!",
+					    ErrorExSeverity.WARNING);
+			}
 		}
 
-		s_BaseLabel += "instance_id=\"" + instanceId.ToString() + "\"";
-		s_BaseLabelReady = (s_BaseLabel != string.Empty);
+		s_BaseLabel += "instance_id=\"" + instanceId + "\"";
+		s_BaseLabelReady = (instanceId != string.Empty);
 
 		return s_BaseLabel;
 	}

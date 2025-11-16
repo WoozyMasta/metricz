@@ -13,6 +13,15 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## [0.2.1][] - 2025-11-16
+
+### Changed
+
+* removed fallback label `game_port` and used `instance_id`
+  to hold game port if instance is `0`
+
+[0.2.1]: https://github.com/WoozyMasta/metricz/compare/0.2.0...0.2.1
+
 ## [0.2.0][] - 2025-11-16
 
 ### Added
@@ -76,8 +85,6 @@ and this project adheres to [Semantic Versioning][].
 * fix not shown `blood` label on player `dayz_metricz_player_loaded` metric
 * all I/O moved to separate `MetricZ_Exporter` class
 * replace all `GetGame()` calls to static `g_Game` instance
-
-[0.2.0]: https://github.com/WoozyMasta/metricz/compare/0.1.2...0.2.0
 
 ## [0.1.2][] - 2025-11-09
 
