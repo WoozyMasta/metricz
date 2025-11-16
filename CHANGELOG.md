@@ -72,6 +72,7 @@ and this project adheres to [Semantic Versioning][].
   previously it was not unique and changed between server restarts
 * earlier initialization of the metrics store to avoid collisions
 * fix not shown `blood` label on player `dayz_metricz_player_loaded` metric
+* all I/O moved to separate `MetricZ_Exporter` class
 
 ## [0.1.2][] - 2025-11-09
 
