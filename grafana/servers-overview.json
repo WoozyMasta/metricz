@@ -352,7 +352,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "dayz_metricz_update_duration_seconds{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}",
+          "expr": "max by(instance, instance_id, world) (dayz_metricz_update_duration_seconds{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{world}} ({{instance_id}})",
