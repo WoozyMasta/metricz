@@ -79,7 +79,7 @@ class MetricZ_LabelUtils
 			k.ToLower();
 			k.Replace(" ", "_");
 
-			if (k == "host" || k == "world" || k == "instance_id")
+			if (k == "world" || k == "host" || k == "instance_id" || k == "game_port")
 				continue;
 
 			result += "," + k + "=\"" + Escape(v) + "\"";
@@ -128,11 +128,22 @@ class MetricZ_LabelUtils
 		if (host != string.Empty)
 			s_BaseLabel += "host=\"" + Escape(host) + "\",";
 
-		// base: instance id (allowed to be "0")
-		string instanceId = g_Game.ServerConfigGetInt("instanceId").ToString();
-		s_BaseLabel += "instance_id=\"" + instanceId + "\"";
+		// base: game port (optional, can provide the desired uniqueness when instanceId is not set)
+		string gamePort;
+		GetCLIParam("port", gamePort);
+		if (gamePort.ToInt() > 0)
+			s_BaseLabel += "game_port=\"" + gamePort + "\",";
 
-		s_BaseLabelReady = true;
+		// base: instance id (allowed to be "0")
+		int instanceId = g_Game.ServerConfigGetInt("instanceId");
+		s_BaseLabel += "instance_id=\"" + instanceId.ToString() + "\"";
+
+		if (instanceId == 0)
+			ErrorEx(
+			    "MetricZ instanceId is 0. Set unique 'instanceId' in server.cfg!",
+			    ErrorExSeverity.WARNING);
+
+		s_BaseLabelReady = (s_BaseLabel != string.Empty);
 		return s_BaseLabel;
 	}
 

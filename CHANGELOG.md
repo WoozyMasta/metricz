@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning][].
 * helper class `MetricZ_ObjectName` with
   `GetName(Object obj, bool stripBase = false)` for consistent,
   normalized object type names (optional suffix stripping).
+* `game_port` base label, provide the desired uniqueness when `instanceId`
+  is not set in server config
 * [INTEGRATION.md](./INTEGRATION.md) with info how to use MetricZ in your mods
 
 #### New metrics
