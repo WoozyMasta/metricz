@@ -12,21 +12,21 @@
 */
 class MetricZ_Exporter
 {
-	// Re-entrancy guard: prevents overlapping scrapes.
-	protected static bool s_Busy;
+	// singleton instance
+	protected static ref MetricZ_Exporter s_Instance;
 
-	// One-time init flag: ensures Init() is idempotent.
-	protected static bool s_Init;
+	// Re-entrancy guard: prevents overlapping scrapes.
+	protected bool s_Busy;
 
 	/**
 	    \brief Initialize MetricZ and schedule first scrape.
 	    \details Loads config, initializes storage and queues first Update().
 	    \return true if initialized this call, false if already initialized.
 	*/
-	static bool Init()
+	void MetricZ_Exporter()
 	{
-		if (s_Init)
-			return false;
+		if (s_Instance)
+			return;
 
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
@@ -36,10 +36,18 @@ class MetricZ_Exporter
 		          MetricZ_Config.s_InitDelayMs,
 		          false);
 
-		s_Init = true;
 		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
+	}
 
-		return true;
+	/**
+	    \brief Access global exporter instance.
+	*/
+	static MetricZ_Exporter Get()
+	{
+		if (!s_Instance)
+			s_Instance = new MetricZ_Exporter();
+
+		return s_Instance;
 	}
 
 	/**
@@ -47,16 +55,13 @@ class MetricZ_Exporter
 	    \details Removes scheduled Update(), deletes temp file and overwrites
 	             target file with a single status metric.
 	*/
-	static void Shutdown()
+	void Shutdown()
 	{
-		if (!s_Init)
-			return;
-
 		// stop future scrapes
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
 		DeleteFile(MetricZ_Config.TEMP);
 
-		s_Init = false;
+		s_Instance = null;
 		s_Busy = false;
 
 		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
@@ -81,7 +86,7 @@ class MetricZ_Exporter
 	    \param fh Open file handle to write to (TEMP file).
 	    \return true on success, false if fh is invalid.
 	*/
-	protected static bool Flush(FileHandle fh)
+	bool Flush(FileHandle fh)
 	{
 		if (!fh)
 			return false;
@@ -132,11 +137,8 @@ class MetricZ_Exporter
 	        - Calls MetricZ_Storage.Update() to refresh gauges.
 	        - Flushes all collectors into TEMP and atomically replaces FILE.
 	*/
-	protected static void Update()
+	protected void Update()
 	{
-		if (!s_Init)
-			return;
-
 		// Schedule next tick for minimize drift
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,

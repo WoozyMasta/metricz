@@ -20,6 +20,12 @@ and this project adheres to [Semantic Versioning][].
 * in class `MetricZ_Exporter` moved all data writers into new
   `bool Flush(FileHandle fh)` to support modded custom metric registries
 
+### Changed
+
+* class `MetricZ_Exporter` rebuild to singleton instance for modding support.
+  Although static overriding was introduced in version 1.29,
+  static overriding does not apply when a method is called via `CallLater`.
+
 ## [0.2.1][] - 2025-11-16
 
 ### Changed

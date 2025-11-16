@@ -10,12 +10,14 @@
 */
 modded class MissionServer : MissionBase
 {
+	protected ref MetricZ_Exporter m_MetricZ;
+
 	/**
 	    \brief Initialize MetricZ and schedule first scrape.
 	*/
 	override void OnInit()
 	{
-		MetricZ_Exporter.Init();
+		m_MetricZ = MetricZ_Exporter.Get();
 
 		super.OnInit();
 	}
@@ -25,7 +27,8 @@ modded class MissionServer : MissionBase
 	*/
 	override void OnMissionFinish()
 	{
-		MetricZ_Exporter.Shutdown();
+		if (m_MetricZ)
+			m_MetricZ.Shutdown();
 
 		super.OnMissionFinish();
 	}
