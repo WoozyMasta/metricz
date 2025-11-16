@@ -33,7 +33,7 @@ class MetricZ_Time
 	static float GameEpochSeconds()
 	{
 		int y, m, d, hh, mm;
-		GetGame().GetWorld().GetDate(y, m, d, hh, mm);
+		g_Game.GetWorld().GetDate(y, m, d, hh, mm);
 
 		int years = y - 1970;
 		int leaps = LeapYearsUpTo(y) - LeapYearsUpTo(1970);

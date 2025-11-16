@@ -80,7 +80,7 @@ class MetricZ_Config
 		s_DisableEventMetrics = Toggle("DisableEventMetrics", "disable-event");
 
 		// server params
-		int v = GetGame().ServerConfigGetInt("maxPlayers");
+		int v = g_Game.ServerConfigGetInt("maxPlayers");
 		if (v > 0)
 			s_MaxPlayers = v;
 
@@ -104,7 +104,7 @@ class MetricZ_Config
 	{
 		int ms = defMs;
 
-		int configVal = GetGame().ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
+		int configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
 		if (configVal > 0)
 			ms = configVal * 1000;
 
@@ -132,7 +132,7 @@ class MetricZ_Config
 	private static bool Toggle(string cfgKey, string cliFlag)
 	{
 
-		int configVal = GetGame().ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
+		int configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
 		bool result = (configVal != 0);
 
 		string cliVal;

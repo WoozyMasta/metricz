@@ -85,10 +85,10 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 	{
 		if (transport) {
 			m_Transport = transport;
-			GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
-			    InitMetricsRegistry,
-			    MetricZ_Config.s_ScrapeIntervalMs,
-			    false);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
+			          InitMetricsRegistry,
+			          MetricZ_Config.s_ScrapeIntervalMs,
+			          false);
 		}
 	}
 

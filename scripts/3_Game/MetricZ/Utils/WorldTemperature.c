@@ -26,9 +26,9 @@ class MetricZ_WorldTemperature
 		if (s_Ready)
 			return;
 
-		float half = GetGame().GetWorld().GetWorldSize() * 0.5;
-		float y = GetGame().SurfaceY(half, half);
-		float depth = GetGame().GetWaterDepth(Vector(half, y, half));
+		float half = g_Game.GetWorld().GetWorldSize() * 0.5;
+		float y = g_Game.SurfaceY(half, half);
+		float depth = g_Game.GetWaterDepth(Vector(half, y, half));
 		if (depth > 0)
 			y += depth;
 
@@ -49,7 +49,7 @@ class MetricZ_WorldTemperature
 			return 0.0;
 
 		int y, m, d, hh, mm;
-		GetGame().GetWorld().GetDate(y, m, d, hh, mm);
+		g_Game.GetWorld().GetDate(y, m, d, hh, mm);
 
 		// base sea-level for current world date/time
 		float base_sea_exact = wd.GetBaseEnvTemperatureExact(m, d, hh, mm);

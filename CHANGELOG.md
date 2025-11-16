@@ -75,6 +75,7 @@ and this project adheres to [Semantic Versioning][].
 * earlier initialization of the metrics store to avoid collisions
 * fix not shown `blood` label on player `dayz_metricz_player_loaded` metric
 * all I/O moved to separate `MetricZ_Exporter` class
+* replace all `GetGame()` calls to static `g_Game` instance
 
 [0.2.0]: https://github.com/WoozyMasta/metricz/compare/0.1.2...0.2.0
 

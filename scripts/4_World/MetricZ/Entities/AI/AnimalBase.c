@@ -84,9 +84,9 @@ modded class AnimalBase
 		string result;
 
 		// 1) Steaks
-		if (GetGame().ConfigIsExisting(cfgBase + "ObtainedSteaks item")) {
+		if (g_Game.ConfigIsExisting(cfgBase + "ObtainedSteaks item")) {
 			string steakItem;
-			GetGame().ConfigGetText(cfgBase + "ObtainedSteaks item", steakItem);
+			g_Game.ConfigGetText(cfgBase + "ObtainedSteaks item", steakItem);
 			steakItem.TrimInPlace();
 
 			if (steakItem != string.Empty) {
@@ -105,9 +105,9 @@ modded class AnimalBase
 		}
 
 		// 2) Pelt fallback
-		if (result == string.Empty && GetGame().ConfigIsExisting(cfgBase + "ObtainedPelt item")) {
+		if (result == string.Empty && g_Game.ConfigIsExisting(cfgBase + "ObtainedPelt item")) {
 			string peltItem;
-			GetGame().ConfigGetText(cfgBase + "ObtainedPelt item", peltItem);
+			g_Game.ConfigGetText(cfgBase + "ObtainedPelt item", peltItem);
 			peltItem.TrimInPlace();
 
 			if (peltItem != string.Empty) {

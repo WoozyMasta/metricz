@@ -31,10 +31,10 @@ class MetricZ_Exporter
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
 
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
-		    Update,
-		    MetricZ_Config.s_InitDelayMs,
-		    false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
+		          Update,
+		          MetricZ_Config.s_InitDelayMs,
+		          false);
 
 		s_Init = true;
 		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
@@ -53,7 +53,7 @@ class MetricZ_Exporter
 			return;
 
 		// stop future scrapes
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
 		DeleteFile(MetricZ_Config.TEMP);
 
 		s_Init = false;
@@ -85,10 +85,10 @@ class MetricZ_Exporter
 			return;
 
 		// Schedule next tick for minimize drift
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
-		    Update,
-		    MetricZ_Config.s_ScrapeIntervalMs,
-		    false);
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
+		          Update,
+		          MetricZ_Config.s_ScrapeIntervalMs,
+		          false);
 
 		if (s_Busy) {
 			MetricZ_Storage.s_ScrapeSkippedTotal.Inc();

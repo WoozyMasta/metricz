@@ -27,7 +27,7 @@ class MetricZ_EntitiesWriter
 		array<ref MetricZ_PlayerMetrics> pms = new array<ref MetricZ_PlayerMetrics>();
 
 		array<Man> players = new array<Man>();
-		GetGame().GetPlayers(players);
+		g_Game.GetPlayers(players);
 
 		foreach (Man man : players) {
 			PlayerBase player;
