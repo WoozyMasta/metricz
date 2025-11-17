@@ -228,8 +228,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 
 		m_Registry.Insert(m_PingMin);
 		m_Registry.Insert(m_PingMax);
-		m_Registry.Insert(m_ThrottleOut);
-		m_Registry.Insert(m_ThrottleIn);
+		m_Registry.Insert(m_Throttle);
 
 		m_Registry.Insert(m_AgentsCount);
 		m_Registry.Insert(m_BleedingSources);
