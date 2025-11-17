@@ -58,6 +58,12 @@ DayZ server. Each metric includes its identifier, type
   Player world Y
 * **`dayz_metricz_player_position_z`** (`GAUGE`) —
   Player world Z
+* **`dayz_metricz_player_network_ping_min`** (`GAUGE`) —
+  Player network ping min
+* **`dayz_metricz_player_network_ping_max`** (`GAUGE`) —
+  Player network ping max
+* **`dayz_metricz_player_network_throttle`** (`GAUGE`) —
+  Fraction of outgoing bandwidth throttled since last update 0..1
 * **`dayz_metricz_player_agents_active`** (`GAUGE`) —
   Number of active disease agents affecting the player
 * **`dayz_metricz_player_bleeding_active`** (`GAUGE`) —

@@ -17,6 +17,12 @@ and this project adheres to [Semantic Versioning][].
 
 ### Added
 
+* **`dayz_metricz_player_network_ping_min`** (`GAUGE`) —
+  player network ping min
+* **`dayz_metricz_player_network_ping_max`** (`GAUGE`) —
+  player network ping max
+* **`dayz_metricz_player_network_throttle`** (`GAUGE`) —
+  fraction of outgoing bandwidth throttled since last update 0..1
 * in class `MetricZ_Exporter` moved all data writers into new
   `bool Flush(FileHandle fh)` to support modded custom metric registries
 
@@ -24,7 +30,7 @@ and this project adheres to [Semantic Versioning][].
 
 * class `MetricZ_Exporter` rebuild to singleton instance for modding support.
   Although static overriding was introduced in version 1.29,
-  static overriding does not apply when a method is called via `CallLater`.
+  static overriding does not apply when a method is called via `CallLater` ⚠️
 
 ## [0.2.1][] - 2025-11-16
 

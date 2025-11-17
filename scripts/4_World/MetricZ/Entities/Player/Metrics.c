@@ -38,6 +38,11 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 	protected ref MetricZ_MetricFloat m_PosY;
 	protected ref MetricZ_MetricFloat m_PosZ;
 
+	// identity
+	protected ref MetricZ_MetricInt m_PingMin;
+	protected ref MetricZ_MetricInt m_PingMax;
+	protected ref MetricZ_MetricFloat m_Throttle;
+
 	// extra stats
 	protected ref MetricZ_MetricInt m_AgentsCount;
 	protected ref MetricZ_MetricInt m_BleedingSources;
@@ -123,6 +128,20 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			    MetricZ_MetricType.GAUGE);
 		}
 
+		// identity
+		m_PingMin = new MetricZ_MetricInt(
+		    "player_network_ping_min",
+		    "Player network ping min",
+		    MetricZ_MetricType.GAUGE);
+		m_PingMax = new MetricZ_MetricInt(
+		    "player_network_ping_max",
+		    "Player network ping max",
+		    MetricZ_MetricType.GAUGE);
+		m_Throttle = new MetricZ_MetricFloat(
+		    "player_network_throttle",
+		    "Fraction of outgoing bandwidth throttled since last update 0..1",
+		    MetricZ_MetricType.GAUGE);
+
 		// extra stats
 		m_AgentsCount = new MetricZ_MetricInt(
 		    "player_agents_active",
@@ -207,6 +226,11 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			m_Registry.Insert(m_PosZ);
 		}
 
+		m_Registry.Insert(m_PingMin);
+		m_Registry.Insert(m_PingMax);
+		m_Registry.Insert(m_ThrottleOut);
+		m_Registry.Insert(m_ThrottleIn);
+
 		m_Registry.Insert(m_AgentsCount);
 		m_Registry.Insert(m_BleedingSources);
 		m_Registry.Insert(m_ImmunityBoosted);
@@ -255,6 +279,13 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			m_PosX.Set(pos[0]);
 			m_PosY.Set(pos[1]);
 			m_PosZ.Set(pos[2]);
+		}
+
+		PlayerIdentity idp = m_Player.GetIdentity();
+		if (idp) {
+			m_PingMin.Set(idp.GetPingMin());
+			m_PingMax.Set(idp.GetPingMax());
+			m_Throttle.Set(idp.GetOutputThrottle());
 		}
 
 		// base states
