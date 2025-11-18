@@ -85,5 +85,16 @@ modded class PlayerBase
 	{
 		return m_MetricZ;
 	}
+
+	/**
+	    \brief Update player network stats.
+	*/
+	override void EOnPostFrame(IEntity other, int extra)
+	{
+		super.EOnPostFrame(other, extra);
+
+		if (m_MetricZ || !MetricZ_Config.s_DisablePlayerMetrics)
+			m_MetricZ.SampleNetwork();
+	}
 }
 #endif

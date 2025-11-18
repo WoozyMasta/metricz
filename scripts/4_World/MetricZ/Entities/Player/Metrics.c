@@ -14,6 +14,12 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 	// Spawn timestamp in seconds
 	protected int m_InitTick;
 
+	// ping & throttle
+	protected int m_PingMinWindow = -1;
+	protected int m_PingMaxWindow = -1;
+	protected int m_ThrottleWindow = -1;
+	protected float m_SampleAccTime;
+
 	// metrics cached labels
 	protected string m_LabelsExtra;
 
@@ -280,12 +286,8 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			m_PosZ.Set(pos[2]);
 		}
 
-		PlayerIdentity idp = m_Player.GetIdentity();
-		if (idp) {
-			m_PingMin.Set(idp.GetPingMin());
-			m_PingMax.Set(idp.GetPingMax());
-			m_Throttle.Set(idp.GetOutputThrottle());
-		}
+		// ping & throttle
+		UpdateNetwork();
 
 		// base states
 		m_AgentsCount.Set(MetricZ_LabelUtils.BitsCount(m_Player.GetAgents()));
@@ -302,6 +304,39 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_StatLongestSurvivorHitMeters.Set(m_Player.StatGet(AnalyticsManagerServer.STAT_LONGEST_SURVIVOR_HIT));
 		m_StatPlayersKilledTotal.Set(m_Player.StatGet(AnalyticsManagerServer.STAT_PLAYERS_KILLED));
 		m_StatInfectedKilledTotal.Set(m_Player.StatGet(AnalyticsManagerServer.STAT_INFECTED_KILLED));
+	}
+
+	/**
+	    \brief Per-frame hook from PlayerBase to sample network stats.
+	    \details Called at most 1 Hz per player to accumulate min/max over scrape window.
+	*/
+	void SampleNetwork()
+	{
+		if (!m_Player)
+			return;
+
+		m_SampleAccTime += m_Player.GetDeltaT();
+		if (m_SampleAccTime < 1.0) // sample ~1 Hz
+			return;
+
+		m_SampleAccTime = 0;
+
+		PlayerIdentity idp = m_Player.GetIdentity();
+		if (!idp)
+			return;
+
+		int pMin = idp.GetPingMin();
+		int pMax = idp.GetPingMax();
+		float throttle = idp.GetOutputThrottle();
+
+		if (pMin > 0 && (m_PingMinWindow < 0 || pMin < m_PingMinWindow))
+			m_PingMinWindow = pMin;
+
+		if (pMax > 0 && (m_PingMaxWindow < 0 || pMax > m_PingMaxWindow))
+			m_PingMaxWindow = pMax;
+
+		if (throttle > 0 && (m_ThrottleWindow < 0 || throttle > m_ThrottleWindow))
+			m_ThrottleWindow = throttle;
 	}
 
 	/**
@@ -357,6 +392,54 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			return m_LabelsExtra;
 
 		return m_Labels;
+	}
+
+	/**
+	    \brief Flush sampled network window into metrics.
+	    \details
+	      - Uses per-frame window samples (min/max/throttle) if present.
+	      - Falls back to identity GetPingMin/Max and GetOutputThrottle if window is empty.
+	      - Normalizes inconsistent values (max < min) and resets window for next scrape.
+	*/
+	protected void UpdateNetwork()
+	{
+		if (!m_Player)
+			return;
+
+		int pMin = 0;
+		int pMax = 0;
+		float throttle = 0.0;
+
+		// prefer window samples collected via SampleNetwork()
+		if (m_PingMinWindow >= 0)
+			pMin = m_PingMinWindow;
+		if (m_PingMaxWindow >= 0)
+			pMax = m_PingMaxWindow;
+		if (m_ThrottleWindow >= 0.0)
+			throttle = m_ThrottleWindow;
+
+		// fallback (but localhost connection with real 0 ping may collect it twice)
+		if (pMin <= 0 && pMax <= 0) {
+			PlayerIdentity idp = m_Player.GetIdentity();
+			if (idp) {
+				pMin = idp.GetPingMin();
+				pMax = idp.GetPingMax();
+				throttle = idp.GetOutputThrottle();
+			}
+		}
+
+		// normalize noise
+		if (pMax < pMin)
+			pMax = pMin;
+
+		m_PingMin.Set(pMin);
+		m_PingMax.Set(pMax);
+		m_Throttle.Set(throttle);
+
+		// reset window for next scrape interval
+		m_PingMinWindow = -1;
+		m_PingMaxWindow = -1;
+		m_ThrottleWindow = -1.0;
 	}
 }
 #endif
