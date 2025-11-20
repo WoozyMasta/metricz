@@ -1496,19 +1496,19 @@
                 "value": 0
               },
               {
-                "color": "green",
+                "color": "semi-dark-green",
                 "value": 5000
               },
               {
-                "color": "super-light-green",
+                "color": "green",
                 "value": 10000
               },
               {
-                "color": "super-light-yellow",
+                "color": "yellow",
                 "value": 20000
               },
               {
-                "color": "#EAB839",
+                "color": "dark-yellow",
                 "value": 30000
               },
               {
@@ -2076,7 +2076,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2142,6 +2142,21 @@
               {
                 "id": "color",
                 "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "act"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
                   "fixedColor": "blue",
                   "mode": "fixed"
                 }
@@ -2157,7 +2172,7 @@
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "red",
+                  "fixedColor": "blue",
                   "mode": "fixed"
                 }
               }
@@ -2180,9 +2195,7 @@
           ],
           "displayMode": "table",
           "placement": "right",
-          "showLegend": true,
-          "sortBy": "Name",
-          "sortDesc": false
+          "showLegend": true
         },
         "tooltip": {
           "hideZeros": false,
@@ -2193,6 +2206,10 @@
       "pluginVersion": "12.2.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
           "editorMode": "code",
           "expr": "dayz_metricz_player_network_ping_min{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
           "hide": false,
@@ -2203,7 +2220,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "PBFA97CFB590B2093"
+            "uid": "${data_source}"
           },
           "editorMode": "code",
           "expr": "dayz_metricz_player_network_ping_max{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
@@ -2299,7 +2316,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "PBFA97CFB590B2093"
+        "uid": "${data_source}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2431,9 +2448,8 @@
         "legend": {
           "calcs": [
             "lastNotNull",
-            "max",
-            "mean",
-            "median"
+            "min",
+            "max"
           ],
           "displayMode": "table",
           "placement": "bottom",
@@ -2448,6 +2464,10 @@
       "pluginVersion": "12.2.1",
       "targets": [
         {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
           "editorMode": "code",
           "expr": "dayz_metricz_player_network_throttle{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
           "hide": false,
@@ -2654,7 +2674,7 @@
         "x": 20,
         "y": 28
       },
-      "id": 19,
+      "id": 18,
       "options": {
         "colorMode": "background",
         "graphMode": "area",
@@ -2681,7 +2701,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "dayz_metricz_player_third_person{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
+          "expr": "dayz_metricz_player_godmode{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{world}} ({{instance_id}})",
@@ -2690,7 +2710,7 @@
           "useBackend": false
         }
       ],
-      "title": "Third Person",
+      "title": "God Mode",
       "type": "stat"
     },
     {
@@ -2732,7 +2752,7 @@
         "x": 22,
         "y": 28
       },
-      "id": 18,
+      "id": 19,
       "options": {
         "colorMode": "background",
         "graphMode": "area",
@@ -2759,7 +2779,7 @@
           },
           "disableTextWrap": false,
           "editorMode": "code",
-          "expr": "dayz_metricz_player_godmode{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
+          "expr": "dayz_metricz_player_third_person{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\", steam_id=\"$steam_id\"}",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "legendFormat": "{{world}} ({{instance_id}})",
@@ -2768,7 +2788,7 @@
           "useBackend": false
         }
       ],
-      "title": "God Mode",
+      "title": "Third Person",
       "type": "stat"
     }
   ],
