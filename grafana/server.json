@@ -996,7 +996,7 @@
           "showLineNumbers": false,
           "showMiniMap": false
         },
-        "content": "## **${world}** \r\n### ${game_version} `${save_version}`",
+        "content": "# ⚙️ ${game_version}\r\n# 💾 ${save_version}\r\n# 🗺️ ${world}",
         "mode": "markdown"
       },
       "pluginVersion": "12.2.1",
