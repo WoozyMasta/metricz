@@ -42,5 +42,15 @@ A simple observability and monitoring mod for DayZ server admins. It collects se
 
 [hr][/hr]
 
+[h2]Complete your stack with LogZ[/h2]
+To get the full picture, use [b][url=https://steamcommunity.com/sharedfiles/filedetails/?id=3610709966]LogZ[/url][/b] alongside MetricZ.
+[list]
+[*] [b]MetricZ[/b] tracks [i]metrics[/i] (How many players? What is the FPS? How many cars?)
+[*] [b]LogZ[/b] tracks [i]logs[/i] (Who killed whom? Who built what? Where did they disconnect?)
+[/list]
+Together they allow you to correlate server performance drops with specific player events in Grafana.
+
+[hr][/hr]
+
 [h2]Source & docs[/h2]
 GitHub: [url=https://github.com/WoozyMasta/metricz]WoozyMasta/metricz[/url]
