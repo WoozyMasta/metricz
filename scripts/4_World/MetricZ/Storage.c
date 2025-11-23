@@ -74,7 +74,7 @@ class MetricZ_Storage
 	    "uptime_seconds",
 	    "Server uptime since start, seconds",
 	    MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_TimeUnixSec = new MetricZ_MetricFloat(
+	static ref MetricZ_MetricInt s_TimeUnixSec = new MetricZ_MetricInt(
 	    "game_time_unix_seconds",
 	    "Current game Unix time seconds",
 	    MetricZ_MetricType.GAUGE);
