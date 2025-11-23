@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning][].
 * class `MetricZ_Exporter` rebuild to singleton instance for modding support.
   Although static overriding was introduced in version 1.29,
   static overriding does not apply when a method is called via `CallLater` ⚠️
+* refactored `MetricZ_Time` and use integer as more accuracy timestamp
 
 ## [0.2.1][] - 2025-11-16
 
