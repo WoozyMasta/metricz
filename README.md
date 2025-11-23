@@ -22,6 +22,11 @@ windows_exporter (Windows).
 <!-- markdownlint-disable-next-line MD033 -->
 <br clear="right"/>
 
+> [!TIP]  
+> It works best when combined with structured logs using the [LogZ] mod.
+> While MetricZ handles performance counters, LogZ captures non-metric
+> event data as structured NDJSON logs, enabling deeper tracing and analysis.
+
 ## Architecture
 
 * Hooks: `DayZGame.OnRPC` and `OnEvent` (RPC/Event), `MissionServer` (init,
@@ -227,7 +232,7 @@ scrape_configs:
 
 Built-in support for modifications:
 
-* [DayZ-Expansion-AI](https://steamcommunity.com/sharedfiles/filedetails/?id=2792982069)
+* [DayZ-Expansion-AI]
 
 ## Mod Integration (for modders)
 
@@ -247,3 +252,14 @@ Covers:
   `INFO` logs from the code.
 
 ## 👉 [Support Me](https://gist.github.com/WoozyMasta/7b0cabb538236b7307002c1fbc2d94ea)
+
+If this mod has saved you hours of time debugging server performance,
+analyzing player activity, or identifying bottlenecks,
+please consider supporting me.  
+At the very least, a Like and Subscribe on the [MetricZ]
+Steam Workshop page would be greatly appreciated!
+
+<!-- Links --->
+[LogZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3610709966
+[MetricZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002
+[DayZ-Expansion-AI]: https://steamcommunity.com/sharedfiles/filedetails/?id=2792982069
