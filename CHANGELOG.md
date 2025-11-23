@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
-## Unreleased
+## [0.3.0][] - 2025-11-23
 
 ### Added
 
@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning][].
   Although static overriding was introduced in version 1.29,
   static overriding does not apply when a method is called via `CallLater` ⚠️
 * refactored `MetricZ_Time` and use integer as more accuracy timestamp
+
+[0.3.0]: https://github.com/WoozyMasta/metricz/compare/0.2.1...0.3.0
 
 ## [0.2.1][] - 2025-11-16
 
