@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning][].
 
 ### Changed
 
+* documentation rendering in `CONFIG.md` has been updated and improved
+* configuration reading has been normalized and brought to a unified form
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
   calculations (if frame skipping is used by mods like GaneZ)
 * spelling in panel names have been corrected

@@ -18,12 +18,9 @@ class MetricZ_Config
 	static const string CLI_FLAG_PREFIX = "metricz-";
 	static const string CFG_OPT_PREFIX = "MetricZ_";
 
-	static const int INIT_DELAY = 60000;
-	static const int SCRAPE_INTERVAL = 15000;
-
 	// runtime overrides
-	static int s_InitDelayMs = INIT_DELAY;
-	static int s_ScrapeIntervalMs = SCRAPE_INTERVAL;
+	static int s_InitDelayMs;
+	static int s_ScrapeIntervalMs;
 	static bool s_DisablePlayerMetrics;
 	static bool s_DisableZombieMetrics;
 	static bool s_DisableAnimalMetrics;
@@ -46,38 +43,38 @@ class MetricZ_Config
 	*/
 	static void Load()
 	{
-		// Delay before the first metric collection in seconds (default 60)
-		s_InitDelayMs = Seconds("InitDelay", "init-delay", INIT_DELAY, 0);
+		// Delay before the first metric collection in seconds
+		s_InitDelayMs = GetNumber("InitDelay", "init-delay", 60, 0) * 1000;
 
-		// Interval between metric updates in seconds (default 15, min 1)
-		s_ScrapeIntervalMs = Seconds("ScrapeInterval", "scrape-interval", SCRAPE_INTERVAL, 1000);
+		// Interval between metric updates in seconds
+		s_ScrapeIntervalMs = GetNumber("ScrapeInterval", "scrape-interval", 15, 1) * 1000;
 
 		// Disable player-related metrics collection
-		s_DisablePlayerMetrics = Toggle("DisablePlayerMetrics", "disable-player");
+		s_DisablePlayerMetrics = GetBool("DisablePlayerMetrics", "disable-player");
 
 		// Disable zombie per-type and mind states metrics collection
-		s_DisableZombieMetrics = Toggle("DisableZombieMetrics", "disable-zombie");
+		s_DisableZombieMetrics = GetBool("DisableZombieMetrics", "disable-zombie");
 
 		// Disable animal per-type metrics collection
-		s_DisableAnimalMetrics = Toggle("DisableAnimalMetrics", "disable-animal");
+		s_DisableAnimalMetrics = GetBool("DisableAnimalMetrics", "disable-animal");
 
 		// Disable vehicle and transport metrics collection
-		s_DisableTransportMetrics = Toggle("DisableTransportMetrics", "disable-transport");
+		s_DisableTransportMetrics = GetBool("DisableTransportMetrics", "disable-transport");
 
 		// Disable weapon usage metrics collection
-		s_DisableWeaponMetrics = Toggle("DisableWeaponMetrics", "disable-weapon");
+		s_DisableWeaponMetrics = GetBool("DisableWeaponMetrics", "disable-weapon");
 
 		// Disable territory flag metrics collection
-		s_DisableTerritoryMetrics = Toggle("DisableTerritoryMetrics", "disable-territory");
+		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
 
-		// Enable player coordinate metrics (off by default)
-		s_EnableCoordinatesMetrics = Toggle("EnableCoordinatesMetrics", "enable-coordinates");
+		// Enable player and transport coordinate metrics
+		s_EnableCoordinatesMetrics = GetBool("EnableCoordinatesMetrics", "enable-coordinates");
 
 		// Disable RPC metrics collection
-		s_DisableRPCMetrics = Toggle("DisableRPCMetrics", "disable-rpc");
+		s_DisableRPCMetrics = GetBool("DisableRPCMetrics", "disable-rpc");
 
 		// Disable event handler metrics collection
-		s_DisableEventMetrics = Toggle("DisableEventMetrics", "disable-event");
+		s_DisableEventMetrics = GetBool("DisableEventMetrics", "disable-event");
 
 		// server params
 		int v = g_Game.ServerConfigGetInt("maxPlayers");
@@ -93,32 +90,43 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Read a time option in seconds and return milliseconds.
-	    \param cfgKey   Key suffix in serverDZ.cfg (without "MetricZ_").
-	    \param cliFlag  CLI flag suffix (without "metricz-").
-	    \param defMs    Default value in milliseconds.
-	    \param minMs    Minimum allowed value in milliseconds.
-	    \return int     Milliseconds after applying overrides and minimum.
+	    \brief Read float option from config and CLI.
+	    \param cfgKey  Key suffix in serverDZ.cfg (without "MetricZ_").
+	    \param cliFlag CLI flag suffix (without "metricz-").
+	    \param defF    Default float value.
+	    \param minF    Minimum allowed value.
+	    \return Resolved float value.
 	*/
-	private static int Seconds(string cfgKey, string cliFlag, int defMs, int minMs = 0)
+	private static float GetNumber(string cfgKey, string cliFlag, float defF, float minF = 0)
 	{
-		int ms = defMs;
+		float result = defF;
 
-		int configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
-		if (configVal > 0)
-			ms = configVal * 1000;
+		float configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
+		if (configVal >= minF)
+			result = configVal;
 
 		string cliVal;
 		if (GetCLIParam(CLI_FLAG_PREFIX + cliFlag, cliVal)) {
-			int cliValSec = cliVal.ToInt();
-			if (cliValSec > 0)
-				ms = cliValSec * 1000;
+			float cliValFloat = cliVal.ToFloat();
+			if (cliValFloat >= minF)
+				result = cliValFloat;
 		}
 
-		if (ms < minMs)
-			ms = minMs;
+		return result;
+	}
 
-		return ms;
+	/**
+	    \brief Read string from CLI.
+	    \param cliFlag CLI flag suffix (without "metricz-").
+	    \return Flag value or empty string.
+	*/
+	private static string GetString(string cliFlag)
+	{
+		string cliVal;
+		if (GetCLIParam(CLI_FLAG_PREFIX + cliFlag, cliVal))
+			return cliVal;
+
+		return string.Empty;
 	}
 
 	/**
@@ -129,7 +137,7 @@ class MetricZ_Config
 	    \param cliFlag CLI flag suffix (without "metricz-").
 	    \return bool   Resolved toggle value.
 	*/
-	private static bool Toggle(string cfgKey, string cliFlag)
+	private static bool GetBool(string cfgKey, string cliFlag)
 	{
 
 		int configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
