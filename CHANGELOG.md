@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning][].
 
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
   calculations (if frame skipping is used by mods like GaneZ)
+* spelling in panel names have been corrected
 
 ## [0.3.0][] - 2025-11-23
 

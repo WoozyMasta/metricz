@@ -39,7 +39,7 @@
       "tags": [],
       "targetBlank": true,
       "title": "Steam",
-      "tooltip": "Steam WorkShop",
+      "tooltip": "Steam Workshop",
       "type": "link",
       "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002"
     }
@@ -95,6 +95,11 @@
                     "targetBlank": true,
                     "title": "Steam Profile",
                     "url": "https://steamcommunity.com/profiles/${__value.raw}"
+                  },
+                  {
+                    "targetBlank": true,
+                    "title": "CF Cloud",
+                    "url": "https://app.cftools.cloud/profile/${__value.raw}"
                   },
                   {
                     "title": "Player Dashboard",
@@ -231,8 +236,13 @@
       "links": [
         {
           "targetBlank": true,
-          "title": "Steam",
+          "title": "Steam Profile",
           "url": "https://steamcommunity.com/profiles/${steam_id}"
+        },
+        {
+          "targetBlank": true,
+          "title": "CF Cloud",
+          "url": "https://app.cftools.cloud/profile/${steam_id}"
         }
       ],
       "options": {
@@ -245,7 +255,7 @@
         "mode": "markdown"
       },
       "pluginVersion": "12.2.1",
-      "title": "Plyer Info",
+      "title": "Player Info",
       "type": "text"
     },
     {
@@ -3018,5 +3028,5 @@
   "timezone": "browser",
   "title": "MetricZ Player",
   "uid": "cf1vdc82xx1q8e",
-  "version": 4
+  "version": 5
 }
