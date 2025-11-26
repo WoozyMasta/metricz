@@ -78,18 +78,18 @@ MetricZ_ScrapeInterval = 15;
 
 // switches
 MetricZ_DisablePlayerMetrics = 0;
-MetricZ_DisableTransportMetrics = 0;
-MetricZ_DisableWeaponMetrics = 0;
-MetricZ_DisableTerritoryMetrics = 0;
-MetricZ_EnableCoordinatesMetrics = 0; // enable consciously
-MetricZ_DisableRPCMetrics = 0;
+MetricZ_DisableTransportMetrics = 1;
+MetricZ_DisableWeaponMetrics = 1;
+MetricZ_DisableTerritoryMetrics = 1;
+MetricZ_DisableCoordinatesMetrics = 1;
+MetricZ_DisableRPCMetrics = 1;
 MetricZ_DisableEventMetrics = 0;
 ```
 
 CLI switches (override config; prefix `metricz-`):
 
 ```txt
--metricz-init-delay=60 -metricz-scrape-interval=15 -metricz-enable-coordinates=false -metricz-disable-rpc=false -metricz-disable-event=false
+-metricz-init-delay=60 -metricz-scrape-interval=15 -metricz-enable-coordinates=false -metricz-disable-rpc=false -metricz-disable-event=false -metricz-map-tiles-version=May.9
 ```
 
 More: [CONFIG.md](./CONFIG.md)

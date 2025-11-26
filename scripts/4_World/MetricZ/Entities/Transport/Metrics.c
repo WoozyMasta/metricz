@@ -23,6 +23,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 	protected ref MetricZ_MetricFloat m_PosX;
 	protected ref MetricZ_MetricFloat m_PosY;
 	protected ref MetricZ_MetricFloat m_PosZ;
+	protected ref MetricZ_MetricFloat m_Yaw;
 
 	/**
 	    \brief Constructor. Initializes metric instances and spawn tick.
@@ -51,7 +52,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		    MetricZ_MetricType.GAUGE);
 
 		// position
-		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
+		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
 			m_PosX = new MetricZ_MetricFloat(
 			    "transport_position_x",
 			    "Transport world X",
@@ -63,6 +64,10 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 			m_PosZ = new MetricZ_MetricFloat(
 			    "transport_position_z",
 			    "Transport world Z",
+			    MetricZ_MetricType.GAUGE);
+			m_Yaw = new MetricZ_MetricFloat(
+			    "transport_orientation",
+			    "Transport yaw degrees",
 			    MetricZ_MetricType.GAUGE);
 		}
 	}
@@ -106,10 +111,11 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_EngineOn);
 		m_Registry.Insert(m_FuelFraction);
 
-		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
+		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
 			m_Registry.Insert(m_PosX);
 			m_Registry.Insert(m_PosY);
 			m_Registry.Insert(m_PosZ);
+			m_Registry.Insert(m_Yaw);
 		}
 
 		SetLabels();
@@ -130,11 +136,12 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Passengers.Set(GetPassengersCount());
 
 		// position
-		if (MetricZ_Config.s_EnableCoordinatesMetrics) {
-			vector pos = m_Transport.GetPosition();
+		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+			vector pos = MetricZ_Geo.GetPosition(m_Transport);
 			m_PosX.Set(pos[0]);
 			m_PosY.Set(pos[1]);
 			m_PosZ.Set(pos[2]);
+			m_Yaw.Set(m_Transport.GetOrientation()[0]);
 		}
 
 		// speed m/s via physics velocity

@@ -7,10 +7,11 @@ function trim(s) {
 }
 
 # simple word-wrap to given width with indent
-function wrap(text, width, indent,   n, words, i, line, base_len, w) {
+# возвращает строку, сам ничего не печатает
+function wrap(text, width, indent,   n, words, i, line, base_len, w, out) {
   text = trim(text)
   if (text == "")
-    return
+    return ""
 
   n = split(text, words, /[[:space:]]+/)
   line = indent
@@ -30,7 +31,8 @@ function wrap(text, width, indent,   n, words, i, line, base_len, w) {
     if (new_len > width) {
       # flush current line and start new one
       if (line != indent)
-        print line
+        out = (out ? out "\n" : "") line
+
       line = indent w
     } else {
       if (line == indent)
@@ -41,7 +43,9 @@ function wrap(text, width, indent,   n, words, i, line, base_len, w) {
   }
 
   if (line != indent)
-    print line
+    out = (out ? out "\n" : "") line
+
+  return out
 }
 
 {
@@ -53,27 +57,35 @@ function wrap(text, width, indent,   n, words, i, line, base_len, w) {
   }
 
   re = "^[[:space:]]*.*(GetNumber|GetString|GetBool)[[:space:]]*\\(" \
-       "[[:space:]]*\"([^\"]+)\"[[:space:]]*," \
-       "[[:space:]]*\"([^\"]+)\"" \
+       "[[:space:]]*\"([^\"]+)\"[[:space:]]*" \
+       "(,[[:space:]]*\"([^\"]+)\")?" \
        "([[:space:]]*,[[:space:]]*([^,)]*))?"
 
   if (match($0, re, m)) {
     type = m[1]
-    name = m[2]
-    cli  = m[3]
-    def  = ""
-    if (m[5] != "")
-      def = trim(m[5])
+    arg1 = m[2]
+    arg2 = m[4]
+
+    def = ""
+    if (m[6] != "")
+      def = trim(m[6])
 
     desc = comment ? comment : "(no description)"
     comment = ""
 
-    printf "* **`MetricZ_%s`**\n  `-metricz-%s`\n", name, cli
-    if (def != "")
-      printf "  (default: `%s`)\n", def
-    printf "  —"
+    if (arg2 != "")
+      printf "* **`MetricZ_%s`**\n  `-metricz-%s` —\n", arg1, arg2
+    else
+      printf "* `-metricz-%s` —\n", arg1
 
-    wrap(desc, 76, " ")
+    wrapped = wrap(desc, 76, "  ")
+    if (wrapped != "")
+      printf "%s", wrapped   # печать без завершающего \n
+
+    if (def != "")
+      printf "\n  (default: `%s`)", def
+
+    printf ";\n"
 
     next
   }
