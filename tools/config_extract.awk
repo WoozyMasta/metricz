@@ -7,8 +7,7 @@ function trim(s) {
 }
 
 # simple word-wrap to given width with indent
-# возвращает строку, сам ничего не печатает
-function wrap(text, width, indent,   n, words, i, line, base_len, w, out) {
+function wrap(text, width, indent, n, words, i, line, base_len, w, out) {
   text = trim(text)
   if (text == "")
     return ""
@@ -80,7 +79,7 @@ function wrap(text, width, indent,   n, words, i, line, base_len, w, out) {
 
     wrapped = wrap(desc, 76, "  ")
     if (wrapped != "")
-      printf "%s", wrapped   # печать без завершающего \n
+      printf "%s", wrapped
 
     if (def != "")
       printf "\n  (default: `%s`)", def
