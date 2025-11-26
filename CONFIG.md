@@ -24,37 +24,57 @@ Each entry below shows:
 ## Options [Utils/Config.c](./scripts/3_Game/MetricZ/Utils/Config.c)
 
 * **`MetricZ_InitDelay`**
-  `-metricz-init-delay`
-  (default: `60`)
-  — Delay before the first metric collection in seconds
+  `-metricz-init-delay` —
+  Delay before the first metric collection in seconds
+  (default: `60`);
 * **`MetricZ_ScrapeInterval`**
-  `-metricz-scrape-interval`
-  (default: `15`)
-  — Interval between metric updates in seconds
+  `-metricz-scrape-interval` —
+  Interval between metric updates in seconds
+  (default: `15`);
 * **`MetricZ_DisablePlayerMetrics`**
-  `-metricz-disable-player`
-  — Disable player-related metrics collection
+  `-metricz-disable-player` —
+  Disable player-related metrics collection;
 * **`MetricZ_DisableZombieMetrics`**
-  `-metricz-disable-zombie`
-  — Disable zombie per-type and mind states metrics collection
+  `-metricz-disable-zombie` —
+  Disable zombie per-type and mind states metrics collection;
 * **`MetricZ_DisableAnimalMetrics`**
-  `-metricz-disable-animal`
-  — Disable animal per-type metrics collection
+  `-metricz-disable-animal` —
+  Disable animal per-type metrics collection;
 * **`MetricZ_DisableTransportMetrics`**
-  `-metricz-disable-transport`
-  — Disable vehicle and transport metrics collection
+  `-metricz-disable-transport` —
+  Disable vehicle and transport metrics collection;
 * **`MetricZ_DisableWeaponMetrics`**
-  `-metricz-disable-weapon`
-  — Disable weapon usage metrics collection
+  `-metricz-disable-weapon` —
+  Disable weapon usage metrics collection;
 * **`MetricZ_DisableTerritoryMetrics`**
-  `-metricz-disable-territory`
-  — Disable territory flag metrics collection
-* **`MetricZ_EnableCoordinatesMetrics`**
-  `-metricz-enable-coordinates`
-  — Enable player and transport coordinate metrics
+  `-metricz-disable-territory` —
+  Disable territory flag metrics collection;
+* **`MetricZ_DisableCoordinatesMetrics`**
+  `-metricz-disable-coordinates` —
+  Disable player and transport coordinate metrics;
+* **`MetricZ_DisableGeoCoordinatesFormat`**
+  `-metricz-disable-geo-coordinates-format` —
+  Disable conversion of coordinates metrics to geo `EPSG:4326` (WGS84)
+  format. By default convert position to lon/lat in `-180/180` and `-90/90`
+  range. If disable, all exported coordinates hold vanilla zero relative
+  meters;
 * **`MetricZ_DisableRPCMetrics`**
-  `-metricz-disable-rpc`
-  — Disable RPC metrics collection
+  `-metricz-disable-rpc` —
+  Disable RPC metrics collection;
 * **`MetricZ_DisableEventMetrics`**
-  `-metricz-disable-event`
-  — Disable event handler metrics collection
+  `-metricz-disable-event` —
+  Disable event handler metrics collection;
+* **`MetricZ_MapEffectiveSize`**
+  `-metricz-map-effective-size` —
+  Override effective map tiles size in world units. Useful if the web map
+  size is larger than the game world size (for example, the izurvive tiles
+  for Chernarus have a size of `15926`, although the world size is `15360`)
+  (default: `0`);
+* `-metricz-map-tiles-name` —
+  Override map tiles name. Useful if the name of the web map tiles was not
+  recognized correctly;
+* `-metricz-map-tiles-version` —
+  Override map tiles version. Useful if the web map version has been updated
+  but the MetricZ returns the old version;
+* `-metricz-map-tiles-format` —
+  Override map tiles format (e.g. `webp`, `jpg`, `png`);

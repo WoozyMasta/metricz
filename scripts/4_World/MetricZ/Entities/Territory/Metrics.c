@@ -63,7 +63,7 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 			return;
 
 		// position as int for drop noise after point
-		vector p = m_TerritoryFlag.GetPosition();
+		vector p = MetricZ_Geo.GetPosition(m_TerritoryFlag);
 		int x = Math.Round(p[0]);
 		int y = Math.Round(p[1]);
 		int z = Math.Round(p[2]);

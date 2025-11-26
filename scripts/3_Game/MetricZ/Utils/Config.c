@@ -67,14 +67,35 @@ class MetricZ_Config
 		// Disable territory flag metrics collection
 		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
 
-		// Enable player and transport coordinate metrics
-		s_EnableCoordinatesMetrics = GetBool("EnableCoordinatesMetrics", "enable-coordinates");
+		// Disable player and transport coordinate metrics
+		s_DisableCoordinatesMetrics = GetBool("DisableCoordinatesMetrics", "disable-coordinates");
+
+		// Disable conversion of coordinates metrics to geo `EPSG:4326` (WGS84) format.
+		// By default convert position to lon/lat in `-180/180` and `-90/90` range.
+		// If disable, all exported coordinates hold vanilla zero relative meters
+		s_DisableGeoCoordinatesFormat = GetBool("DisableGeoCoordinatesFormat", "disable-geo-coordinates-format");
 
 		// Disable RPC metrics collection
 		s_DisableRPCMetrics = GetBool("DisableRPCMetrics", "disable-rpc");
 
 		// Disable event handler metrics collection
 		s_DisableEventMetrics = GetBool("DisableEventMetrics", "disable-event");
+
+		// Override effective map tiles size in world units.
+		// Useful if the web map size is larger than the game world size
+		// (for example, the izurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`)
+		s_MapEffectiveSize = GetNumber("MapEffectiveSize", "map-effective-size", 0, g_Game.GetWorld().GetWorldSize());
+
+		// Override map tiles name.
+		// Useful if the name of the web map tiles was not recognized correctly
+		s_MapTilesName = GetString("map-tiles-name");
+
+		// Override map tiles version.
+		// Useful if the web map version has been updated but the MetricZ returns the old version
+		s_MapTilesVersion = GetString("map-tiles-version");
+
+		// Override map tiles format (e.g. `webp`, `jpg`, `png`)
+		s_MapTilesFormat = GetString("map-tiles-format");
 
 		// server params
 		int v = g_Game.ServerConfigGetInt("maxPlayers");
@@ -87,6 +108,8 @@ class MetricZ_Config
 			if (fps > 0)
 				s_LimitFPS = fps;
 		}
+
+		MetricZ_Geo.Init();
 	}
 
 	/**

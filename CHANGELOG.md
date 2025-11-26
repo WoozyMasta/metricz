@@ -15,11 +15,27 @@ and this project adheres to [Semantic Versioning][].
 
 ## Unreleased
 
+### Added
+
+* `MetricZ_Geo` helper class for converting world coordinates to `EPSG:4326`
+  (WGS84) and exposing map tiles metadata (name, version, format, workshop ID).
+* new config/CLI options to override map tiles metadata
+* **`dayz_metricz_player_orientation`**  (`GAUGE`) — player yaw in degrees
+* **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
+* for metric `dayz_metricz_status` optional map tiles metadata labels
+  `map_tiles_size`, `map_tiles_name`, `map_tiles_version`, `map_tiles_format`
+  if exporting coordinates metrics enabled
+
 ### Changed
 
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name
+* replaced `MetricZ_EnableCoordinatesMetrics` with inverted
+  `MetricZ_DisableCoordinatesMetrics` (`-metricz-disable-coordinates`) ⚠️
+* coordinate metrics now use `MetricZ_Geo` and can export either raw world
+  coordinates or WGS84 lon/lat based on
+  `MetricZ_DisableGeoCoordinatesFormat` ⚠️
 * documentation rendering in `CONFIG.md` has been updated and improved
 * configuration reading has been normalized and brought to a unified form
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
