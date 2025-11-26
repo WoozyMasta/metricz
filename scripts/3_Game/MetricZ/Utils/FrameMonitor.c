@@ -39,8 +39,11 @@ class MetricZ_FrameMonitor
 
 			RecordWindowSample(s_FPS);
 
-			s_AccTime = 0;
+			s_AccTime = s_AccTime - 1.0;
 			s_AccFrames = 0;
+
+			if (s_AccTime > 1.0)
+				s_AccTime = 0;
 		}
 	}
 

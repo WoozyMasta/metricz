@@ -34,17 +34,6 @@ modded class MissionServer : MissionBase
 	}
 
 	/**
-	    \brief Pump frame monitor each frame.
-	    \param timeslice Delta time of the last frame in seconds.
-	*/
-	override void OnUpdate(float timeslice)
-	{
-		super.OnUpdate(timeslice);
-
-		MetricZ_FrameMonitor.OnUpdate(timeslice);
-	}
-
-	/**
 	    \brief Count new player spawns.
 	    \return \p PlayerBase Created player
 	*/

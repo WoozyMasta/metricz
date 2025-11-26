@@ -15,6 +15,18 @@ modded class DayZGame
 	static int s_MetricZ_PathGraphUpdates;
 
 	/**
+	    \brief Pump frame monitor each frame.
+	    \param timeslice Delta time of the last frame in seconds.
+	*/
+	override void OnPostUpdate(bool doSim, float timeslice)
+	{
+		if (doSim)
+			MetricZ_FrameMonitor.OnUpdate(timeslice);
+
+		super.OnPostUpdate(doSim, timeslice);
+	}
+
+	/**
 	    \brief Hook incoming RPCs to count them.
 	    \details Increments per-id counter, then calls base.
 	*/

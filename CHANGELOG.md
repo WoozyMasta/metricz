@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## Unreleased
+
+### Changed
+
+* frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
+  calculations (if frame skipping is used by mods like GaneZ)
+
 ## [0.3.0][] - 2025-11-23
 
 ### Added
