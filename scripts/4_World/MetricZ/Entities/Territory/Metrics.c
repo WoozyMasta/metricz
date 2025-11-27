@@ -62,16 +62,12 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 		if (!m_TerritoryFlag || m_Labels != string.Empty)
 			return;
 
-		// position as int for drop noise after point
-		vector p = MetricZ_Geo.GetPosition(m_TerritoryFlag);
-		int x = Math.Round(p[0]);
-		int y = Math.Round(p[1]);
-		int z = Math.Round(p[2]);
+		vector pos = MetricZ_Geo.GetPosition(m_TerritoryFlag);
 
 		map<string, string> labels = new map<string, string>();
-		labels.Insert("x", x.ToString());
-		labels.Insert("y", y.ToString());
-		labels.Insert("z", z.ToString());
+		labels.Insert("refresher_radius", MetricZ_Geo.GetRadiusDegrees(GameConstants.REFRESHER_RADIUS).ToString());
+		labels.Insert("longitude", pos[0].ToString());
+		labels.Insert("latitude", pos[2].ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
 	}
