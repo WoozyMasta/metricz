@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning][].
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name
+* fixed **`dayz_metricz_artillery_barrages_total`** calculation logic
 * replaced `MetricZ_EnableCoordinatesMetrics` with inverted
   `MetricZ_DisableCoordinatesMetrics` (`-metricz-disable-coordinates`) ⚠️
 * coordinate metrics now use `MetricZ_Geo` and can export either raw world
