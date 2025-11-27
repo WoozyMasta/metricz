@@ -115,7 +115,7 @@ class MetricZ_Geo
 		// x: [0..size] -> lon: [-180..180]
 		lon = pos[0] * s_LongitudeScale - 180.0;
 
-		// z: [0..size] -> mercatorY: [-π..π]
+		// z: [0..size] -> mercatorY: [-PI..PI]
 		float mercatorY = pos[2] * s_MercatorScale - Math.PI;
 		float latRad = (2.0 * Math.Atan(Math.Pow(Math.EULER, mercatorY))) - (Math.PI * 0.5);
 		lat = Math.Clamp(latRad * Math.RAD2DEG, -MAX_LAT, MAX_LAT);
