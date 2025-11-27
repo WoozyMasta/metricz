@@ -74,6 +74,8 @@ Here is the updated changelog including the new changes.
 * coordinate metrics now use `MetricZ_Geo` and can export either raw world
   coordinates or WGS84 lon/lat based on
   `MetricZ_DisableGeoCoordinatesFormat` ⚠️
+* labels for **`dayz_metricz_territory_lifetime`** changed: replaced
+  `x`/`y`/`z` with `longitude`/`latitude` and added `refresher_radius` ⚠️
 * documentation rendering in `CONFIG.md` has been updated and improved
 * configuration reading has been normalized and brought to a unified form
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
