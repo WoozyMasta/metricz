@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning][].
 
 ### Changed
 
+* weapon type name for labels now use `MetricZ_ObjectName::GetName()`
+* `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
+  accepts an `inout` type name
 * documentation rendering in `CONFIG.md` has been updated and improved
 * configuration reading has been normalized and brought to a unified form
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable

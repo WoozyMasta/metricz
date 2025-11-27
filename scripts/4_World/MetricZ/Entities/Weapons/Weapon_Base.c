@@ -77,52 +77,8 @@ modded class Weapon_Base
 		if (s_MetricZ_LabelNames && s_MetricZ_LabelNames.Find(type, cached))
 			return cached;
 
-		string result = type;
-
-		// remove all case-insensitive "sawedoff" occurrences
-		string pat = "sawedoff";
-		string low = result;
-		low.ToLower();
-		int plen = pat.Length();
-		int pos = low.IndexOf(pat);
-		while (pos != -1) {
-			// delete substring [pos, pos+plen]
-			result = result.Substring(0, pos) + result.Substring(pos + plen, result.Length() - (pos + plen));
-
-			// recalc lowercase view
-			low = result;
-			low.ToLower();
-			pos = low.IndexOf(pat);
-		}
-
-		// collapse repeated underscores
-		while (result.Contains("__"))
-			result.Replace("__", "_");
-
-		// trim leading underscores
-		while (result.Length() > 0 && result.Get(0) == "_")
-			result = result.Substring(1, result.Length() - 1);
-
-		// trim trailing underscores
-		while (result.Length() > 0 && result.Get(result.Length() - 1) == "_")
-			result = result.Substring(0, result.Length() - 1);
-
-		// cut after last underscore (drop variant)
-		if (result != string.Empty) {
-			int last = result.LastIndexOf("_");
-			if (last != -1) {
-				if (last > 0)
-					result = result.Substring(0, last);
-				else
-					result = "";
-			}
-		}
-
-		// fallback
-		if (result == string.Empty)
-			result = type;
-
-		result.ToLower();
+		string result = MetricZ_ObjectName.GetName(this, true);
+		result.Replace("sawedoff", "");
 
 		// cache store
 		if (!s_MetricZ_LabelNames)

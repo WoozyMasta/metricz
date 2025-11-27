@@ -48,21 +48,16 @@ class MetricZ_ObjectName
 		"tropic", "tropical",
 		"khaki",
 		"navy",
-		"metal",
+		"metal", "wood", "wooden", "plastic"
 		"desert", "sand",
 		"flat",
+		"chernarus", "livonia",
 	};
 
 	/**
-	    \brief Derive a readable object type/name.
-	    \details Resolution order:
-	             1) Object.GetType()
-	             2) Object.ClassName() (skips generic "Object"/"House")
-	             3) Object.GetDebugNameNative() with "NOID " prefix handling and ".p3d" trimming.
-	             Result is lowercased; optionally strips common postfix after last "_" (color/base/state/etc.).
+	    \brief Derive a readable lowercased object type/class/model name.
 	    \param obj       Source object.
 	    \param stripBase If true, try to strip known postfix from final name
-	                     (suffixes in NAME_SUFFIXES or "<digits>rnd" magazine-style endings).
 	    \return string Non-empty trimmed lowercase name or "unknown"/"none".
 	*/
 	static string GetName(Object obj, bool stripBase = false)
@@ -70,41 +65,43 @@ class MetricZ_ObjectName
 		if (!obj)
 			return "none";
 
-		string typeName = obj.GetType();
-		if (typeName != string.Empty) {
-			typeName.TrimInPlace();
-			typeName.ToLower();
+		string name, strippedName;
 
-			if (stripBase)
-				typeName = StripSuffix(typeName);
+		name = obj.GetType();
+		if (name != string.Empty) {
+			name.TrimInPlace();
+			name.ToLower();
 
-			return typeName;
+			strippedName = name;
+			if (stripBase && StripSuffix(strippedName))
+				return strippedName;
+
+			return name;
 		}
 
-		string className = obj.ClassName();
-		if (className != string.Empty) {
-			className.TrimInPlace();
-			if (className != "Object" && className != "House") {
-				className.ToLower();
+		name = obj.ClassName();
+		if (name != string.Empty) {
+			name.TrimInPlace();
+			if (name != "Object" && name != "House") {
+				name.ToLower();
 
-				if (stripBase)
-					className = StripSuffix(className);
+				strippedName = name;
+				if (stripBase && StripSuffix(strippedName))
+					return strippedName;
 
-				return className;
+				return name;
 			}
 		}
 
-		string dbg = obj.GetDebugNameNative();
+		name = obj.GetDebugNameNative();
+		if (name.IndexOf("NOID ") == 0)
+			name = name.Substring(5, name.Length() - 5);
 
-		// drop "NOID " prefix for house proxies
-		if (dbg.IndexOf("NOID ") == 0)
-			dbg = dbg.Substring(5, dbg.Length() - 5);
-
-		if (dbg == string.Empty)
+		if (name == string.Empty)
 			return "unknown";
 
 		array<string> parts = new array<string>();
-		dbg.Split(":", parts);
+		name.Split(":", parts);
 
 		string part;
 		if (parts.Count() == 2) {
@@ -113,7 +110,7 @@ class MetricZ_ObjectName
 			else
 				part = parts[0];
 		} else
-			part = dbg;
+			part = name;
 
 		part.TrimInPlace();
 		part.ToLower();
@@ -122,42 +119,56 @@ class MetricZ_ObjectName
 	}
 
 	/**
-	    \brief Strip a single known suffix from a normalized name.
-	    \details
-	        Input must already be trimmed and lowercased.
-	        Handles:
-	          - known NAME_SUFFIXES (e.g. "_black", "_winter", "_colorbase", ...)
-	          - magazine-style numeric suffix "<digits>rnd" (e.g. "_30rnd")
-	    \param name Normalized type name (lowercase).
-	    \return string Name without the last known suffix, or original name if nothing matches.
+	        \brief Strips known suffixes recursively and cleans up the name.
+	        \param name String to process (modified in place).
+	        \return bool True if name is valid (not empty), false otherwise.
 	*/
-	static string StripSuffix(string name)
+	static bool StripSuffix(inout string name)
 	{
 		name.TrimInPlace();
 		if (name == string.Empty)
-			return name;
+			return false;
 
-		int sep = name.LastIndexOf("_");
-		if (sep <= 0 || sep >= name.Length() - 1)
-			return name;
+		bool foundAny = false;
+		while (true) {
+			int sep = name.LastIndexOf("_");
+			if (sep <= 0)
+				break;
 
-		string suffix = name.Substring(sep + 1, name.Length() - (sep + 1));
-		if (suffix == string.Empty)
-			return name;
+			string suffix = name.Substring(sep + 1, name.Length() - (sep + 1));
+			bool isMatch = false;
 
-		for (int i = 0; i < NAME_SUFFIXES.Count(); i++) {
-			if (suffix == NAME_SUFFIXES[i])
-				return name.Substring(0, sep);
+			if (NAME_SUFFIXES.Find(suffix) != -1)
+				isMatch = true;
+
+			else {
+				int len = suffix.Length();
+				if (len > 3 && suffix.Substring(len - 3, 3) == "rnd") {
+					if (IsDigits(suffix.Substring(0, len - 3)))
+						isMatch = true;
+				}
+			}
+
+			if (isMatch) {
+				name = name.Substring(0, sep);
+				foundAny = true;
+			} else
+				break;
 		}
 
-		// generic <digits>rnd, e.g. 5rnd, 20rnd, 100rnd, 1000rnd...
-		int len = suffix.Length();
-		if (len > 3 && suffix.Substring(len - 3, 3) == "rnd") {
-			if (IsDigits(suffix.Substring(0, len - 3)))
-				return name.Substring(0, sep);
-		}
+		while (name.Contains("__"))
+			name.Replace("__", "_");
 
-		return name;
+		while (name.Length() > 0 && name.Get(0) == "_")
+			name = name.Substring(1, name.Length() - 1);
+
+		while (name.Length() > 0 && name.Get(name.Length() - 1) == "_")
+			name = name.Substring(0, name.Length() - 1);
+
+		if (name == string.Empty)
+			return false;
+
+		return true;
 	}
 
 	/**
