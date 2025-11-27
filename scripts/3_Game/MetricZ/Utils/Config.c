@@ -27,9 +27,16 @@ class MetricZ_Config
 	static bool s_DisableTransportMetrics;
 	static bool s_DisableWeaponMetrics;
 	static bool s_DisableTerritoryMetrics;
-	static bool s_EnableCoordinatesMetrics;
+	static bool s_DisableEffectAreaMetrics;
+	static bool s_EnableLocalEffectAreaMetrics;
+	static bool s_DisableCoordinatesMetrics;
+	static bool s_DisableGeoCoordinatesFormat;
 	static bool s_DisableRPCMetrics;
 	static bool s_DisableEventMetrics;
+	static float s_MapEffectiveSize;
+	static string s_MapTilesName;
+	static string s_MapTilesVersion;
+	static string s_MapTilesFormat;
 
 	// server params -> metrics
 	static int s_MaxPlayers = 255; // from serverDZ.cfg:maxPlayers
@@ -67,14 +74,44 @@ class MetricZ_Config
 		// Disable territory flag metrics collection
 		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
 
-		// Enable player and transport coordinate metrics
-		s_EnableCoordinatesMetrics = GetBool("EnableCoordinatesMetrics", "enable-coordinates");
+		// Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.) metrics
+		s_DisableEffectAreaMetrics = GetBool("DisableEffectAreaMetrics", "disable-effect-area");
+
+		// Enable Local EffectArea metrics like ContaminatedArea_Local created from Grenade_ChemGas
+		// This is disabled by default because metrics for such local zones will always have unique
+		// positions, thereby creating new metric series in the TSDB each time.
+		// Use with caution, as this may bloat your metrics database!
+		s_EnableLocalEffectAreaMetrics = GetBool("EnableLocalEffectAreaMetrics", "enable-local-effect-area");
+
+		// Disable player and transport coordinate metrics
+		s_DisableCoordinatesMetrics = GetBool("DisableCoordinatesMetrics", "disable-coordinates");
+
+		// Disable conversion of coordinates metrics to geo `EPSG:4326` (WGS84) format.
+		// By default convert position to lon/lat in `-180/180` and `-90/90` range.
+		// If disable, all exported coordinates hold vanilla zero relative meters
+		s_DisableGeoCoordinatesFormat = GetBool("DisableGeoCoordinatesFormat", "disable-geo-coordinates-format");
 
 		// Disable RPC metrics collection
 		s_DisableRPCMetrics = GetBool("DisableRPCMetrics", "disable-rpc");
 
 		// Disable event handler metrics collection
 		s_DisableEventMetrics = GetBool("DisableEventMetrics", "disable-event");
+
+		// Override effective map tiles size in world units.
+		// Useful if the web map size is larger than the game world size
+		// (for example, the izurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`)
+		s_MapEffectiveSize = GetNumber("MapEffectiveSize", "map-effective-size", 0, g_Game.GetWorld().GetWorldSize());
+
+		// Override map tiles name.
+		// Useful if the name of the web map tiles was not recognized correctly
+		s_MapTilesName = GetString("map-tiles-name");
+
+		// Override map tiles version.
+		// Useful if the web map version has been updated but the MetricZ returns the old version
+		s_MapTilesVersion = GetString("map-tiles-version");
+
+		// Override map tiles format (e.g. `webp`, `jpg`, `png`)
+		s_MapTilesFormat = GetString("map-tiles-format");
 
 		// server params
 		int v = g_Game.ServerConfigGetInt("maxPlayers");
@@ -87,6 +124,8 @@ class MetricZ_Config
 			if (fps > 0)
 				s_LimitFPS = fps;
 		}
+
+		MetricZ_Geo.Init();
 	}
 
 	/**

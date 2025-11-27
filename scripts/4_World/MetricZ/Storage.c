@@ -254,6 +254,10 @@ class MetricZ_Storage
 	    MetricZ_MetricType.COUNTER);
 
 	// Events
+	static ref MetricZ_MetricInt s_EffectAreas = new MetricZ_MetricInt(
+	    "effect_areas",
+	    "Total active effect areas (static/dynamic zones)",
+	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Corpses = new MetricZ_MetricInt(
 	    "corpses",
 	    "Corpses tracked on server",
@@ -423,6 +427,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_FishingCatches);
 
 		// Events
+		s_Registry.Insert(s_EffectAreas);
 		s_Registry.Insert(s_Corpses);
 		s_Registry.Insert(s_Artillery);
 		s_Registry.Insert(s_CrashSites);
@@ -480,6 +485,13 @@ class MetricZ_Storage
 
 		labels.Insert("game_version", game_version);
 		labels.Insert("save_version", g_Game.SaveVersion().ToString());
+
+		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+			labels.Insert("map_tiles_size", MetricZ_Geo.GetMapEffectiveSize().ToString());
+			labels.Insert("map_tiles_name", MetricZ_Geo.GetMapTilesName());
+			labels.Insert("map_tiles_version", MetricZ_Geo.GetMapTilesVersion());
+			labels.Insert("map_tiles_format", MetricZ_Geo.GetMapTilesFormat());
+		}
 
 		s_LabelsExtra = MetricZ_LabelUtils.MakeLabels(labels);
 	}
