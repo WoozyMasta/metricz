@@ -42,6 +42,13 @@ Here is the updated changelog including the new changes.
 * new config/CLI options to override map tiles metadata
 * **`dayz_metricz_player_orientation`**  (`GAUGE`) — player yaw in degrees
 * **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
+* **`dayz_metricz_effect_areas`** (`GAUGE`) — total active effect areas
+  (static/dynamic zones)
+* **`dayz_metricz_effect_area_radius`** (`GAUGE`) and
+  **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
+  per-zone metrics with position labels
+* new config options `MetricZ_DisableEffectAreaMetrics` and
+  `MetricZ_EnableLocalEffectAreaMetrics`
 * for metric `dayz_metricz_status` optional map tiles metadata labels
   `map_tiles_size`, `map_tiles_name`, `map_tiles_version`, `map_tiles_format`
   if exporting coordinates metrics enabled

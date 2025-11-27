@@ -28,6 +28,13 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_infected_by_type`** (`GAUGE`) —
   Infected count by zombie type
 
+## [Entities/EffectArea/Metrics.c](./scripts/4_World/MetricZ/Entities/EffectArea/Metrics.c)
+
+* **`dayz_metricz_effect_area_radius`** (`GAUGE`) —
+  Effect Area radius in meters (0 if inactive)
+* **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
+  Count of players inside Effect Area
+
 ## [Entities/Player/Metrics.c](./scripts/4_World/MetricZ/Entities/Player/Metrics.c)
 
 * **`dayz_metricz_player_loaded`** (`GAUGE`) —
@@ -236,6 +243,8 @@ DayZ server. Each metric includes its identifier, type
   Total fishing attempts
 * **`dayz_metricz_fishing_catches_total`** (`COUNTER`) —
   Total fish caught
+* **`dayz_metricz_effect_areas`** (`GAUGE`) —
+  Total active effect areas (static/dynamic zones)
 * **`dayz_metricz_corpses`** (`GAUGE`) —
   Corpses tracked on server
 * **`dayz_metricz_artillery_barrages_total`** (`COUNTER`) —

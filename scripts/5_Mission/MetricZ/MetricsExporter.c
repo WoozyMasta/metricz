@@ -124,6 +124,10 @@ class MetricZ_Exporter
 		if (!MetricZ_Config.s_DisableTerritoryMetrics)
 			MetricZ_EntitiesWriter.FlushTerritory(fh);
 
+		// per-effect-area
+		if (!MetricZ_Config.s_DisableEffectAreaMetrics)
+			MetricZ_EntitiesWriter.FlushEffectAreas(fh);
+
 		// dayz game RPC inputs
 		if (!MetricZ_Config.s_DisableRPCMetrics)
 			MetricZ_RpcStats.Flush(fh);

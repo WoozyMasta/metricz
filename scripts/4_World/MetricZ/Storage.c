@@ -254,6 +254,10 @@ class MetricZ_Storage
 	    MetricZ_MetricType.COUNTER);
 
 	// Events
+	static ref MetricZ_MetricInt s_EffectAreas = new MetricZ_MetricInt(
+	    "effect_areas",
+	    "Total active effect areas (static/dynamic zones)",
+	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_Corpses = new MetricZ_MetricInt(
 	    "corpses",
 	    "Corpses tracked on server",
@@ -423,6 +427,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_FishingCatches);
 
 		// Events
+		s_Registry.Insert(s_EffectAreas);
 		s_Registry.Insert(s_Corpses);
 		s_Registry.Insert(s_Artillery);
 		s_Registry.Insert(s_CrashSites);

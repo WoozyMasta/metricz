@@ -130,6 +130,17 @@ For DayZ metrics, we strongly recommend using
   `-metricz-disable-territory` —
   Disable territory flag metrics collection
   `dayz_metricz_territory_lifetime`;
+* **`MetricZ_DisableEffectAreaMetrics`**
+  `-metricz-disable-effect-area` —
+  Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.)
+  metrics;
+* **`MetricZ_EnableLocalEffectAreaMetrics`**
+  `-metricz-enable-local-effect-area` —
+  Enable Local EffectArea metrics like ContaminatedArea_Local created from
+  Grenade_ChemGas This is disabled by default because metrics for such local
+  zones will always have unique positions, thereby creating new metric
+  series in the TSDB each time. Use with caution, as this may bloat your
+  metrics database!;
 * **`MetricZ_DisableCoordinatesMetrics`**
   `-metricz-disable-coordinates` —
   Disable player and transport coordinate metrics;

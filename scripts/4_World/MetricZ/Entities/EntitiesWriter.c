@@ -172,5 +172,48 @@ class MetricZ_EntitiesWriter
 
 		MetricZ_WeaponStats.Flush(fh);
 	}
+
+	static void FlushEffectAreas(FileHandle fh)
+	{
+#ifdef DIAG
+		float t0 = g_Game.GetTickTime();
+#endif
+
+		if (!fh)
+			return;
+
+		array<EffectArea> list;
+		MetricZ_EffectAreaRegistry.Snapshot(list);
+		if (!list || list.Count() == 0)
+			return;
+
+		array<ref MetricZ_EffectAreaMetrics> ams = new array<ref MetricZ_EffectAreaMetrics>();
+		foreach (EffectArea area : list) {
+			if (!area)
+				continue;
+
+			MetricZ_EffectAreaMetrics am = area.MetricZ_GetMetrics();
+			if (!am)
+				continue;
+
+			am.Update();
+			ams.Insert(am);
+		}
+
+		if (ams.Count() == 0)
+			return;
+
+		int n = ams[0].Count();
+		for (int i = 0; i < n; i++) {
+			ams[0].WriteHeaderAt(fh, i);
+
+			foreach (MetricZ_EffectAreaMetrics amCurrent : ams)
+				amCurrent.FlushAt(fh, i);
+		}
+
+#ifdef DIAG
+		ErrorEx("MetricZ effect_areas_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+#endif
+	}
 }
 #endif
