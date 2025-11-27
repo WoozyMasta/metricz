@@ -112,6 +112,12 @@ class MetricZ_Geo
 		if (s_MapEffectiveSize <= 0)
 			Init();
 
+		if (MetricZ_Config.s_DisableGeoCoordinatesFormat) {
+			lon = pos[2];
+			lat = pos[0];
+			return;
+		}
+
 		// x: [0..size] -> lon: [-180..180]
 		lon = pos[0] * s_LongitudeScale - 180.0;
 
@@ -119,6 +125,22 @@ class MetricZ_Geo
 		float mercatorY = pos[2] * s_MercatorScale - Math.PI;
 		float latRad = (2.0 * Math.Atan(Math.Pow(Math.EULER, mercatorY))) - (Math.PI * 0.5);
 		lat = Math.Clamp(latRad * Math.RAD2DEG, -MAX_LAT, MAX_LAT);
+	}
+
+	/**
+	        \brief Convert radius in meters to degrees (relative to map projection).
+	        \param radiusMeters Radius in game world meters.
+	        \return Radius value in degrees (scaled to fit the projected world).
+	*/
+	static float GetRadiusDegrees(float radiusMeters)
+	{
+		if (s_MapEffectiveSize <= 0)
+			Init();
+
+		if (MetricZ_Config.s_DisableGeoCoordinatesFormat)
+			return radiusMeters;
+
+		return radiusMeters * s_LongitudeScale;
 	}
 
 	/**
