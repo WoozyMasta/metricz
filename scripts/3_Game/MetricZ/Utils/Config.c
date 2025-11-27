@@ -27,6 +27,8 @@ class MetricZ_Config
 	static bool s_DisableTransportMetrics;
 	static bool s_DisableWeaponMetrics;
 	static bool s_DisableTerritoryMetrics;
+	static bool s_DisableEffectAreaMetrics;
+	static bool s_EnableLocalEffectAreaMetrics;
 	static bool s_DisableCoordinatesMetrics;
 	static bool s_DisableGeoCoordinatesFormat;
 	static bool s_DisableRPCMetrics;
@@ -71,6 +73,15 @@ class MetricZ_Config
 
 		// Disable territory flag metrics collection
 		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
+
+		// Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.) metrics
+		s_DisableEffectAreaMetrics = GetBool("DisableEffectAreaMetrics", "disable-effect-area");
+
+		// Enable Local EffectArea metrics like ContaminatedArea_Local created from Grenade_ChemGas
+		// This is disabled by default because metrics for such local zones will always have unique
+		// positions, thereby creating new metric series in the TSDB each time.
+		// Use with caution, as this may bloat your metrics database!
+		s_EnableLocalEffectAreaMetrics = GetBool("EnableLocalEffectAreaMetrics", "enable-local-effect-area");
 
 		// Disable player and transport coordinate metrics
 		s_DisableCoordinatesMetrics = GetBool("DisableCoordinatesMetrics", "disable-coordinates");
