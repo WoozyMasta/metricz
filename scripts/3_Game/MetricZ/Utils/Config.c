@@ -32,9 +32,14 @@ class MetricZ_Config
 	static float s_EntityVehicleHitDamageThreshold;
 	static bool s_DisableEntityKillsMetrics;
 	static bool s_DisableTerritoryMetrics;
-	static bool s_EnableCoordinatesMetrics;
+	static bool s_DisableCoordinatesMetrics;
+	static bool s_DisableGeoCoordinatesFormat;
 	static bool s_DisableRPCMetrics;
 	static bool s_DisableEventMetrics;
+	static float s_MapEffectiveSize;
+	static string s_MapTilesName;
+	static string s_MapTilesVersion;
+	static string s_MapTilesFormat;
 
 	// server params -> metrics
 	static int s_MaxPlayers = 255; // from serverDZ.cfg:maxPlayers
