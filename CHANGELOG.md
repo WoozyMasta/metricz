@@ -68,6 +68,7 @@ Here is the updated changelog including the new changes.
 * `MetricZ_Config` now robustly handles missing or `0` values from
   `server.cfg` by respecting default values, while allowing explicit `-1`
   to set a value to `0` where applicable
+* fixed **`dayz_metricz_artillery_barrages_total`** calculation logic
 * replaced `MetricZ_EnableCoordinatesMetrics` with inverted
   `MetricZ_DisableCoordinatesMetrics` (`-metricz-disable-coordinates`) ⚠️
 * coordinate metrics now use `MetricZ_Geo` and can export either raw world
