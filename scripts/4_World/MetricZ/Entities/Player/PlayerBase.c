@@ -10,6 +10,8 @@
 */
 modded class PlayerBase
 {
+	// prevent counting hits on death bodies except last hit
+	protected bool m_MetricZ_IsLastHit;
 	protected ref MetricZ_PlayerMetrics m_MetricZ;
 
 	/**
@@ -66,7 +68,11 @@ modded class PlayerBase
 	{
 #ifdef EXPANSIONMODAI
 		if (IsInherited(eAIBase)) {
+			if (!MetricZ_Config.s_DisableEntityKillsMetrics && killer != this)
+				MetricZ_WeaponStats.OnCreatureKill(killer);
+
 			super.EEKilled(killer);
+
 			return;
 		}
 #endif
@@ -74,7 +80,41 @@ modded class PlayerBase
 		if (!MetricZ_Config.s_DisablePlayerMetrics)
 			MetricZ_Storage.s_PlayersDeaths.Inc();
 
+		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+			MetricZ_WeaponStats.OnPlayerKilled(killer);
+
 		super.EEKilled(killer);
+	}
+
+	/**
+	    \brief Capture hit statistics for metric counters.
+	*/
+	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	{
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+
+		if (!MetricZ_Config.s_DisableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+			if (IsDamageDestroyed())
+				m_MetricZ_IsLastHit = true;
+
+			if (damageResult) {
+				float damage = damageResult.GetDamage(dmgZone, "");
+				if (damage < MetricZ_Config.s_EntityHitDamageThreshold)
+					return;
+
+				if (source && source.IsTransport() && damage < MetricZ_Config.s_EntityVehicleHitDamageThreshold)
+					return;
+			}
+
+#ifdef EXPANSIONMODAI
+			if (IsInherited(eAIBase)) {
+				MetricZ_HitStats.OnCreatureHit(ammo);
+				return;
+			}
+#endif
+
+			MetricZ_HitStats.OnPlayerHit(ammo);
+		}
 	}
 
 	/**

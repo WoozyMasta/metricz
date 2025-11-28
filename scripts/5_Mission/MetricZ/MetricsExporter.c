@@ -115,6 +115,10 @@ class MetricZ_Exporter
 		if (!MetricZ_Config.s_DisableWeaponMetrics)
 			MetricZ_WeaponStats.Flush(fh);
 
+		// entity hits
+		if (!MetricZ_Config.s_DisableEntityHitsMetrics)
+			MetricZ_HitStats.Flush(fh);
+
 		// per-territory
 		if (!MetricZ_Config.s_DisableTerritoryMetrics)
 			MetricZ_EntitiesWriter.FlushTerritory(fh);

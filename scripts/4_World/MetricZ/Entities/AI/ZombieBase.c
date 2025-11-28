@@ -10,6 +10,8 @@
 */
 modded class ZombieBase
 {
+	// prevent counting hits on death bodies except last hit
+	protected bool m_MetricZ_IsLastHit;
 	// last reported mind state
 	protected int m_MetricZ_State = -1;
 	// cache for zombie types used in labels: original class -> canonical type
@@ -58,7 +60,34 @@ modded class ZombieBase
 		} else
 			m_MetricZ_State = -1;
 
+		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+			MetricZ_WeaponStats.OnCreatureKilled(killer);
+
 		super.EEKilled(killer);
+	}
+
+	/**
+	    \brief Capture hit statistics for infected.
+	*/
+	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	{
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+
+		if (!MetricZ_Config.s_DisableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+			if (IsDamageDestroyed())
+				m_MetricZ_IsLastHit = true;
+
+			if (damageResult) {
+				float damage = damageResult.GetDamage(dmgZone, "");
+				if (damage < MetricZ_Config.s_EntityHitDamageThreshold)
+					return;
+
+				if (source && source.IsTransport() && damage < MetricZ_Config.s_EntityVehicleHitDamageThreshold)
+					return;
+			}
+
+			MetricZ_HitStats.OnCreatureHit(ammo);
+		}
 	}
 
 	/**

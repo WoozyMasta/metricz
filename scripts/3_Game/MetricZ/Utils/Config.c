@@ -27,6 +27,10 @@ class MetricZ_Config
 	static bool s_DisableAnimalMetrics;
 	static bool s_DisableTransportMetrics;
 	static bool s_DisableWeaponMetrics;
+	static bool s_DisableEntityHitsMetrics;
+	static float s_EntityHitDamageThreshold;
+	static float s_EntityVehicleHitDamageThreshold;
+	static bool s_DisableEntityKillsMetrics;
 	static bool s_DisableTerritoryMetrics;
 	static bool s_EnableCoordinatesMetrics;
 	static bool s_DisableRPCMetrics;
@@ -45,10 +49,10 @@ class MetricZ_Config
 	static void Load()
 	{
 		// Delay before the first metric collection in seconds
-		s_InitDelayMs = GetNumber("InitDelay", "init-delay", 60, 0) * 1000;
+		s_InitDelayMs = GetNumber("InitDelay", "init-delay", 60, 0, 300) * 1000;
 
 		// Interval between metric updates in seconds
-		s_ScrapeIntervalMs = GetNumber("ScrapeInterval", "scrape-interval", 15, 1) * 1000;
+		s_ScrapeIntervalMs = GetNumber("ScrapeInterval", "scrape-interval", 15, 1, 300) * 1000;
 
 		// Disable player-related metrics collection
 		s_DisablePlayerMetrics = GetBool("DisablePlayerMetrics", "disable-player");
@@ -62,8 +66,19 @@ class MetricZ_Config
 		// Disable vehicle and transport metrics collection
 		s_DisableTransportMetrics = GetBool("DisableTransportMetrics", "disable-transport");
 
-		// Disable weapon usage metrics collection
+		// Disable weapon per-type (count, shoot and kills) metrics collection
 		s_DisableWeaponMetrics = GetBool("DisableWeaponMetrics", "disable-weapon");
+
+		// Disable player and zombie/animal hit by ammo type metrics
+		s_DisableEntityHitsMetrics = GetBool("DisableEntityHitsMetrics", "disable-entity-hits");
+
+		// Minimum damage to log in `EEHitBy()`;
+		// -1 and less disables threshold.
+		s_EntityHitDamageThreshold = GetNumber("EntityHitDamageThreshold", "entity-hit-damage-threshold", 3, -1, 100);
+
+		// Minimum vehicle-hit damage to log in `EEHitBy()`;
+		// -1 and less disables threshold.
+		s_EntityVehicleHitDamageThreshold = GetNumber("EntityVehicleHitDamageThreshold", "entity-vehicle-hit-damage-threshold", 15, -1, 100);
 
 		// Disable territory flag metrics collection
 		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
@@ -91,6 +106,10 @@ class MetricZ_Config
 
 		// Load labels cache
 		MetricZ_PersistentCache.Load();
+
+#ifdef DIAG
+		DebugConfig();
+#endif
 	}
 
 	/**
@@ -99,15 +118,21 @@ class MetricZ_Config
 	    \param cliFlag CLI flag suffix (without "metricz-").
 	    \param defF    Default float value.
 	    \param minF    Minimum allowed value.
+	    \param maxF    Maximum allowed value.
 	    \return Resolved float value.
 	*/
-	private static float GetNumber(string cfgKey, string cliFlag, float defF, float minF = 0)
+	private static float GetNumber(string cfgKey, string cliFlag, float defF, float minF, float maxF)
 	{
 		float result = defF;
 
 		float configVal = g_Game.ServerConfigGetInt(CFG_OPT_PREFIX + cfgKey);
-		if (configVal >= minF)
-			result = configVal;
+		if (configVal != 0) {
+			if (configVal < minF)
+				configVal = minF;
+
+			if (configVal >= minF)
+				result = configVal;
+		}
 
 		string cliVal;
 		if (GetCLIParam(CLI_FLAG_PREFIX + cliFlag, cliVal)) {
@@ -115,6 +140,9 @@ class MetricZ_Config
 			if (cliValFloat >= minF)
 				result = cliValFloat;
 		}
+
+		if (result > maxF)
+			return maxF;
 
 		return result;
 	}
@@ -152,6 +180,31 @@ class MetricZ_Config
 			result = (cliVal == "true" || cliVal == "1" || cliVal == string.Empty);
 
 		return result;
+	}
+
+	private static void DebugConfig()
+	{
+		string log = "MetricZ configuration loaded:\n";
+
+		log += "  InitDelayMs: " + s_InitDelayMs + "\n";
+		log += "  ScrapeIntervalMs: " + s_ScrapeIntervalMs + "\n";
+		log += "  DisablePlayerMetrics: " + s_DisablePlayerMetrics + "\n";
+		log += "  DisableZombieMetrics: " + s_DisableZombieMetrics + "\n";
+		log += "  DisableAnimalMetrics: " + s_DisableAnimalMetrics + "\n";
+		log += "  DisableTransportMetrics: " + s_DisableTransportMetrics + "\n";
+		log += "  DisableWeaponMetrics: " + s_DisableWeaponMetrics + "\n";
+		log += "  DisableEntityHitsMetrics: " + s_DisableEntityHitsMetrics + "\n";
+		log += "  EntityHitDamageThreshold: " + s_EntityHitDamageThreshold + "\n";
+		log += "  EntityVehicleHitDamageThreshold: " + s_EntityVehicleHitDamageThreshold + "\n";
+		log += "  DisableEntityKillsMetrics: " + s_DisableEntityKillsMetrics + "\n";
+		log += "  DisableTerritoryMetrics: " + s_DisableTerritoryMetrics + "\n";
+		log += "  EnableCoordinatesMetrics: " + s_EnableCoordinatesMetrics + "\n";
+		log += "  DisableRPCMetrics: " + s_DisableRPCMetrics + "\n";
+		log += "  DisableEventMetrics: " + s_DisableEventMetrics + "\n";
+		log += "  MaxPlayers: " + s_MaxPlayers + "\n";
+		log += "  LimitFPS: " + s_LimitFPS;
+
+		ErrorEx(log, ErrorExSeverity.INFO);
 	}
 }
 #endif
