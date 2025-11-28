@@ -20,6 +20,11 @@ class MetricZ_WeaponStats
 	protected static ref map<string, int> s_ShotsByWeapon = new map<string, int>();
 	// weapon -> live count in world
 	protected static ref map<string, int> s_CountByType = new map<string, int>();
+	// players kills by source (source name -> count)
+	protected static ref map<string, int> s_PlayerKills = new map<string, int>();
+	// creatures kills by source (source name -> count)
+	protected static ref map<string, int> s_CreatureKills = new map<string, int>();
+
 	// weapon -> cached labels "{world=...,host=...,instance_id=...,weapon=...}"
 	protected static ref map<string, string> s_LabelsByWeapon = new map<string, string>();
 
@@ -36,6 +41,14 @@ class MetricZ_WeaponStats
 	    "weapons_by_type",
 	    "Weapons in world grouped by canonical type",
 	    MetricZ_MetricType.GAUGE);
+	protected static ref MetricZ_MetricInt s_MetricPlayerKills = new MetricZ_MetricInt(
+	    "player_killed_by",
+	    "Count of players killed by source",
+	    MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_MetricCreatureKills = new MetricZ_MetricInt(
+	    "creature_killed_by",
+	    "Count of creatures (Infected/Animals/AI) killed by source",
+	    MetricZ_MetricType.COUNTER);
 
 	static void LoadCache()
 	{
@@ -64,24 +77,15 @@ class MetricZ_WeaponStats
 	/**
 	    \brief Increment counters for a fired weapon.
 	*/
-	static void OnFire(Weapon_Base wpn)
+	static void OnFire(Weapon_Base weapon)
 	{
-		if (!wpn)
+		if (!weapon)
 			return;
 
-		string type = wpn.MetricZ_GetLabelTypeName();
-
-		int v;
-		if (s_ShotsByWeapon.Find(type, v))
-			s_ShotsByWeapon.Set(type, v + 1);
-		else {
-			s_ShotsByWeapon.Insert(type, 1);
-			// build labels on first sight of this type
-			LabelsFor(type);
-			MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
-		}
-
 		s_MetricShootsTotal.Inc();
+
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
+		IncMap(s_ShotsByWeapon, weapon.MetricZ_GetLabelTypeName());
 	}
 
 	/**
@@ -92,17 +96,32 @@ class MetricZ_WeaponStats
 		if (!weapon)
 			return;
 
-		string type = weapon.MetricZ_GetLabelTypeName();
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
+		IncMap(s_CountByType, weapon.MetricZ_GetLabelTypeName());
+	}
 
-		int v;
-		if (s_CountByType.Find(type, v))
-			s_CountByType.Set(type, v + 1);
-		else {
-			s_CountByType.Insert(type, 1);
-			// build labels on first sight of this type
-			LabelsFor(type);
-			MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
-		}
+	/**
+	    \brief Called when a Player is killed.
+	*/
+	static void OnPlayerKilled(Object source)
+	{
+		if (!source)
+			return;
+
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.KILLER_OBJECT, type);
+		IncMap(s_PlayerKills, ResolveSourceName(source));
+	}
+
+	/**
+	    \brief Called when a Creature (Zombie/Animal/eAI) is killed.
+	*/
+	static void OnCreatureKilled(Object source)
+	{
+		if (!source)
+			return;
+
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.KILLER_OBJECT, type);
+		IncMap(s_CreatureKills, ResolveSourceName(source));
 	}
 
 	/**
@@ -127,27 +146,8 @@ class MetricZ_WeaponStats
 	}
 
 	/**
-	    \brief Get or build cached labels for a weapon type.
-	    \details Always returns non-empty label block with base labels and "weapon".
-	*/
-	protected static string LabelsFor(string type)
-	{
-		string labels;
-		if (s_LabelsByWeapon && s_LabelsByWeapon.Find(type, labels) && labels != string.Empty)
-			return labels;
-
-		map<string, string> m = new map<string, string>();
-		m.Insert("weapon", type);
-		labels = MetricZ_LabelUtils.MakeLabels(m);
-		if (!s_LabelsByWeapon)
-			s_LabelsByWeapon = new map<string, string>();
-		s_LabelsByWeapon.Set(type, labels);
-		return labels;
-	}
-
-	/**
-	    \brief Flush all weapon metrics (shots + live counts).
-	    \param fh Open file handle
+	    \brief Flush all weapon metrics (shots, live counts, kills).
+	    \param fh Open file handle.
 	*/
 	static void Flush(FileHandle fh)
 	{
@@ -157,19 +157,11 @@ class MetricZ_WeaponStats
 		if (!fh)
 			return;
 
-		bool hasShots = (s_ShotsByWeapon.Count() > 0);
-		bool hasCounts = (s_CountByType.Count() > 0);
-
-		if (!hasShots && !hasCounts)
-			return;
-
 		// total shots + per-weapon shots
-		if (hasShots) {
-			// total
+		if (s_ShotsByWeapon.Count() > 0) {
 			s_MetricShootsTotal.FlushWithHead(fh, MetricZ_Storage.GetLabels());
-
-			// per-weapon series
 			s_MetricShotsByType.WriteHeaders(fh);
+
 			foreach (string key, int val : s_ShotsByWeapon) {
 				s_MetricShotsByType.Set(val);
 				s_MetricShotsByType.Flush(fh, LabelsFor(key));
@@ -177,12 +169,32 @@ class MetricZ_WeaponStats
 		}
 
 		// live weapons per type
-		if (hasCounts) {
+		if (s_CountByType.Count() > 0) {
 			s_MetricCountByType.WriteHeaders(fh);
 
-			foreach (string key2, int cnt : s_CountByType) {
-				s_MetricCountByType.Set(cnt);
+			foreach (string key2, int val2 : s_CountByType) {
+				s_MetricCountByType.Set(val2);
 				s_MetricCountByType.Flush(fh, LabelsFor(key2));
+			}
+		}
+
+		// player kills
+		if (s_PlayerKills.Count() > 0) {
+			s_MetricPlayerKills.WriteHeaders(fh);
+
+			foreach (string key3, int val3 : s_PlayerKills) {
+				s_MetricPlayerKills.Set(val3);
+				s_MetricPlayerKills.Flush(fh, LabelsFor(key3));
+			}
+		}
+
+		// creature kills
+		if (s_CreatureKills.Count() > 0) {
+			s_MetricCreatureKills.WriteHeaders(fh);
+
+			foreach (string key4, int val4 : s_CreatureKills) {
+				s_MetricCreatureKills.Set(val4);
+				s_MetricCreatureKills.Flush(fh, LabelsFor(key4));
 			}
 		}
 
@@ -192,5 +204,111 @@ class MetricZ_WeaponStats
 		    ErrorExSeverity.INFO);
 #endif
 	}
+
+
+	/**
+	    \brief Get or build cached labels for a weapon type.
+	    \param type The normalized weapon/source name.
+	    \return string Formatted Prometheus labels.
+	*/
+	protected static string LabelsFor(string type)
+	{
+		string labels;
+		if (s_LabelsByWeapon && s_LabelsByWeapon.Find(type, labels) && labels != string.Empty)
+			return labels;
+
+		map<string, string> labelsMap = new map<string, string>();
+		labelsMap.Insert("weapon", type);
+		labels = MetricZ_LabelUtils.MakeLabels(labelsMap);
+
+		if (!s_LabelsByWeapon)
+			s_LabelsByWeapon = new map<string, string>();
+
+		s_LabelsByWeapon.Set(type, labels);
+
+		return labels;
+	}
+
+	/**
+	    \brief Determines the metric key from an Object source.
+	    \param source The killer Object.
+	    \return string Normalized key (e.g., "akm", "zombie", "player_melee_item_heavy").
+	*/
+	protected static string ResolveSourceName(Object source)
+	{
+		if (!source)
+			return "none";
+
+		Weapon_Base wpn;
+		if (Class.CastTo(wpn, source))
+			return wpn.MetricZ_GetLabelTypeName();
+
+		if (source.IsInherited(ZombieBase))
+			return "zombie";
+
+		if (source.IsInherited(AnimalBase))
+			return "animal";
+
+		if (source.IsInherited(Transport))
+			return "transport";
+
+		if (source.IsInherited(Grenade_Base))
+			return "grenade";
+
+		if (source.IsInherited(TrapBase))
+			return "trap";
+
+		if (source.IsInherited(ToolBase))
+			return "tool";
+
+		if (source.IsInherited(PlayerBase)) {
+#ifdef EXPANSIONMODAI
+			if (source.IsInherited(eAIBase))
+				return "eai_fist";
+#endif
+			return "player_fist";
+		}
+
+		EntityAI eai;
+		if (!Class.CastTo(eai, source))
+			return "object";
+
+		Man rootMan = eai.GetHierarchyRootPlayer();
+		if (rootMan) {
+			string type;
+			if (eai.IsHeavyBehaviour())
+				type = "_heavy";
+			else if (eai.IsTwoHandedBehaviour())
+				type = "_two_hands";
+			else if (eai.IsOneHandedBehaviour())
+				type = "_one_hand";
+
+#ifdef EXPANSIONMODAI
+			if (rootMan.IsInherited(eAIBase))
+				return "eai_melee_item" + type;
+#endif
+			return "player_melee_item" + type;
+		}
+
+		return "unknown";
+	}
+
+	/**
+	    \brief Helper to increment value in a specific map and pre-cache labels.
+	    \param metricsStore The registry map to update.
+	    \param key The normalized source key.
+	*/
+	protected static void IncMap(map<string, int> metricsStore, string key)
+	{
+		int value;
+		if (metricsStore.Find(key, value)) {
+			metricsStore.Set(key, value + 1);
+			return;
+		}
+
+		metricsStore.Insert(key, 1);
+		LabelsFor(key);
+	}
+
 }
 #endif

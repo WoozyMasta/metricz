@@ -10,6 +10,8 @@
 */
 modded class AnimalBase
 {
+	// prevent counting hits on death bodies except last hit
+	protected bool m_MetricZ_IsLastHit;
 	// cache for animal names used in labels: original -> canonical
 	protected static ref map<string, string> s_MetricZ_LabelNames = new map<string, string>();
 
@@ -50,7 +52,34 @@ modded class AnimalBase
 		MetricZ_Storage.s_AnimalsDeaths.Inc();
 		MetricZ_Storage.s_AnimalsCorpses.Inc();
 
+		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+			MetricZ_WeaponStats.OnCreatureKilled(killer);
+
 		super.EEKilled(killer);
+	}
+
+	/**
+	    \brief Capture hit statistics for animals.
+	*/
+	override void EEHitBy(TotalDamageResult damageResult, int damageType, EntityAI source, int component, string dmgZone, string ammo, vector modelPos, float speedCoef)
+	{
+		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
+
+		if (!MetricZ_Config.s_DisableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+			if (IsDamageDestroyed())
+				m_MetricZ_IsLastHit = true;
+
+			if (damageResult) {
+				float damage = damageResult.GetDamage(dmgZone, "");
+				if (damage < MetricZ_Config.s_EntityHitDamageThreshold)
+					return;
+
+				if (source && source.IsTransport() && damage < MetricZ_Config.s_EntityVehicleHitDamageThreshold)
+					return;
+			}
+
+			MetricZ_HitStats.OnCreatureHit(ammo);
+		}
 	}
 
 	/**

@@ -113,6 +113,14 @@ DayZ server. Each metric includes its identifier, type
 * **`dayz_metricz_transport_position_z`** (`GAUGE`) —
   Transport world Z
 
+## [Entities/Weapons/HitStats.c](./scripts/4_World/MetricZ/Entities/Weapons/HitStats.c)
+
+* **`dayz_metricz_player_hit_by_total`** (`COUNTER`) —
+  Count of hits received by players from specific ammo types
+* **`dayz_metricz_creature_hit_by_total`** (`COUNTER`) —
+  Count of hits received by creatures (Zombie/Animals/eAI) from specific ammo
+  types
+
 ## [Entities/Weapons/WeaponStats.c](./scripts/4_World/MetricZ/Entities/Weapons/WeaponStats.c)
 
 * **`dayz_metricz_weapon_shots_total`** (`COUNTER`) —
@@ -121,6 +129,10 @@ DayZ server. Each metric includes its identifier, type
   Total shots on server
 * **`dayz_metricz_weapons_by_type`** (`GAUGE`) —
   Weapons in world grouped by canonical type
+* **`dayz_metricz_player_killed_by_total`** (`COUNTER`) —
+  Count of players killed by source
+* **`dayz_metricz_creature_killed_by_total`** (`COUNTER`) —
+  Count of creatures (Infected/Animals/AI) killed by source
 
 ## [Storage.c](./scripts/4_World/MetricZ/Storage.c)
 

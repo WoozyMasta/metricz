@@ -13,18 +13,39 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+Here is the updated changelog including the new changes.
+
 ## Unreleased
 
 ### Added
 
 * implemented `MetricZ_PersistentCache` to save and load unique sets of
   tags between server restarts, which will fix Prometheus rate calculations
+* **`dayz_metricz_player_hit_by_total`** (`COUNTER`) —
+  Count of hits received by players from specific ammo types
+* **`dayz_metricz_creature_hit_by_total`** (`COUNTER`) —
+  Count of hits received by creatures (Zombie/Animals/eAI) from specific ammo
+  types
+* **`dayz_metricz_player_killed_by_total`** (`COUNTER`) —
+  Count of players killed by source
+* **`dayz_metricz_creature_killed_by_total`** (`COUNTER`) —
+  Count of creatures (Infected/Animals/AI) killed by source
+* configuration options `MetricZ_DisableEntityHitsMetrics`,
+  `MetricZ_EntityHitDamageThreshold` and
+  `MetricZ_EntityVehicleHitDamageThreshold` to control entity hit
+  metrics
+* configuration option `MetricZ_DisableEntityKillsMetrics` to disable
+  player and zombie/animal kill source metrics
+* debug logging of all configuration values when `DIAG` is defined
 
 ### Changed
 
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name
+* `MetricZ_Config` now robustly handles missing or `0` values from
+  `server.cfg` by respecting default values, while allowing explicit `-1`
+  to set a value to `0` where applicable
 * documentation rendering in `CONFIG.md` has been updated and improved
 * configuration reading has been normalized and brought to a unified form
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable

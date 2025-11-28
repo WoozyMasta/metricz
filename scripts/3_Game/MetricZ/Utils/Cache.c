@@ -11,6 +11,7 @@ enum MetricZ_CacheKey {
 	NONE,
 	WEAPON_TYPES,
 	AMMO_TYPES,
+	KILLER_OBJECT,
 }
 
 /**
@@ -18,7 +19,8 @@ enum MetricZ_CacheKey {
     \details Stores sets of known labels (e.g. all seen weapon types) to initialize
              counters with 0 on server restart, fixing Prometheus rate calculations.
 */
-class MetricZ_PersistentCache {
+class MetricZ_PersistentCache
+{
 	protected static bool s_HasChanges;
 	protected static ref MetricZ_Cache s_Cache;
 	protected static ref JsonSerializer m_Serializer;
