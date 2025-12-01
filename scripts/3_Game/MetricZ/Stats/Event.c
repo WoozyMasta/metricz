@@ -10,12 +10,9 @@
 */
 class MetricZ_EventStats
 {
-	protected static ref map<EventType, string> s_EventNames;
-	protected static ref map<EventType, int> s_EventsRegistry = new map<EventType, int>(); // eventTypeId -> count
-	protected static ref MetricZ_MetricInt s_EventTotal = new MetricZ_MetricInt(
-	    "events",
-	    "Total events by EventType",
-	    MetricZ_MetricType.COUNTER);
+	protected static const int UNKNOWN_EVENT = -1;
+	protected static bool s_Initialized;
+	protected static ref map<EventType, ref MetricZ_MetricInt> s_EventsRegistry;
 
 	/**
 	    \brief Increment counter for an EventType.
@@ -23,16 +20,22 @@ class MetricZ_EventStats
 	*/
 	static void Inc(EventType eventTypeId)
 	{
-		int v;
-		if (s_EventsRegistry.Find(eventTypeId, v))
-			s_EventsRegistry.Set(eventTypeId, v + 1);
-		else
-			s_EventsRegistry.Insert(eventTypeId, 1);
+		if (!s_Initialized)
+			return;
+
+		MetricZ_MetricInt metric;
+		if (s_EventsRegistry.Find(eventTypeId, metric)) {
+			metric.Inc();
+			return;
+		}
+
+		if (s_EventsRegistry.Find(UNKNOWN_EVENT, metric))
+			metric.Inc();
 	}
 
 	/**
 	    \brief Emit HELP/TYPE and per-event samples.
-	    \details Builds the EventType->name map lazily. Writes one sample per EventType with labels {id, event}.
+	    \details Writes one sample per EventType with label event name.
 	    \param fh Open file handle.
 	*/
 	static void Flush(FileHandle fh)
@@ -41,27 +44,17 @@ class MetricZ_EventStats
 		float t0 = g_Game.GetTickTime();
 #endif
 
-		if (!fh)
+		if (!fh || !s_Initialized)
 			return;
 
-		if (s_EventsRegistry.Count() == 0)
-			return;
+		bool headerWritten;
+		foreach (MetricZ_MetricBase metric : s_EventsRegistry) {
+			if (!headerWritten) {
+				metric.WriteHeaders(fh);
+				headerWritten = true;
+			}
 
-		MakeNameMap();
-		s_EventTotal.WriteHeaders(fh);
-
-		for (int i = 0; i < s_EventsRegistry.Count(); i++) {
-			int id = s_EventsRegistry.GetKey(i);
-			int val = s_EventsRegistry.GetElement(i);
-
-			s_EventTotal.Set(val);
-
-			string name = EventName(s_EventsRegistry.GetKey(i));
-			map<string, string> labels = new map<string, string>();
-			labels.Insert("id", id.ToString());
-			labels.Insert("event", name);
-
-			s_EventTotal.Flush(fh, MetricZ_LabelUtils.MakeLabels(labels));
+			metric.Flush(fh);
 		}
 
 #ifdef DIAG
@@ -70,95 +63,98 @@ class MetricZ_EventStats
 	}
 
 	/**
-	    \brief Build the EventType->name map once.
-	    \details No-op if the map already exists.
+	    \brief Build the EventType->MetricZ_MetricInt metrics registry once.
 	*/
-	protected static void MakeNameMap()
+	static void Init()
 	{
-		if (s_EventNames)
+		if (s_Initialized || MetricZ_Config.s_DisableEventMetrics)
 			return;
 
-		s_EventNames = new map<EventType, string>();
+		s_EventsRegistry = new map<EventType, ref MetricZ_MetricInt>();
 
+		map<EventType, string> eventNames = new map<EventType, string>();
+
+		// placeholder for all unknown
+		eventNames.Insert(UNKNOWN_EVENT, "Unknown");
 		// system
-		s_EventNames.Insert(StartupEventTypeID, "Startup");
-		s_EventNames.Insert(WorldCleaupEventTypeID, "WorldCleanUP");
-		s_EventNames.Insert(SelectedUserChangedEventTypeID, "SelectedUserChanged");
-		s_EventNames.Insert(ScriptLogEventTypeID, "ScriptLog");
+		eventNames.Insert(StartupEventTypeID, "Startup");
+		eventNames.Insert(WorldCleaupEventTypeID, "WorldCleanUP");
+		eventNames.Insert(SelectedUserChangedEventTypeID, "SelectedUserChanged");
+		eventNames.Insert(ScriptLogEventTypeID, "ScriptLog");
 
 		// MP session
-		s_EventNames.Insert(MPSessionStartEventTypeID, "MPSessionStart");
-		s_EventNames.Insert(MPSessionEndEventTypeID, "MPSessionEnd");
-		s_EventNames.Insert(MPSessionFailEventTypeID, "MPSessionFail");
-		s_EventNames.Insert(MPSessionPlayerReadyEventTypeID, "MPSessionPlayerReady");
-		s_EventNames.Insert(MPConnectionLostEventTypeID, "MPConnectionLost");
-		s_EventNames.Insert(MPConnectionCloseEventTypeID, "MPConnectionClose");
+		eventNames.Insert(MPSessionStartEventTypeID, "MPSessionStart");
+		eventNames.Insert(MPSessionEndEventTypeID, "MPSessionEnd");
+		eventNames.Insert(MPSessionFailEventTypeID, "MPSessionFail");
+		eventNames.Insert(MPSessionPlayerReadyEventTypeID, "MPSessionPlayerReady");
+		eventNames.Insert(MPConnectionLostEventTypeID, "MPConnectionLost");
+		eventNames.Insert(MPConnectionCloseEventTypeID, "MPConnectionClose");
 
 		// misc
-		s_EventNames.Insert(ProgressEventTypeID, "Progress");
-		s_EventNames.Insert(NetworkManagerClientEventTypeID, "NetworkManagerClient");
-		s_EventNames.Insert(NetworkManagerServerEventTypeID, "NetworkManagerServer");
-		s_EventNames.Insert(DialogQueuedEventTypeID, "DialogQueued");
+		eventNames.Insert(ProgressEventTypeID, "Progress");
+		eventNames.Insert(NetworkManagerClientEventTypeID, "NetworkManagerClient");
+		eventNames.Insert(NetworkManagerServerEventTypeID, "NetworkManagerServer");
+		eventNames.Insert(DialogQueuedEventTypeID, "DialogQueued");
 
 		// chat
-		s_EventNames.Insert(ChatMessageEventTypeID, "ChatMessage");
-		s_EventNames.Insert(ChatChannelEventTypeID, "ChatChannel");
+		eventNames.Insert(ChatMessageEventTypeID, "ChatMessage");
+		eventNames.Insert(ChatChannelEventTypeID, "ChatChannel");
 
 		// client lifecycle
-		s_EventNames.Insert(ClientConnectedEventTypeID, "ClientConnected");
-		s_EventNames.Insert(ClientPrepareEventTypeID, "ClientPrepare");
-		s_EventNames.Insert(ClientNewEventTypeID, "ClientNew");
-		s_EventNames.Insert(ClientNewReadyEventTypeID, "ClientNewReady");
-		s_EventNames.Insert(ClientRespawnEventTypeID, "ClientReSpawn");
-		s_EventNames.Insert(ClientReconnectEventTypeID, "ClientReconnect");
-		s_EventNames.Insert(ClientReadyEventTypeID, "ClientReady");
-		s_EventNames.Insert(ClientDisconnectedEventTypeID, "ClientDisconnected");
-		s_EventNames.Insert(ClientRemovedEventTypeID, "ClientRemoved");
+		eventNames.Insert(ClientConnectedEventTypeID, "ClientConnected");
+		eventNames.Insert(ClientPrepareEventTypeID, "ClientPrepare");
+		eventNames.Insert(ClientNewEventTypeID, "ClientNew");
+		eventNames.Insert(ClientNewReadyEventTypeID, "ClientNewReady");
+		eventNames.Insert(ClientRespawnEventTypeID, "ClientReSpawn");
+		eventNames.Insert(ClientReconnectEventTypeID, "ClientReconnect");
+		eventNames.Insert(ClientReadyEventTypeID, "ClientReady");
+		eventNames.Insert(ClientDisconnectedEventTypeID, "ClientDisconnected");
+		eventNames.Insert(ClientRemovedEventTypeID, "ClientRemoved");
 
 		// connectivity and server stats
-		s_EventNames.Insert(ConnectivityStatsUpdatedEventTypeID, "ConnectivityStatsUpdated");
-		s_EventNames.Insert(ServerFpsStatsUpdatedEventTypeID, "ServerFpsStatsUpdated");
+		eventNames.Insert(ConnectivityStatsUpdatedEventTypeID, "ConnectivityStatsUpdated");
+		eventNames.Insert(ServerFpsStatsUpdatedEventTypeID, "ServerFpsStatsUpdated");
 
 		// login/logout flow
-		s_EventNames.Insert(LogoutCancelEventTypeID, "LogoutCancel");
-		s_EventNames.Insert(LoginTimeEventTypeID, "LoginTime");
-		s_EventNames.Insert(RespawnEventTypeID, "Respawn");
-		s_EventNames.Insert(PreloadEventTypeID, "Preload");
-		s_EventNames.Insert(LogoutEventTypeID, "Logout");
-		s_EventNames.Insert(LoginStatusEventTypeID, "LoginStatus");
+		eventNames.Insert(LogoutCancelEventTypeID, "LogoutCancel");
+		eventNames.Insert(LoginTimeEventTypeID, "LoginTime");
+		eventNames.Insert(RespawnEventTypeID, "Respawn");
+		eventNames.Insert(PreloadEventTypeID, "Preload");
+		eventNames.Insert(LogoutEventTypeID, "Logout");
+		eventNames.Insert(LoginStatusEventTypeID, "LoginStatus");
 
 		// VON
-		s_EventNames.Insert(VONStateEventTypeID, "VONState");
-		s_EventNames.Insert(VONStartSpeakingEventTypeID, "VONStartSpeaking");
-		s_EventNames.Insert(VONStopSpeakingEventTypeID, "VONStopSpeaking");
-		s_EventNames.Insert(VONUserStartedTransmittingAudioEventTypeID, "VONStartedTransmitting");
-		s_EventNames.Insert(VONUserStoppedTransmittingAudioEventTypeID, "VONStoppedTransmitting");
+		eventNames.Insert(VONStateEventTypeID, "VONState");
+		eventNames.Insert(VONStartSpeakingEventTypeID, "VONStartSpeaking");
+		eventNames.Insert(VONStopSpeakingEventTypeID, "VONStopSpeaking");
+		eventNames.Insert(VONUserStartedTransmittingAudioEventTypeID, "VONStartedTransmitting");
+		eventNames.Insert(VONUserStoppedTransmittingAudioEventTypeID, "VONStoppedTransmitting");
 
 		// other
-		s_EventNames.Insert(PartyChatStatusChangedEventTypeID, "PartyChatStatusChanged");
-		s_EventNames.Insert(DLCOwnerShipFailedEventTypeID, "DLCOwnerShipFailed");
-		s_EventNames.Insert(SetFreeCameraEventTypeID, "SetFreeCamera");
-		s_EventNames.Insert(ConnectingStartEventTypeID, "ConnectingStart");
-		s_EventNames.Insert(ConnectingAbortEventTypeID, "ConnectingAbort");
-		s_EventNames.Insert(PlayerDeathEventTypeID, "PlayerDeath");
-		s_EventNames.Insert(NetworkInputBufferEventTypeID, "NetworkInputBuffer");
-	}
+		eventNames.Insert(PartyChatStatusChangedEventTypeID, "PartyChatStatusChanged");
+		eventNames.Insert(DLCOwnerShipFailedEventTypeID, "DLCOwnerShipFailed");
+		eventNames.Insert(SetFreeCameraEventTypeID, "SetFreeCamera");
+		eventNames.Insert(ConnectingStartEventTypeID, "ConnectingStart");
+		eventNames.Insert(ConnectingAbortEventTypeID, "ConnectingAbort");
+		eventNames.Insert(PlayerDeathEventTypeID, "PlayerDeath");
+		eventNames.Insert(NetworkInputBufferEventTypeID, "NetworkInputBuffer");
 
-	/**
-	    \brief Resolve a human-readable name for an EventType.
-	    \param id EventType id.
-	    \return \p string Name or "unknown".
-	*/
-	protected static string EventName(EventType id)
-	{
-		if (!s_EventNames)
-			return "unknown";
+		// create metrics per event type with static labels
+		foreach (int id, string name: eventNames) {
+			MetricZ_MetricInt metric = new MetricZ_MetricInt(
+			    "events",
+			    "Total events by EventType",
+			    MetricZ_MetricType.COUNTER);
 
-		string name;
-		if (s_EventNames.Find(id, name))
-			return name;
+			// build labels once
+			map<string, string> labels = new map<string, string>();
+			labels.Insert("event", name);
+			metric.MakeLabels(labels);
 
-		return "unknown";
+			s_EventsRegistry.Insert(id, metric);
+		}
+
+		s_Initialized = true;
 	}
 }
 #endif

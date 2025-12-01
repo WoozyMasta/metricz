@@ -30,6 +30,7 @@ class MetricZ_Exporter
 
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
+		MetricZ_EventStats.Init();
 		MetricZ_WeaponStats.LoadCache();
 		MetricZ_HitStats.LoadCache();
 
