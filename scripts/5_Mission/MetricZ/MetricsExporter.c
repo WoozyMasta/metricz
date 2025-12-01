@@ -31,6 +31,7 @@ class MetricZ_Exporter
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
 		MetricZ_WeaponStats.LoadCache();
+		MetricZ_HitStats.LoadCache();
 
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,

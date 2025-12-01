@@ -93,22 +93,29 @@ For DayZ metrics, we strongly recommend using
   — Interval between metric updates in seconds
 * **`MetricZ_DisablePlayerMetrics`**
   `-metricz-disable-player`
-  — Disable player-related metrics collection
+  — Disable player-related metrics collection `dayz_metricz_player_*`
 * **`MetricZ_DisableZombieMetrics`**
   `-metricz-disable-zombie`
   — Disable zombie per-type and mind states metrics collection
+ `dayz_metricz_animals_by_type`
 * **`MetricZ_DisableAnimalMetrics`**
   `-metricz-disable-animal`
-  — Disable animal per-type metrics collection
+  — Disable animal per-type metrics collection `dayz_metricz_infected_by_type`
+ and `dayz_metricz_infected_mind_state`
 * **`MetricZ_DisableTransportMetrics`**
   `-metricz-disable-transport`
-  — Disable vehicle and transport metrics collection
+  — Disable vehicle and transport metrics collection `dayz_metricz_transport_*`
 * **`MetricZ_DisableWeaponMetrics`**
   `-metricz-disable-weapon`
-  — Disable weapon per-type (count, shoot and kills) metrics collection
+  — Disable weapon per-type (count, shoot, kills and hits) metrics collection
+ `dayz_metricz_weapon_shots_total`, `dayz_metricz_weapons_by_type_total`,
+ `dayz_metricz_player_killed_by_total` and
+ `dayz_metricz_creature_killed_by_total`
 * **`MetricZ_DisableEntityHitsMetrics`**
   `-metricz-disable-entity-hits`
   — Disable player and zombie/animal hit by ammo type metrics
+ `dayz_metricz_player_killed_by_total` and
+ `dayz_metricz_creature_killed_by_total`
 * **`MetricZ_EntityHitDamageThreshold`**
   `-metricz-entity-hit-damage-threshold`
   (default: `3`)
@@ -120,13 +127,13 @@ For DayZ metrics, we strongly recommend using
  threshold.
 * **`MetricZ_DisableTerritoryMetrics`**
   `-metricz-disable-territory`
-  — Disable territory flag metrics collection
+  — Disable territory flag metrics collection `dayz_metricz_territory_lifetime`
 * **`MetricZ_EnableCoordinatesMetrics`**
   `-metricz-enable-coordinates`
   — Enable player and transport coordinate metrics
 * **`MetricZ_DisableRPCMetrics`**
   `-metricz-disable-rpc`
-  — Disable RPC metrics collection
+  — Disable RPC metrics collection `dayz_metricz_rpc_input_total`
 * **`MetricZ_DisableEventMetrics`**
   `-metricz-disable-event`
-  — Disable event handler metrics collection
+  — Disable event handler metrics collection `dayz_metricz_events_total`

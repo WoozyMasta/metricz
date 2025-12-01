@@ -40,6 +40,7 @@ Here is the updated changelog including the new changes.
 
 ### Changed
 
+* removed `dayz_metricz_weapon_shots_all_total` ⚠️
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name

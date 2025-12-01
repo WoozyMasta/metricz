@@ -55,21 +55,28 @@ class MetricZ_Config
 		s_ScrapeIntervalMs = GetNumber("ScrapeInterval", "scrape-interval", 15, 1, 300) * 1000;
 
 		// Disable player-related metrics collection
+		// `dayz_metricz_player_*`
 		s_DisablePlayerMetrics = GetBool("DisablePlayerMetrics", "disable-player");
 
 		// Disable zombie per-type and mind states metrics collection
+		// `dayz_metricz_animals_by_type`
 		s_DisableZombieMetrics = GetBool("DisableZombieMetrics", "disable-zombie");
 
 		// Disable animal per-type metrics collection
+		// `dayz_metricz_infected_by_type` and `dayz_metricz_infected_mind_state`
 		s_DisableAnimalMetrics = GetBool("DisableAnimalMetrics", "disable-animal");
 
 		// Disable vehicle and transport metrics collection
+		// `dayz_metricz_transport_*`
 		s_DisableTransportMetrics = GetBool("DisableTransportMetrics", "disable-transport");
 
-		// Disable weapon per-type (count, shoot and kills) metrics collection
+		// Disable weapon per-type (count, shoot, kills and hits) metrics collection
+		// `dayz_metricz_weapon_shots_total`, `dayz_metricz_weapons_by_type_total`,
+		// `dayz_metricz_player_killed_by_total` and `dayz_metricz_creature_killed_by_total`
 		s_DisableWeaponMetrics = GetBool("DisableWeaponMetrics", "disable-weapon");
 
 		// Disable player and zombie/animal hit by ammo type metrics
+		// `dayz_metricz_player_killed_by_total` and `dayz_metricz_creature_killed_by_total`
 		s_DisableEntityHitsMetrics = GetBool("DisableEntityHitsMetrics", "disable-entity-hits");
 
 		// Minimum damage to log in `EEHitBy()`;
@@ -81,15 +88,18 @@ class MetricZ_Config
 		s_EntityVehicleHitDamageThreshold = GetNumber("EntityVehicleHitDamageThreshold", "entity-vehicle-hit-damage-threshold", 15, -1, 100);
 
 		// Disable territory flag metrics collection
+		// `dayz_metricz_territory_lifetime`
 		s_DisableTerritoryMetrics = GetBool("DisableTerritoryMetrics", "disable-territory");
 
 		// Enable player and transport coordinate metrics
 		s_EnableCoordinatesMetrics = GetBool("EnableCoordinatesMetrics", "enable-coordinates");
 
 		// Disable RPC metrics collection
+		// `dayz_metricz_rpc_input_total`
 		s_DisableRPCMetrics = GetBool("DisableRPCMetrics", "disable-rpc");
 
 		// Disable event handler metrics collection
+		// `dayz_metricz_events_total`
 		s_DisableEventMetrics = GetBool("DisableEventMetrics", "disable-event");
 
 		// server params

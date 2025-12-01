@@ -11,6 +11,8 @@
 */
 class MetricZ_HitStats
 {
+	protected static bool s_CacheLoaded;
+
 	// Registries
 	protected static ref map<string, int> s_PlayerHit = new map<string, int>();
 	protected static ref map<string, int> s_CreatureHit = new map<string, int>();
@@ -29,6 +31,33 @@ class MetricZ_HitStats
 	    MetricZ_MetricType.COUNTER);
 
 	/**
+	    \brief Load cache of ammo types for label persistency.
+	*/
+	static void LoadCache()
+	{
+		if (s_CacheLoaded || MetricZ_Config.s_DisableEntityHitsMetrics)
+			return;
+
+		s_CacheLoaded = true;
+
+		array<string> knownAmmo = MetricZ_PersistentCache.GetKeys(MetricZ_CacheKey.AMMO_TYPES);
+		if (!knownAmmo)
+			return;
+
+		foreach (string ammo : knownAmmo) {
+			if (!s_PlayerHit.Contains(ammo)) {
+				s_PlayerHit.Insert(ammo, 0);
+				LabelsFor(ammo);
+			}
+
+			if (!s_CreatureHit.Contains(ammo)) {
+				s_CreatureHit.Insert(ammo, 0);
+				LabelsFor(ammo);
+			}
+		}
+	}
+
+	/**
 	    \brief Register a hit on a Player.
 	*/
 	static void OnPlayerHit(string ammo)
@@ -36,6 +65,7 @@ class MetricZ_HitStats
 		if (ammo == string.Empty)
 			return;
 
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.AMMO_TYPES, ammo);
 		IncMap(s_PlayerHit, ammo);
 	}
 
@@ -47,6 +77,7 @@ class MetricZ_HitStats
 		if (ammo == string.Empty)
 			return;
 
+		MetricZ_PersistentCache.Register(MetricZ_CacheKey.AMMO_TYPES, ammo);
 		IncMap(s_CreatureHit, ammo);
 	}
 
