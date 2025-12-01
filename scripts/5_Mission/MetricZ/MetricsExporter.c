@@ -30,6 +30,7 @@ class MetricZ_Exporter
 
 		MetricZ_Config.Load();
 		MetricZ_Storage.Init();
+		MetricZ_WeaponStats.LoadCache();
 
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,
@@ -59,14 +60,14 @@ class MetricZ_Exporter
 	{
 		// stop future scrapes
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
-		DeleteFile(MetricZ_Config.TEMP);
+		DeleteFile(MetricZ_Config.METRICS_TEMP);
 
 		s_Instance = null;
 		s_Busy = false;
 
 		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
 
-		FileHandle fh = OpenFile(MetricZ_Config.FILE, FileMode.WRITE);
+		FileHandle fh = OpenFile(MetricZ_Config.METRICS_FILE, FileMode.WRITE);
 		if (!fh)
 			return;
 
@@ -83,7 +84,7 @@ class MetricZ_Exporter
 	        - Writes world-level metrics from MetricZ_Storage.
 	        - Appends per-player, per-entity and event metrics depending on config.
 	        - Does not close the file handle.
-	    \param fh Open file handle to write to (TEMP file).
+	    \param fh Open file handle to write to (METRICS_TEMP file).
 	    \return true on success, false if fh is invalid.
 	*/
 	bool Flush(FileHandle fh)
@@ -135,7 +136,7 @@ class MetricZ_Exporter
 	        - Reschedules itself each call using fixed interval (minimizes drift).
 	        - Skips execution if a previous scrape is still running (s_Busy).
 	        - Calls MetricZ_Storage.Update() to refresh gauges.
-	        - Flushes all collectors into TEMP and atomically replaces FILE.
+	        - Flushes all collectors into METRICS_TEMP and atomically replaces METRICS_FILE.
 	*/
 	protected void Update()
 	{
@@ -161,17 +162,17 @@ class MetricZ_Exporter
 		ErrorEx("MetricZ start update on " + t0 + "s server tick", ErrorExSeverity.INFO);
 #endif
 
-		FileHandle fh = OpenFile(MetricZ_Config.TEMP, FileMode.WRITE);
+		FileHandle fh = OpenFile(MetricZ_Config.METRICS_TEMP, FileMode.WRITE);
 		if (!fh) {
 			s_Busy = false;
-			ErrorEx("MetricZ open file " + MetricZ_Config.TEMP + " failed");
+			ErrorEx("MetricZ open file " + MetricZ_Config.METRICS_TEMP + " failed");
 			return;
 		}
 
 		// refresh world gauges before flush
 		MetricZ_Storage.Update();
 
-		// write full snapshot into TEMP
+		// write full snapshot into METRICS_TEMP
 		if (!Flush(fh)) {
 			CloseFile(fh);
 			s_Busy = false;
@@ -182,11 +183,14 @@ class MetricZ_Exporter
 		CloseFile(fh);
 
 		// publish new snapshot
-		DeleteFile(MetricZ_Config.FILE);
-		if (!CopyFile(MetricZ_Config.TEMP, MetricZ_Config.FILE))
-			ErrorEx("MetricZ publish failed " + MetricZ_Config.TEMP + " -> " + MetricZ_Config.FILE);
+		DeleteFile(MetricZ_Config.METRICS_FILE);
+		if (!CopyFile(MetricZ_Config.METRICS_TEMP, MetricZ_Config.METRICS_FILE))
+			ErrorEx("MetricZ publish failed " + MetricZ_Config.METRICS_TEMP + " -> " + MetricZ_Config.METRICS_FILE);
 
-		DeleteFile(MetricZ_Config.TEMP);
+		DeleteFile(MetricZ_Config.METRICS_TEMP);
+
+		// update labels cache if needed
+		MetricZ_PersistentCache.Save();
 
 		float t1 = g_Game.GetTickTime();
 		MetricZ_Storage.s_UpdateDurationSec.Set(t1 - t0);

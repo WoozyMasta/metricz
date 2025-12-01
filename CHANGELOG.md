@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning][].
 
 ## Unreleased
 
+### Added
+
+* implemented `MetricZ_PersistentCache` to save and load unique sets of
+  tags between server restarts, which will fix Prometheus rate calculations
+
 ### Changed
 
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
