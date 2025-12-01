@@ -12,8 +12,9 @@
 class MetricZ_Config
 {
 	// constants
-	static const string FILE = "$profile:metricz.prom";
-	static const string TEMP = "$profile:metricz.tmp";
+	static const string METRICS_FILE = "$profile:metricz.prom";
+	static const string METRICS_TEMP = "$profile:metricz.tmp";
+	static const string METRICS_CACHE = "$profile:metricz.cache";
 	static const string NS = "dayz_metricz_";
 	static const string CLI_FLAG_PREFIX = "metricz-";
 	static const string CFG_OPT_PREFIX = "MetricZ_";
@@ -87,6 +88,9 @@ class MetricZ_Config
 			if (fps > 0)
 				s_LimitFPS = fps;
 		}
+
+		// Load labels cache
+		MetricZ_PersistentCache.Load();
 	}
 
 	/**

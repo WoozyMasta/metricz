@@ -14,6 +14,8 @@
 */
 class MetricZ_WeaponStats
 {
+	protected static bool s_CacheLoaded;
+
 	// weapon -> total shots
 	protected static ref map<string, int> s_ShotsByWeapon = new map<string, int>();
 	// weapon -> live count in world
@@ -35,6 +37,30 @@ class MetricZ_WeaponStats
 	    "Weapons in world grouped by canonical type",
 	    MetricZ_MetricType.GAUGE);
 
+	static void LoadCache()
+	{
+		if (s_CacheLoaded)
+			return;
+
+		s_CacheLoaded = true;
+
+		array<string> known = MetricZ_PersistentCache.GetKeys(MetricZ_CacheKey.WEAPON_TYPES);
+		if (!known)
+			return;
+
+		foreach (string wpn : known) {
+			if (!s_ShotsByWeapon.Contains(wpn)) {
+				s_ShotsByWeapon.Insert(wpn, 0);
+				LabelsFor(wpn);
+			}
+
+			if (!s_CountByType.Contains(wpn)) {
+				s_CountByType.Insert(wpn, 0);
+				LabelsFor(wpn);
+			}
+		}
+	}
+
 	/**
 	    \brief Increment counters for a fired weapon.
 	*/
@@ -52,6 +78,7 @@ class MetricZ_WeaponStats
 			s_ShotsByWeapon.Insert(type, 1);
 			// build labels on first sight of this type
 			LabelsFor(type);
+			MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
 		}
 
 		s_MetricShootsTotal.Inc();
@@ -74,6 +101,7 @@ class MetricZ_WeaponStats
 			s_CountByType.Insert(type, 1);
 			// build labels on first sight of this type
 			LabelsFor(type);
+			MetricZ_PersistentCache.Register(MetricZ_CacheKey.WEAPON_TYPES, type);
 		}
 	}
 
