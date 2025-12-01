@@ -125,8 +125,6 @@ DayZ server. Each metric includes its identifier, type
 
 * **`dayz_metricz_weapon_shots_total`** (`COUNTER`) —
   Shots by weapon base type
-* **`dayz_metricz_weapon_shots_all_total`** (`COUNTER`) —
-  Total shots on server
 * **`dayz_metricz_weapons_by_type`** (`GAUGE`) —
   Weapons in world grouped by canonical type
 * **`dayz_metricz_player_killed_by_total`** (`COUNTER`) —
