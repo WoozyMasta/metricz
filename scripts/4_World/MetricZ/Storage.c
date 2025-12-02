@@ -344,6 +344,14 @@ class MetricZ_Storage
 	    "eai_npc",
 	    "Total Expansion AI NPCs in the world (optional)",
 	    MetricZ_MetricType.GAUGE);
+	static ref MetricZ_MetricInt s_ExpansionAIDeaths = new MetricZ_MetricInt(
+	    "eai_deaths",
+	    "Total number of Expansion AI deaths (optional)",
+	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_ExpansionAINPCDeaths = new MetricZ_MetricInt(
+	    "eai_npc_deaths",
+	    "Total number of Expansion AI NPC deaths (optional)",
+	    MetricZ_MetricType.COUNTER);
 #endif
 
 	/**
@@ -450,6 +458,8 @@ class MetricZ_Storage
 #ifdef EXPANSIONMODAI
 		s_Registry.Insert(s_ExpansionAI);
 		s_Registry.Insert(s_ExpansionAINPC);
+		s_Registry.Insert(s_ExpansionAIDeaths);
+		s_Registry.Insert(s_ExpansionAINPCDeaths);
 #endif
 
 		SetLabels();

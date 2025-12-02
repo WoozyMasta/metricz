@@ -274,5 +274,9 @@ DayZ server. Each metric includes its identifier, type
   Total Expansion AI in the world (optional)
 * **`dayz_metricz_eai_npc`** (`GAUGE`) —
   Total Expansion AI NPCs in the world (optional)
+* **`dayz_metricz_eai_deaths_total`** (`COUNTER`) —
+  Total number of Expansion AI deaths (optional)
+* **`dayz_metricz_eai_npc_deaths_total`** (`COUNTER`) —
+  Total number of Expansion AI NPC deaths (optional)
 * **`dayz_metricz_food`** (`GAUGE`) —
   Total edible base items in the world with static labeled types

@@ -19,6 +19,10 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
+* **`dayz_metricz_eai_deaths_total`** (`COUNTER`) —
+  Total number of Expansion AI deaths (optional)
+* **`dayz_metricz_eai_npc_deaths_total`** (`COUNTER`) —
+  Total number of Expansion AI NPC deaths (optional)
 * implemented `MetricZ_PersistentCache` to save and load unique sets of
   tags between server restarts, which will fix Prometheus rate calculations
 * **`dayz_metricz_player_hit_by_total`** (`COUNTER`) —

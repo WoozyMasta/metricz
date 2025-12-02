@@ -69,7 +69,12 @@ modded class PlayerBase
 #ifdef EXPANSIONMODAI
 		if (IsInherited(eAIBase)) {
 			if (!MetricZ_Config.s_DisableEntityKillsMetrics && killer != this)
-				MetricZ_WeaponStats.OnCreatureKill(killer);
+				MetricZ_WeaponStats.OnCreatureKilled(killer);
+
+			if (IsInherited(eAINPCBase))
+				MetricZ_Storage.s_ExpansionAINPCDeaths.Inc();
+			else
+				MetricZ_Storage.s_ExpansionAIDeaths.Inc();
 
 			super.EEKilled(killer);
 
