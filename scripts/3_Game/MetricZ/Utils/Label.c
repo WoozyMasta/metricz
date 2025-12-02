@@ -106,7 +106,7 @@ class MetricZ_LabelUtils
 	             Result is cached after first build to avoid repeated string ops.
 	    \return \p string Comma-separated base labels without surrounding braces.
 	*/
-	protected static string BaseLabels()
+	static string BaseLabels()
 	{
 		if (s_BaseLabelReady)
 			return s_BaseLabel;

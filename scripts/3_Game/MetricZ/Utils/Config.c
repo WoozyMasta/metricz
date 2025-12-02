@@ -126,7 +126,7 @@ class MetricZ_Config
 		// Override effective map tiles size in world units.
 		// Useful if the web map size is larger than the game world size
 		// (for example, the izurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`)
-		s_MapEffectiveSize = GetNumber("MapEffectiveSize", "map-effective-size", 0, g_Game.GetWorld().GetWorldSize());
+		s_MapEffectiveSize = GetNumber("MapEffectiveSize", "map-effective-size", 0, g_Game.GetWorld().GetWorldSize(), 81920);
 
 		// Override map tiles name.
 		// Useful if the name of the web map tiles was not recognized correctly
@@ -248,11 +248,19 @@ class MetricZ_Config
 		log += "  EntityVehicleHitDamageThreshold: " + s_EntityVehicleHitDamageThreshold + "\n";
 		log += "  DisableEntityKillsMetrics: " + s_DisableEntityKillsMetrics + "\n";
 		log += "  DisableTerritoryMetrics: " + s_DisableTerritoryMetrics + "\n";
-		log += "  EnableCoordinatesMetrics: " + s_EnableCoordinatesMetrics + "\n";
+		log += "  DisableEffectAreaMetrics: " + s_DisableEffectAreaMetrics + "\n";
+		log += "  EnableLocalEffectAreaMetrics: " + s_EnableLocalEffectAreaMetrics + "\n";
+		log += "  DisableCoordinatesMetrics: " + s_DisableCoordinatesMetrics + "\n";
+		log += "  DisableGeoCoordinatesFormat: " + s_DisableGeoCoordinatesFormat + "\n";
 		log += "  DisableRPCMetrics: " + s_DisableRPCMetrics + "\n";
 		log += "  DisableEventMetrics: " + s_DisableEventMetrics + "\n";
+		log += "  MapEffectiveSize: " + MetricZ_Geo.GetMapEffectiveSize() + "\n";
+		log += "  MapTilesName: " + MetricZ_Geo.GetMapTilesName() + "\n";
+		log += "  MapTilesVersion: " + MetricZ_Geo.GetMapTilesVersion() + "\n";
+		log += "  MapTilesFormat: " + MetricZ_Geo.GetMapTilesFormat() + "\n";
 		log += "  MaxPlayers: " + s_MaxPlayers + "\n";
-		log += "  LimitFPS: " + s_LimitFPS;
+		log += "  LimitFPS: " + s_LimitFPS + "\n";
+		log += "  BaseLabels: " + MetricZ_LabelUtils.BaseLabels();
 
 		ErrorEx(log, ErrorExSeverity.INFO);
 	}
