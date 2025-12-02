@@ -23,10 +23,6 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 	*/
 	void MetricZ_EffectAreaMetrics()
 	{
-		m_Radius = new MetricZ_MetricFloat(
-		    "effect_area_radius",
-		    "Effect Area radius in meters (0 if inactive)",
-		    MetricZ_MetricType.GAUGE);
 		m_Insiders = new MetricZ_MetricInt(
 		    "effect_area_insiders",
 		    "Count of players inside Effect Area",
@@ -43,7 +39,6 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 
 		m_Area = area;
 
-		m_Registry.Insert(m_Radius);
 		m_Registry.Insert(m_Insiders);
 
 		SetLabels();
@@ -57,7 +52,6 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 		if (!m_Area || m_Registry.Count() < 1)
 			return;
 
-		m_Radius.Set(m_Area.MetricZ_GetRadius());
 		m_Insiders.Set(m_Area.MetricZ_GetInsidersCount());
 	}
 
@@ -81,6 +75,7 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 		labels.Insert("class", m_Area.ClassName());
 		labels.Insert("longitude", lon.ToString());
 		labels.Insert("latitude", lat.ToString());
+		labels.Insert("radius", m_Area.MetricZ_GetRadius().ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
 	}
