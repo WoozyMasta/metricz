@@ -30,8 +30,6 @@ DayZ server. Each metric includes its identifier, type
 
 ## [Entities/EffectArea/Metrics.c](./scripts/4_World/MetricZ/Entities/EffectArea/Metrics.c)
 
-* **`dayz_metricz_effect_area_radius`** (`GAUGE`) —
-  Effect Area radius in meters (0 if inactive)
 * **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
   Count of players inside Effect Area
 

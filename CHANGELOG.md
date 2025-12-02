@@ -44,9 +44,8 @@ Here is the updated changelog including the new changes.
 * **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
 * **`dayz_metricz_effect_areas`** (`GAUGE`) — total active effect areas
   (static/dynamic zones)
-* **`dayz_metricz_effect_area_radius`** (`GAUGE`) and
-  **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
-  per-zone metrics with position labels
+* **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
+  per-zone metrics with position and radius labels
 * new config options `MetricZ_DisableEffectAreaMetrics` and
   `MetricZ_EnableLocalEffectAreaMetrics`
 * for metric `dayz_metricz_status` optional map tiles metadata labels
