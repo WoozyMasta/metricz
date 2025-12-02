@@ -37,11 +37,12 @@ modded class MissionServer : MissionBase
 	    \brief Count new player spawns.
 	    \return \p PlayerBase Created player
 	*/
-	override PlayerBase CreateCharacter(PlayerIdentity identity, vector pos, ParamsReadContext ctx, string characterName)
+	override PlayerBase OnClientNewEvent(PlayerIdentity identity, vector pos, ParamsReadContext ctx)
 	{
-		super.CreateCharacter(identity, pos, ctx, characterName);
+		super.OnClientNewEvent(identity, pos, ctx);
 
-		MetricZ_Storage.s_PlayersSpawns.Inc();
+		if (m_player)
+			MetricZ_Storage.s_PlayersSpawns.Inc();
 
 		return m_player;
 	}
