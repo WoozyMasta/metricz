@@ -11,30 +11,33 @@
 modded class EffectArea
 {
 	protected bool m_MetricZ_AreaInit;
-	protected bool m_MetricZ_ZoneInit;
 	protected int m_MetricZ_InsidersCount;
 	protected ref MetricZ_EffectAreaMetrics m_MetricZ;
 
 	/**
-	    \brief Track EffectArea and register metrics collector.
-	    \details Called in static and dynamic zones.
+	    \brief Standard entity initialization.
+	    \details
+	        MetricZ initialization is skipped here. For dynamic zones, EEInit triggers
+	        while the artillery projectile is still airborne. We must wait for the actual zone creation.
 	*/
 	override void EEInit()
 	{
 		super.EEInit();
 
-		MetricZ_Init();
+		// MetricZ_Init();
 	}
 
 	/**
-	    \brief Track EffectArea and register metrics collector.
-	    \details Called for ContaminatedArea_Local or areas that do not call EEInit fully or need late setup.
+	    \brief Finalizes zone setup and registers metrics collector.
+	    \details This is the safe point to initialize metrics:
+	      - For Dynamic Zones: Called only after the shell has landed and the zone is physically created.
+	      - For Static Zones: Called immediately.
+	      Guarantees that metrics are not exported before the zone actually exists.
 	*/
 	override void InitZone()
 	{
 		super.InitZone();
 
-		m_MetricZ_ZoneInit = true;
 		MetricZ_Init();
 	}
 
@@ -81,13 +84,10 @@ modded class EffectArea
 
 	/**
 	    \brief Get area radius in degrees (MetricZ projection).
-	    \return \p int Radius or 0 if not initialized.
+	    \return \p int Radius.
 	*/
 	float MetricZ_GetRadius()
 	{
-		if (!m_MetricZ_AreaInit || !m_MetricZ_ZoneInit)
-			return 0;
-
 		return MetricZ_Geo.GetRadiusDegrees(m_Radius);
 	}
 
