@@ -193,40 +193,43 @@ scrape_configs:
 
 | MetricZ Servers Overview                                    |
 | :---------------------------------------------------------: |
-| ![Overview](./grafana/servers-overview-1.png)               |
-| ![Overview](./grafana/servers-overview-2.png)               |
-| ![Overview](./grafana/servers-overview-3.png)               |
-| ![Overview](./grafana/servers-overview-4.png)               |
+| ![Overview](grafana/images/servers-overview-1.png)          |
+| ![Overview](grafana/images/servers-overview-2.png)          |
+| ![Overview](grafana/images/servers-overview-3.png)          |
+| ![Overview](grafana/images/servers-overview-4.png)          |
+| ![Overview](grafana/images/servers-overview-7.png)          |
+| ![Overview](grafana/images/servers-overview-9.png)          |
+| ![Overview](grafana/images/servers-overview-10.png)         |
 | [grafana.com](https://grafana.com/grafana/dashboards/24291) |
 | Dashboard ID: `24291`                                       |
-| [Dashboard JSON](./grafana/servers-overview.json)           |
+| [Dashboard JSON](grafana/dashboards/servers-overview.json)  |
 
 ---
 
 | MetricZ Server Details                                      |
 | :---------------------------------------------------------: |
-| ![Details](./grafana/server.png)                            |
+| ![Details](grafana/images/server.png)                       |
 | [grafana.com](https://grafana.com/grafana/dashboards/24290) |
 | Dashboard ID: `24290`                                       |
-| [Dashboard JSON](./grafana/server.json)                     |
+| [Dashboard JSON](grafana/dashboards/server.json)            |
 
 ---
 
 | MetricZ Player Stats                                        |
 | :---------------------------------------------------------: |
-| ![Players](./grafana/player.png)                            |
+| ![Players](grafana/images/player.png)                       |
 | [grafana.com](https://grafana.com/grafana/dashboards/24289) |
 | Dashboard ID: `24289`                                       |
-| [Dashboard JSON](./grafana/player.json)                     |
+| [Dashboard JSON](grafana/dashboards/player.json)            |
 
 ---
 
 | MetricZ Transport Stats                                     |
 | :---------------------------------------------------------: |
-| ![Transport](./grafana/transport.png)                       |
+| ![Transport](grafana/images/transport.png)                  |
 | [grafana.com](https://grafana.com/grafana/dashboards/24292) |
 | Dashboard ID: `24292`                                       |
-| [Dashboard JSON](./grafana/transport.json)                  |
+| [Dashboard JSON](grafana/dashboards/transport.json)         |
 
 ## Mod support
 

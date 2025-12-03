@@ -103,4 +103,8 @@ tags
 
 tools/diag-*.sh
 tools/*ent.sh
-TODO/*
+tools/scp.sh
+tools/extract.sh
+
+grafana-data
+grafana/datasources.yml

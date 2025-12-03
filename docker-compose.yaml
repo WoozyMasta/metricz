@@ -1,0 +1,12 @@
+services:
+  grafana:
+    image: docker.io/woozymasta/grafana:114371
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - $PWD/grafana-data:/var/lib/grafana
+      - $PWD/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - $PWD/grafana/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml
+      - $PWD/grafana/datasources.example.yml:/etc/grafana/provisioning/datasources/datasources.example.yml
