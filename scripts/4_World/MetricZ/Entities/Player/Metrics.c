@@ -56,7 +56,6 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 	protected ref MetricZ_MetricInt m_ImmunityBoosted;
 	protected ref MetricZ_MetricInt m_Unconscious;
 	protected ref MetricZ_MetricInt m_Restrained;
-	protected ref MetricZ_MetricInt m_ThirdPerson;
 	protected ref MetricZ_MetricInt m_GodMode;
 
 	// analytics
@@ -174,10 +173,6 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		    "player_restrained",
 		    "Is restrained (0/1)",
 		    MetricZ_MetricType.GAUGE);
-		m_ThirdPerson = new MetricZ_MetricInt(
-		    "player_third_person",
-		    "Is in third person (0/1)",
-		    MetricZ_MetricType.GAUGE);
 		m_GodMode = new MetricZ_MetricInt(
 		    "player_godmode",
 		    "Damage disabled (0/1)",
@@ -247,7 +242,6 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_ImmunityBoosted);
 		m_Registry.Insert(m_Unconscious);
 		m_Registry.Insert(m_Restrained);
-		m_Registry.Insert(m_ThirdPerson);
 		m_Registry.Insert(m_GodMode);
 
 		m_Registry.Insert(m_StatPlaytimeSeconds);
@@ -302,7 +296,6 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_ImmunityBoosted.Set(MetricZ_LabelUtils.Bool(m_Player.m_ImmunityBoosted));
 		m_Unconscious.Set(MetricZ_LabelUtils.Bool(m_Player.IsUnconscious()));
 		m_Restrained.Set(MetricZ_LabelUtils.Bool(m_Player.IsRestrained()));
-		m_ThirdPerson.Set(MetricZ_LabelUtils.Bool(m_Player.IsInThirdPerson()));
 		m_GodMode.Set(MetricZ_LabelUtils.Bool(!m_Player.GetAllowDamage()));
 
 		// analytics

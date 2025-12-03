@@ -81,8 +81,6 @@ DayZ server. Each metric includes its identifier, type
   Is unconscious (0/1)
 * **`dayz_metricz_player_restrained`** (`GAUGE`) —
   Is restrained (0/1)
-* **`dayz_metricz_player_third_person`** (`GAUGE`) —
-  Is in third person (0/1)
 * **`dayz_metricz_player_godmode`** (`GAUGE`) —
   Damage disabled (0/1)
 * **`dayz_metricz_player_stat_playtime_seconds`** (`GAUGE`) —
