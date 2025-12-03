@@ -120,7 +120,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.4.0-pre",
       "targets": [
         {
           "datasource": {
@@ -235,7 +235,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.4.0-pre",
       "targets": [
         {
           "datasource": {
@@ -343,7 +343,7 @@
         "textMode": "value_and_name",
         "wideLayout": true
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.4.0-pre",
       "targets": [
         {
           "datasource": {
@@ -457,7 +457,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.4.0-pre",
       "targets": [
         {
           "datasource": {
@@ -601,7 +601,7 @@
           "sort": "desc"
         }
       },
-      "pluginVersion": "12.2.1",
+      "pluginVersion": "12.4.0-pre",
       "targets": [
         {
           "datasource": {
@@ -717,7 +717,7 @@
             "h": 7,
             "w": 8,
             "x": 0,
-            "y": 700
+            "y": 22
           },
           "id": 60,
           "options": {
@@ -736,7 +736,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -829,7 +829,7 @@
             "h": 7,
             "w": 8,
             "x": 8,
-            "y": 700
+            "y": 22
           },
           "id": 61,
           "options": {
@@ -848,7 +848,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -941,7 +941,7 @@
             "h": 7,
             "w": 8,
             "x": 16,
-            "y": 700
+            "y": 22
           },
           "id": 62,
           "options": {
@@ -961,7 +961,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1047,7 +1047,7 @@
             "h": 7,
             "w": 8,
             "x": 0,
-            "y": 924
+            "y": 29
           },
           "id": 64,
           "options": {
@@ -1065,7 +1065,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1151,7 +1151,7 @@
             "h": 7,
             "w": 8,
             "x": 8,
-            "y": 924
+            "y": 29
           },
           "id": 4,
           "options": {
@@ -1169,7 +1169,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1256,7 +1256,7 @@
             "h": 7,
             "w": 8,
             "x": 16,
-            "y": 924
+            "y": 29
           },
           "id": 3,
           "options": {
@@ -1275,7 +1275,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1364,7 +1364,7 @@
             "h": 7,
             "w": 8,
             "x": 0,
-            "y": 931
+            "y": 36
           },
           "id": 65,
           "options": {
@@ -1380,7 +1380,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1469,7 +1469,7 @@
             "h": 7,
             "w": 8,
             "x": 8,
-            "y": 931
+            "y": 36
           },
           "id": 8,
           "options": {
@@ -1485,7 +1485,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1570,7 +1570,7 @@
             "h": 7,
             "w": 8,
             "x": 16,
-            "y": 931
+            "y": 36
           },
           "id": 5,
           "options": {
@@ -1588,7 +1588,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1721,7 +1721,7 @@
             "h": 12,
             "w": 12,
             "x": 0,
-            "y": 701
+            "y": 625
           },
           "id": 48,
           "options": {
@@ -1742,7 +1742,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1829,7 +1829,7 @@
             "h": 12,
             "w": 12,
             "x": 12,
-            "y": 701
+            "y": 625
           },
           "id": 49,
           "options": {
@@ -1850,7 +1850,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -1922,7 +1922,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 865
+            "y": 740
           },
           "id": 50,
           "options": {
@@ -1942,7 +1942,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -2051,7 +2051,7 @@
             "h": 12,
             "w": 12,
             "x": 12,
-            "y": 865
+            "y": 740
           },
           "id": 51,
           "options": {
@@ -2067,7 +2067,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -2155,7 +2155,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 869
+            "y": 744
           },
           "id": 52,
           "options": {
@@ -2175,7 +2175,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -2263,7 +2263,7 @@
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 873
+            "y": 748
           },
           "id": 53,
           "options": {
@@ -2283,7 +2283,7 @@
             "textMode": "auto",
             "wideLayout": true
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -2393,18 +2393,23 @@
                     "id": "links",
                     "value": [
                       {
+                        "title": "Player Dashboard",
+                        "url": "/d/${player_dash}?var-steam_id=${__value.raw}"
+                      },
+                      {
                         "targetBlank": true,
                         "title": "Steam Profile",
                         "url": "https://steamcommunity.com/profiles/${__value.raw}"
                       },
                       {
                         "targetBlank": true,
-                        "title": "CF Cloud",
-                        "url": "https://app.cftools.cloud/profile/${__value.raw}"
+                        "title": "Steam DB",
+                        "url": "https://steamdb.info/calculator/${__value.raw}"
                       },
                       {
-                        "title": "Player Dashboard",
-                        "url": "/d/${player_dash}?var-steam_id=${__value.raw}"
+                        "targetBlank": true,
+                        "title": "CF Cloud",
+                        "url": "https://app.cftools.cloud/profile/${__value.raw}"
                       }
                     ]
                   },
@@ -2450,7 +2455,7 @@
             "h": 28,
             "w": 12,
             "x": 0,
-            "y": 24
+            "y": 1143
           },
           "id": 31,
           "options": {
@@ -2663,7 +2668,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 24
+            "y": 1143
           },
           "id": 46,
           "options": {
@@ -2786,7 +2791,7 @@
             "h": 7,
             "w": 5,
             "x": 12,
-            "y": 30
+            "y": 1149
           },
           "id": 56,
           "options": {
@@ -2873,18 +2878,23 @@
                     "id": "links",
                     "value": [
                       {
+                        "title": "Player Dashboard",
+                        "url": "/d/${player_dash}?var-steam_id=${__field.labels.steam_id}"
+                      },
+                      {
                         "targetBlank": true,
                         "title": "Steam Profile",
                         "url": "https://steamcommunity.com/profiles/${__field.labels.steam_id}"
                       },
                       {
                         "targetBlank": true,
-                        "title": "CF Cloud",
-                        "url": "https://app.cftools.cloud/profile/${__field.labels.steam_id}"
+                        "title": "Steam DB",
+                        "url": "https://steamdb.info/calculator/${__field.labels.steam_id}"
                       },
                       {
-                        "title": "Player Dashboard",
-                        "url": "/d/${player_dash}?var-steam_id=${__field.labels.steam_id}"
+                        "targetBlank": true,
+                        "title": "CF Cloud",
+                        "url": "https://app.cftools.cloud/profile/${__field.labels.steam_id}"
                       }
                     ]
                   }
@@ -2896,7 +2906,7 @@
             "h": 7,
             "w": 3,
             "x": 17,
-            "y": 30
+            "y": 1149
           },
           "id": 33,
           "options": {
@@ -2988,18 +2998,23 @@
                     "id": "links",
                     "value": [
                       {
+                        "title": "Player Dashboard",
+                        "url": "/d/${player_dash}?var-steam_id=${__field.labels.steam_id}"
+                      },
+                      {
                         "targetBlank": true,
                         "title": "Steam Profile",
                         "url": "https://steamcommunity.com/profiles/${__field.labels.steam_id}"
                       },
                       {
                         "targetBlank": true,
-                        "title": "CF Cloud",
-                        "url": "https://app.cftools.cloud/profile/${__field.labels.steam_id}"
+                        "title": "Steam DB",
+                        "url": "https://steamdb.info/calculator/${__field.labels.steam_id}"
                       },
                       {
-                        "title": "Player Dashboard",
-                        "url": "/d/${player_dash}?var-steam_id=${__value.raw}"
+                        "targetBlank": true,
+                        "title": "CF Cloud",
+                        "url": "https://app.cftools.cloud/profile/${__field.labels.steam_id}"
                       }
                     ]
                   }
@@ -3011,7 +3026,7 @@
             "h": 7,
             "w": 4,
             "x": 20,
-            "y": 30
+            "y": 1149
           },
           "id": 32,
           "options": {
@@ -3124,7 +3139,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 37
+            "y": 1156
           },
           "id": 81,
           "options": {
@@ -3215,7 +3230,7 @@
             "h": 3,
             "w": 12,
             "x": 12,
-            "y": 43
+            "y": 1162
           },
           "id": 55,
           "options": {
@@ -3356,7 +3371,7 @@
             "h": 6,
             "w": 12,
             "x": 12,
-            "y": 46
+            "y": 1165
           },
           "id": 57,
           "options": {
@@ -3491,7 +3506,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 165
+            "y": 1284
           },
           "id": 39,
           "options": {
@@ -3600,7 +3615,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 177
+            "y": 1296
           },
           "id": 69,
           "options": {
@@ -3711,7 +3726,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 185
+            "y": 1304
           },
           "id": 38,
           "options": {
@@ -3816,7 +3831,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 185
+            "y": 1304
           },
           "id": 37,
           "options": {
@@ -3932,7 +3947,7 @@
             "h": 12,
             "w": 24,
             "x": 0,
-            "y": 942
+            "y": 2061
           },
           "id": 66,
           "options": {
@@ -4041,7 +4056,7 @@
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 954
+            "y": 2073
           },
           "id": 70,
           "options": {
@@ -4162,7 +4177,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 1007
+            "y": 629
           },
           "id": 72,
           "options": {
@@ -4182,7 +4197,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -4269,7 +4284,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 1007
+            "y": 629
           },
           "id": 73,
           "options": {
@@ -4289,7 +4304,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -4324,357 +4339,6 @@
       },
       "id": 20,
       "panels": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "mappings": []
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 5,
-            "x": 0,
-            "y": 1017
-          },
-          "id": 22,
-          "options": {
-            "displayLabels": [
-              "value",
-              "name"
-            ],
-            "legend": {
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "pieType": "donut",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "sort": "desc",
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${data_source}"
-              },
-              "disableTextWrap": false,
-              "editorMode": "code",
-              "expr": "sum by(weapon) (dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "{{weapon}}",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            }
-          ],
-          "title": "Weapons Shots Total by Weapon",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "showValues": false,
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 7,
-            "x": 5,
-            "y": 1017
-          },
-          "id": 21,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${data_source}"
-              },
-              "disableTextWrap": false,
-              "editorMode": "code",
-              "expr": "sum by(weapon) (rate(dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__rate_interval]))",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "{{weapon}}",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            }
-          ],
-          "title": "Weapons Shots Rate by Weapon",
-          "type": "timeseries"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "mappings": []
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 5,
-            "x": 12,
-            "y": 1017
-          },
-          "id": 24,
-          "options": {
-            "displayLabels": [
-              "value"
-            ],
-            "legend": {
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true
-            },
-            "pieType": "donut",
-            "reduceOptions": {
-              "calcs": [
-                "lastNotNull"
-              ],
-              "fields": "",
-              "values": false
-            },
-            "sort": "desc",
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${data_source}"
-              },
-              "disableTextWrap": false,
-              "editorMode": "code",
-              "expr": "sum by(instance, instance_id, world) (dayz_metricz_weapon_shots_all_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "{{world}} ({{ instance_id}})",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            }
-          ],
-          "title": "Weapons Shots Total by Instance",
-          "type": "piechart"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${data_source}"
-          },
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "insertNulls": false,
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "showValues": false,
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 10,
-            "w": 7,
-            "x": 17,
-            "y": 1017
-          },
-          "id": 23,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom",
-              "showLegend": true
-            },
-            "tooltip": {
-              "hideZeros": false,
-              "mode": "multi",
-              "sort": "desc"
-            }
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "prometheus",
-                "uid": "${data_source}"
-              },
-              "disableTextWrap": false,
-              "editorMode": "code",
-              "expr": "sum by(instance, instance_id, world) (rate(dayz_metricz_weapon_shots_all_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__rate_interval]))",
-              "fullMetaSearch": false,
-              "includeNullMetadata": true,
-              "legendFormat": "{{world}} ({{ instance_id }})",
-              "range": true,
-              "refId": "A",
-              "useBackend": false
-            }
-          ],
-          "title": "Weapons Shots Rate by Instance",
-          "type": "timeseries"
-        },
         {
           "datasource": {
             "type": "prometheus",
@@ -4740,7 +4404,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1027
+            "y": 488
           },
           "id": 25,
           "options": {
@@ -4761,7 +4425,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -4847,7 +4511,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1027
+            "y": 488
           },
           "id": 28,
           "options": {
@@ -4868,7 +4532,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -4954,7 +4618,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1035
+            "y": 552
           },
           "id": 78,
           "options": {
@@ -4975,7 +4639,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5061,7 +4725,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1035
+            "y": 552
           },
           "id": 77,
           "options": {
@@ -5082,7 +4746,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5168,7 +4832,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1043
+            "y": 560
           },
           "id": 26,
           "options": {
@@ -5189,7 +4853,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5275,7 +4939,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1043
+            "y": 560
           },
           "id": 27,
           "options": {
@@ -5296,7 +4960,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5382,7 +5046,7 @@
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 1051
+            "y": 568
           },
           "id": 29,
           "options": {
@@ -5403,7 +5067,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5489,7 +5153,7 @@
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 1051
+            "y": 568
           },
           "id": 35,
           "options": {
@@ -5508,7 +5172,7 @@
               "sort": "desc"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5530,7 +5194,7 @@
           "type": "timeseries"
         }
       ],
-      "title": "Weapons",
+      "title": "Weapons, magazines, explosives, ammunition",
       "type": "row"
     },
     {
@@ -5574,7 +5238,7 @@
             "h": 26,
             "w": 5,
             "x": 0,
-            "y": 2677
+            "y": 489
           },
           "id": 75,
           "options": {
@@ -5601,7 +5265,7 @@
             "sizing": "auto",
             "valueMode": "text"
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5692,7 +5356,7 @@
             "h": 26,
             "w": 19,
             "x": 5,
-            "y": 2677
+            "y": 489
           },
           "id": 74,
           "options": {
@@ -5714,7 +5378,7 @@
               "sort": "none"
             }
           },
-          "pluginVersion": "12.2.1",
+          "pluginVersion": "12.4.0-pre",
           "targets": [
             {
               "datasource": {
@@ -5738,7 +5402,7 @@
           "type": "timeseries"
         }
       ],
-      "title": "Firearms types",
+      "title": "Weapon Types Count",
       "type": "row"
     },
     {
@@ -5748,6 +5412,829 @@
         "w": 24,
         "x": 0,
         "y": 29
+      },
+      "id": 82,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 5,
+            "x": 0,
+            "y": 490
+          },
+          "id": 22,
+          "options": {
+            "displayLabels": [
+              "value",
+              "name"
+            ],
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "exemplar": false,
+              "expr": "sum by (weapon) (increase(dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range])) > 0",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "instant": false,
+              "legendFormat": "{{weapon}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Weapons Shots Total by Weapon",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 20,
+            "w": 10,
+            "x": 5,
+            "y": 490
+          },
+          "id": 21,
+          "options": {
+            "legend": {
+              "calcs": [
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by(weapon) (rate(dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__rate_interval])) > 0",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{weapon}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Weapons Shots Rate by Weapon",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 20,
+            "w": 9,
+            "x": 15,
+            "y": 490
+          },
+          "id": 23,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by(instance, instance_id, world) (rate(dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__rate_interval]))",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{world}} ({{ instance_id }})",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Weapons Shots Rate by Instance",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 5,
+            "x": 0,
+            "y": 500
+          },
+          "id": 24,
+          "options": {
+            "displayLabels": [
+              "value"
+            ],
+            "legend": {
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true
+            },
+            "pieType": "donut",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "desc"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by(instance, instance_id, world) (dayz_metricz_weapon_shots_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{world}} ({{ instance_id}})",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Weapons Shots Total by Instance",
+          "type": "piechart"
+        }
+      ],
+      "title": "Weapon Shots",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 30
+      },
+      "id": 84,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 17,
+            "w": 12,
+            "x": 0,
+            "y": 456
+          },
+          "id": 85,
+          "options": {
+            "legend": {
+              "calcs": [
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by (weapon) (increase(dayz_metricz_player_killed_by_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range]) > 0)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{weapon}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Player Killed",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 17,
+            "w": 12,
+            "x": 12,
+            "y": 456
+          },
+          "id": 86,
+          "options": {
+            "legend": {
+              "calcs": [
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by (weapon) (increase(dayz_metricz_creature_killed_by_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range]) > 0)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{weapon}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Creature Killed",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Kills by Source",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 31
+      },
+      "id": 83,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 17,
+            "w": 12,
+            "x": 0,
+            "y": 457
+          },
+          "id": 88,
+          "options": {
+            "legend": {
+              "calcs": [
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by (ammo) (increase(dayz_metricz_player_hit_by_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range]) > 0)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{ammo}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Player Hits",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 25,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "never",
+                "showValues": false,
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 17,
+            "w": 12,
+            "x": 12,
+            "y": 457
+          },
+          "id": 89,
+          "options": {
+            "legend": {
+              "calcs": [
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Max",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "sum by (ammo) (increase(dayz_metricz_creature_hit_by_total{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range]) > 0)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{ammo}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Creature Hits",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Hits by Ammo",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
       },
       "id": 79,
       "panels": [
@@ -5816,7 +6303,7 @@
             "h": 16,
             "w": 24,
             "x": 0,
-            "y": 708
+            "y": 1827
           },
           "id": 80,
           "options": {
@@ -5869,7 +6356,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 33
       },
       "id": 40,
       "panels": [
@@ -5938,7 +6425,7 @@
             "h": 9,
             "w": 12,
             "x": 0,
-            "y": 2678
+            "y": 3797
           },
           "id": 41,
           "options": {
@@ -6041,7 +6528,7 @@
             "h": 9,
             "w": 12,
             "x": 12,
-            "y": 2678
+            "y": 3797
           },
           "id": 42,
           "options": {
@@ -6147,7 +6634,7 @@
             "h": 9,
             "w": 8,
             "x": 0,
-            "y": 2718
+            "y": 3837
           },
           "id": 43,
           "options": {
@@ -6252,7 +6739,7 @@
             "h": 9,
             "w": 8,
             "x": 8,
-            "y": 2718
+            "y": 3837
           },
           "id": 44,
           "options": {
@@ -6357,7 +6844,7 @@
             "h": 9,
             "w": 8,
             "x": 16,
-            "y": 2718
+            "y": 3837
           },
           "id": 45,
           "options": {
@@ -6406,7 +6893,297 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 34
+      },
+      "id": 87,
+      "panels": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 15,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 9,
+            "x": 0,
+            "y": 445
+          },
+          "id": 90,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last *",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "count by (type) (dayz_metricz_effect_area_insiders{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Effect Area by Type",
+          "type": "timeseries"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 6,
+            "x": 9,
+            "y": 445
+          },
+          "id": 92,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "right",
+              "showLegend": true
+            },
+            "pieType": "pie",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "sort": "desc",
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "max by (class) (increase(dayz_metricz_effect_area_insiders{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"}[$__range]) > 0)",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "{{class}}",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Effect Area Insiders Max",
+          "type": "piechart"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${data_source}"
+          },
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "barWidthFactor": 0.6,
+                "drawStyle": "line",
+                "fillOpacity": 15,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "insertNulls": false,
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "showValues": false,
+                "spanNulls": true,
+                "stacking": {
+                  "group": "A",
+                  "mode": "normal"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "text",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 9,
+            "x": 15,
+            "y": 445
+          },
+          "id": 91,
+          "options": {
+            "legend": {
+              "calcs": [
+                "lastNotNull",
+                "max"
+              ],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "sortBy": "Last *",
+              "sortDesc": true
+            },
+            "tooltip": {
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "12.4.0-pre",
+          "targets": [
+            {
+              "datasource": {
+                "type": "prometheus",
+                "uid": "${data_source}"
+              },
+              "disableTextWrap": false,
+              "editorMode": "code",
+              "expr": "count by (class) (dayz_metricz_effect_area_insiders{instance=~\"$instance\", instance_id=~\"$instance_id\", world=~\"$world\"})",
+              "fullMetaSearch": false,
+              "includeNullMetadata": true,
+              "legendFormat": "__auto",
+              "range": true,
+              "refId": "A",
+              "useBackend": false
+            }
+          ],
+          "title": "Effect Area by Class",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Effect Areas",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 35
       },
       "id": 11,
       "panels": [
@@ -6462,7 +7239,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2679
+            "y": 3798
           },
           "id": 18,
           "options": {
@@ -6534,7 +7311,7 @@
             "h": 3,
             "w": 24,
             "x": 0,
-            "y": 2683
+            "y": 3802
           },
           "id": 12,
           "options": {
@@ -6641,7 +7418,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2686
+            "y": 3805
           },
           "id": 15,
           "options": {
@@ -6742,7 +7519,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2690
+            "y": 3809
           },
           "id": 13,
           "options": {
@@ -6831,7 +7608,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2694
+            "y": 3813
           },
           "id": 14,
           "options": {
@@ -6951,7 +7728,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2698
+            "y": 3817
           },
           "id": 16,
           "options": {
@@ -7072,7 +7849,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2702
+            "y": 3821
           },
           "id": 17,
           "options": {
@@ -7194,7 +7971,7 @@
             "h": 4,
             "w": 24,
             "x": 0,
-            "y": 2706
+            "y": 3825
           },
           "id": 19,
           "options": {
