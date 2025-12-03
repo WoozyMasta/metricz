@@ -57,22 +57,5 @@ modded class MissionServer : MissionBase
 
 		MetricZ_Storage.s_Corpses.Set(m_DeadPlayersArray.Count());
 	}
-
-	/**
-	    \brief Count completed artillery barrages.
-	    \details Reads timer before calling base. After base logic, if artillery is enabled
-	        and a cycle completed (before > m_ArtyDelay and m_ArtyBarrageTimer < before),
-	        increments MetricZ_Storage.s_Artillery.
-	    \param deltaTime Frame delta in seconds.
-	*/
-	override void RandomArtillery(float deltaTime)
-	{
-		float before = m_ArtyBarrageTimer;
-
-		super.RandomArtillery(deltaTime);
-
-		if (m_PlayArty && before > m_ArtyDelay && m_ArtyBarrageTimer < before)
-			MetricZ_Storage.s_Artillery.Inc();
-	}
 }
 #endif
