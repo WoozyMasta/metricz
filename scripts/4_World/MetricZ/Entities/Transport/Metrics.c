@@ -169,6 +169,16 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 			return;
 		}
 
+#ifdef EXPANSIONMODVEHICLE
+		ExpansionVehicleBase expVehicle;
+		if (Class.CastTo(expVehicle, m_Transport)) {
+			m_EngineOn.Set(MetricZ_LabelUtils.Bool(expVehicle.EngineIsOn()));
+			m_FuelFraction.Set(expVehicle.GetFluidFraction(CarFluid.FUEL));
+
+			return;
+		}
+#endif
+
 		// HelicopterScript heli;
 		// if (Class.CastTo(heli, m_Transport)) {}
 	}

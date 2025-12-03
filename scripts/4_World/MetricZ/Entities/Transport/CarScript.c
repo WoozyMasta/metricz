@@ -39,7 +39,17 @@ modded class CarScript
 		if (MetricZ_Config.s_DisableTransportMetrics)
 			return;
 
+#ifdef EXPANSIONMODVEHICLE
+		if (IsInherited(ExpansionBoatScript))
+			MetricZ_Storage.s_Boats.Inc();
+		else if (IsInherited(ExpansionHelicopterScript))
+			MetricZ_Storage.s_Helicopters.Inc();
+		else
+			MetricZ_Storage.s_Cars.Inc();
+#else
 		MetricZ_Storage.s_Cars.Inc();
+#endif
+
 		MetricZ_TransportRegistry.Register(this);
 
 		if (!m_MetricZ)
@@ -58,7 +68,18 @@ modded class CarScript
 	{
 		if (!MetricZ_Config.s_DisableTransportMetrics) {
 			m_MetricZ = null;
+
+#ifdef EXPANSIONMODVEHICLE
+			if (IsInherited(ExpansionBoatScript))
+				MetricZ_Storage.s_Boats.Dec();
+			else if (IsInherited(ExpansionHelicopterScript))
+				MetricZ_Storage.s_Helicopters.Dec();
+			else
+				MetricZ_Storage.s_Cars.Dec();
+#else
 			MetricZ_Storage.s_Cars.Dec();
+#endif
+
 			MetricZ_TransportRegistry.Unregister(this);
 		}
 
@@ -70,8 +91,18 @@ modded class CarScript
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.s_DisableTransportMetrics) {
+#ifdef EXPANSIONMODVEHICLE
+			if (IsInherited(ExpansionBoatScript))
+				MetricZ_Storage.s_BoatsDestroys.Inc();
+			else if (IsInherited(ExpansionHelicopterScript))
+				MetricZ_Storage.s_HelicoptersDestroys.Inc();
+			else
+				MetricZ_Storage.s_CarsDestroys.Inc();
+#else
 			MetricZ_Storage.s_CarsDestroys.Inc();
+#endif
+		}
 
 		super.EEKilled(killer);
 	}

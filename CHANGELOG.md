@@ -44,6 +44,9 @@ Here is the updated changelog including the new changes.
 
 ### Changed
 
+* fixed calculation of `dayz_metricz_(boats|cars|helicopters)` and
+  `dayz_metricz_(boats|cars|helicopters)_destroyed_total` with installed
+  Expansion Vehicles mod
 * fixed calculation of `dayz_metricz_players_spawns_total`
 * removed `dayz_metricz_weapon_shots_all_total` ⚠️
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
