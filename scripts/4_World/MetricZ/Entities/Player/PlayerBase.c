@@ -10,8 +10,11 @@
 */
 modded class PlayerBase
 {
+	// prevent counting kills on already killed body
+	protected bool m_MetricZ_IsKilled;
 	// prevent counting hits on death bodies except last hit
 	protected bool m_MetricZ_IsLastHit;
+
 	protected ref MetricZ_PlayerMetrics m_MetricZ;
 
 	/**
@@ -66,27 +69,31 @@ modded class PlayerBase
 	*/
 	override void EEKilled(Object killer)
 	{
+		if (!m_MetricZ_IsKilled) {
+			m_MetricZ_IsKilled = true;
+
 #ifdef EXPANSIONMODAI
-		if (IsInherited(eAIBase)) {
-			if (!MetricZ_Config.s_DisableEntityKillsMetrics && killer != this)
-				MetricZ_WeaponStats.OnCreatureKilled(killer);
+			if (IsInherited(eAIBase)) {
+				if (!MetricZ_Config.s_DisableEntityKillsMetrics && killer != this)
+					MetricZ_WeaponStats.OnCreatureKilled(killer);
 
-			if (IsInherited(eAINPCBase))
-				MetricZ_Storage.s_ExpansionAINPCDeaths.Inc();
-			else
-				MetricZ_Storage.s_ExpansionAIDeaths.Inc();
+				if (IsInherited(eAINPCBase))
+					MetricZ_Storage.s_ExpansionAINPCDeaths.Inc();
+				else
+					MetricZ_Storage.s_ExpansionAIDeaths.Inc();
 
-			super.EEKilled(killer);
+				super.EEKilled(killer);
 
-			return;
-		}
+				return;
+			}
 #endif
 
-		if (!MetricZ_Config.s_DisablePlayerMetrics)
-			MetricZ_Storage.s_PlayersDeaths.Inc();
+			if (!MetricZ_Config.s_DisablePlayerMetrics)
+				MetricZ_Storage.s_PlayersDeaths.Inc();
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
-			MetricZ_WeaponStats.OnPlayerKilled(killer);
+			if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+				MetricZ_WeaponStats.OnPlayerKilled(killer);
+		}
 
 		super.EEKilled(killer);
 	}
@@ -137,6 +144,11 @@ modded class PlayerBase
 	override void EOnPostFrame(IEntity other, int extra)
 	{
 		super.EOnPostFrame(other, extra);
+
+#ifdef EXPANSIONMODAI
+		if (IsInherited(eAIBase))
+			return;
+#endif
 
 		if (m_MetricZ || !MetricZ_Config.s_DisablePlayerMetrics)
 			m_MetricZ.SampleNetwork();

@@ -44,6 +44,10 @@ Here is the updated changelog including the new changes.
 
 ### Changed
 
+* fixed an issue when trying to calculate network ping for eAI
+* fixed double counting of destroyed vehicles when saving/loading
+* stricter `EEKilled()` checking for objects deaths
+  to prevent unnecessary counter increments
 * fixed calculation of `dayz_metricz_(boats|cars|helicopters)` and
   `dayz_metricz_(boats|cars|helicopters)_destroyed_total` with installed
   Expansion Vehicles mod

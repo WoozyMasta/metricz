@@ -11,6 +11,33 @@
 */
 modded class ExpansionVehicleBase
 {
+	// prevent counting kills on destroyed vehicles
+	protected bool m_MetricZ_IsKilled;
+
+	protected ref MetricZ_TransportMetrics m_MetricZ;
+
+	/**
+	    \brief Initialize transport metrics for expansion vehicle loaded from persistence.
+	*/
+	override void EEOnAfterLoad()
+	{
+		super.EEOnAfterLoad();
+
+		if (MetricZ_Config.s_DisableTransportMetrics)
+			return;
+
+		if (!m_MetricZ)
+			m_MetricZ = new MetricZ_TransportMetrics();
+
+		// Init metrics for a persistent transport loaded from save with the actual persistence hash.
+		m_MetricZ.Init(this);
+
+		// prevent double counting for save/load destroyed vehicle
+		if (IsDamageDestroyed())
+			m_MetricZ_IsKilled = true;
+	}
+
+
 	/**
 	    \brief Increment transport based counters.
 	*/
@@ -27,6 +54,20 @@ modded class ExpansionVehicleBase
 			MetricZ_Storage.s_Helicopters.Inc();
 		else
 			MetricZ_Storage.s_Cars.Inc();
+
+		MetricZ_TransportRegistry.Register(this);
+
+		if (!m_MetricZ)
+			m_MetricZ = new MetricZ_TransportMetrics();
+
+		// Scheduled init of metrics for the created transport.
+		// In this state, the persistence hash is not guaranteed and must be loaded later.
+		// However, if the transport was not loaded but created via debug, this is the only reliable place for integration.
+		m_MetricZ.InitLater(this);
+
+		// prevent double counting for save/load destroyed vehicle
+		if (IsDamageDestroyed())
+			m_MetricZ_IsKilled = true;
 	}
 
 	/**
@@ -41,6 +82,8 @@ modded class ExpansionVehicleBase
 				MetricZ_Storage.s_Helicopters.Dec();
 			else
 				MetricZ_Storage.s_Cars.Dec();
+
+			MetricZ_TransportRegistry.Unregister(this);
 		}
 
 		super.EEDelete(parent);
@@ -51,16 +94,27 @@ modded class ExpansionVehicleBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics) {
+		if (!MetricZ_Config.s_DisableTransportMetrics && !m_MetricZ_IsKilled) {
 			if (Expansion_IsBoat())
 				MetricZ_Storage.s_BoatsDestroys.Inc();
 			else if (Expansion_IsHelicopter() || Expansion_IsPlane())
 				MetricZ_Storage.s_HelicoptersDestroys.Inc();
 			else
 				MetricZ_Storage.s_CarsDestroys.Inc();
+
+			m_MetricZ_IsKilled = true;
 		}
 
 		super.EEKilled(killer);
+	}
+
+	/**
+	    \brief Accessor for per-expansion vehicle metrics.
+	    \return \p MetricZ_TransportMetrics or null.
+	*/
+	MetricZ_TransportMetrics MetricZ_GetMetrics()
+	{
+		return m_MetricZ;
 	}
 }
 #endif

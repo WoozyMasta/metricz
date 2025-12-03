@@ -10,6 +10,9 @@
 */
 modded class CarScript
 {
+	// prevent counting kills on destroyed vehicles
+	protected bool m_MetricZ_IsKilled;
+
 	protected ref MetricZ_TransportMetrics m_MetricZ;
 
 	/**
@@ -27,6 +30,10 @@ modded class CarScript
 
 		// Init metrics for a persistent transport loaded from save with the actual persistence hash.
 		m_MetricZ.Init(this);
+
+		// prevent double counting for save/load destroyed vehicle
+		if (IsDamageDestroyed())
+			m_MetricZ_IsKilled = true;
 	}
 
 	/**
@@ -59,6 +66,10 @@ modded class CarScript
 		// In this state, the persistence hash is not guaranteed and must be loaded later.
 		// However, if the transport was not loaded but created via debug, this is the only reliable place for integration.
 		m_MetricZ.InitLater(this);
+
+		// prevent double counting for save/load destroyed vehicle
+		if (IsDamageDestroyed())
+			m_MetricZ_IsKilled = true;
 	}
 
 	/**
@@ -91,7 +102,7 @@ modded class CarScript
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics) {
+		if (!MetricZ_Config.s_DisableTransportMetrics && !m_MetricZ_IsKilled) {
 #ifdef EXPANSIONMODVEHICLE
 			if (IsInherited(ExpansionBoatScript))
 				MetricZ_Storage.s_BoatsDestroys.Inc();
@@ -102,6 +113,7 @@ modded class CarScript
 #else
 			MetricZ_Storage.s_CarsDestroys.Inc();
 #endif
+			m_MetricZ_IsKilled = true;
 		}
 
 		super.EEKilled(killer);

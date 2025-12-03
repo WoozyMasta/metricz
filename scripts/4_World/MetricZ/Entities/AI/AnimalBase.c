@@ -10,6 +10,8 @@
 */
 modded class AnimalBase
 {
+	// prevent counting kills on already killed body
+	protected bool m_MetricZ_IsKilled;
 	// prevent counting hits on death bodies except last hit
 	protected bool m_MetricZ_IsLastHit;
 	// cache for animal names used in labels: original -> canonical
@@ -35,7 +37,7 @@ modded class AnimalBase
 	{
 		MetricZ_Storage.s_Animals.Dec();
 
-		if (IsDamageDestroyed())
+		if (m_MetricZ_IsKilled)
 			MetricZ_Storage.s_AnimalsCorpses.Dec();
 
 		if (!MetricZ_Config.s_DisableAnimalMetrics)
@@ -49,11 +51,17 @@ modded class AnimalBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		MetricZ_Storage.s_AnimalsDeaths.Inc();
-		MetricZ_Storage.s_AnimalsCorpses.Inc();
+		if (!m_MetricZ_IsKilled) {
+			m_MetricZ_IsKilled = true;
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
-			MetricZ_WeaponStats.OnCreatureKilled(killer);
+			if (killer != this)
+				MetricZ_Storage.s_AnimalsDeaths.Inc();
+
+			MetricZ_Storage.s_AnimalsCorpses.Inc();
+
+			if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+				MetricZ_WeaponStats.OnCreatureKilled(killer);
+		}
 
 		super.EEKilled(killer);
 	}

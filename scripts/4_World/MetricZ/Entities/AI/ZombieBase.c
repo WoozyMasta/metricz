@@ -10,6 +10,8 @@
 */
 modded class ZombieBase
 {
+	// prevent counting kills on already killed body
+	protected bool m_MetricZ_IsKilled;
 	// prevent counting hits on death bodies except last hit
 	protected bool m_MetricZ_IsLastHit;
 	// last reported mind state
@@ -37,7 +39,7 @@ modded class ZombieBase
 	{
 		MetricZ_Storage.s_Infected.Dec();
 
-		if (IsDamageDestroyed())
+		if (m_MetricZ_IsKilled)
 			MetricZ_Storage.s_InfectedCorpses.Dec();
 
 		if (!MetricZ_Config.s_DisableZombieMetrics)
@@ -51,17 +53,23 @@ modded class ZombieBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		MetricZ_Storage.s_InfectedDeaths.Inc();
-		MetricZ_Storage.s_InfectedCorpses.Inc();
+		if (!m_MetricZ_IsKilled) {
+			m_MetricZ_IsKilled = true;
 
-		if (!MetricZ_Config.s_DisableZombieMetrics) {
-			MetricZ_ZombieStats.OnKilled(m_MetricZ_State);
-			m_MetricZ_State = MetricZ_ZombieStats.MINDSTATE_DEAD;
-		} else
-			m_MetricZ_State = -1;
+			if (killer != this)
+				MetricZ_Storage.s_InfectedDeaths.Inc();
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
-			MetricZ_WeaponStats.OnCreatureKilled(killer);
+			MetricZ_Storage.s_InfectedCorpses.Inc();
+
+			if (!MetricZ_Config.s_DisableZombieMetrics) {
+				MetricZ_ZombieStats.OnKilled(m_MetricZ_State);
+				m_MetricZ_State = MetricZ_ZombieStats.MINDSTATE_DEAD;
+			} else
+				m_MetricZ_State = -1;
+
+			if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+				MetricZ_WeaponStats.OnCreatureKilled(killer);
+		}
 
 		super.EEKilled(killer);
 	}
