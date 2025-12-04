@@ -65,7 +65,7 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 		vector pos = MetricZ_Geo.GetPosition(m_TerritoryFlag);
 
 		map<string, string> labels = new map<string, string>();
-		labels.Insert("refresher_radius", MetricZ_Geo.GetRadiusDegrees(GameConstants.REFRESHER_RADIUS).ToString());
+		labels.Insert("refresher_radius", GameConstants.REFRESHER_RADIUS.ToString());
 		labels.Insert("longitude", pos[0].ToString());
 		labels.Insert("latitude", pos[2].ToString());
 

@@ -83,12 +83,12 @@ modded class EffectArea
 	}
 
 	/**
-	    \brief Get area radius in degrees (MetricZ projection).
+	    \brief Get area radius.
 	    \return \p int Radius.
 	*/
 	float MetricZ_GetRadius()
 	{
-		return MetricZ_Geo.GetRadiusDegrees(m_Radius);
+		return m_Radius;
 	}
 
 	/**
