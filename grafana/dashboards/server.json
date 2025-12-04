@@ -206,7 +206,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "mean"
           ],
           "fields": "",
           "values": false
@@ -225,7 +225,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "sum by (instance_id, world) (dayz_metricz_fps{instance=\"$instance\",instance_id=\"$instance_id\"})",
+          "expr": "sum by (instance_id, world) (dayz_metricz_fps_window_avg{instance=\"$instance\",instance_id=\"$instance_id\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -235,7 +235,7 @@
           "useBackend": false
         }
       ],
-      "title": "Server FPS",
+      "title": "Average Server FPS",
       "type": "stat"
     },
     {
@@ -1789,7 +1789,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -1897,7 +1897,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -1916,7 +1916,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_corpses{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "sum by (instance_id, world) (dayz_metricz_corpses{instance=\"$instance\",instance_id=\"$instance_id\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2009,7 +2009,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "max"
           ],
           "fields": "",
           "values": false
@@ -2028,7 +2028,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_players_online{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "sum by (instance_id, world) (dayz_metricz_players_online{instance=\"$instance\",instance_id=\"$instance_id\"})",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2045,7 +2045,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "dayz_metricz_max_players{instance=\"$instance\",instance_id=\"$instance_id\"}",
+          "expr": "sum by (instance_id, world) (dayz_metricz_max_players{instance=\"$instance\",instance_id=\"$instance_id\"})",
           "fullMetaSearch": false,
           "hide": false,
           "includeNullMetadata": true,
@@ -2056,7 +2056,7 @@
           "useBackend": false
         }
       ],
-      "title": "Players Alive",
+      "title": "Players Alive Max",
       "transformations": [
         {
           "id": "configFromData",
@@ -2116,7 +2116,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -2566,7 +2566,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -2585,7 +2585,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "increase(dayz_metricz_artillery_barrages_total{instance=\"$instance\",instance_id=\"$instance_id\"}[$__range])",
+          "expr": "sum by (instance_id, world) (increase(dayz_metricz_artillery_barrages_total{instance=\"$instance\",instance_id=\"$instance_id\"}[$__range]))",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -2858,7 +2858,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -3345,7 +3345,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -3418,7 +3418,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -3851,7 +3851,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -3924,7 +3924,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -4132,7 +4132,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -4599,7 +4599,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
@@ -4672,7 +4672,7 @@
         "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
-            "lastNotNull"
+            "range"
           ],
           "fields": "",
           "values": false
