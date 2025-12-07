@@ -118,7 +118,7 @@ modded class EffectArea
 		if (!MetricZ_Config.IsLoaded() || m_MetricZ_AreaInit)
 			return;
 
-		if (!MetricZ_Config.Get().enableLocalEffectAreaMetrics && IsInherited(ContaminatedArea_Local))
+		if (MetricZ_Config.Get().disableLocalEffectAreaMetrics && IsInherited(ContaminatedArea_Local))
 			return;
 
 		m_MetricZ_AreaInit = true;
