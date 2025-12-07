@@ -7,7 +7,7 @@ function trim(s) {
 }
 
 # simple word-wrap to given width with indent
-function wrap(text, width, indent, n, words, i, line, base_len, w, out) {
+function wrap(text, width, indent,   n, words, i, line, base_len, w, out, new_len) {
   text = trim(text)
   if (text == "")
     return ""
@@ -21,17 +21,14 @@ function wrap(text, width, indent, n, words, i, line, base_len, w, out) {
     if (w == "")
       continue
 
-    # length if we append this word (with leading space if not first)
     if (line == indent)
       new_len = base_len + length(w)
     else
       new_len = length(line) + 1 + length(w)
 
     if (new_len > width) {
-      # flush current line and start new one
       if (line != indent)
         out = (out ? out "\n" : "") line
-
       line = indent w
     } else {
       if (line == indent)
@@ -47,35 +44,61 @@ function wrap(text, width, indent, n, words, i, line, base_len, w, out) {
   return out
 }
 
+BEGIN {
+  in_public = 0
+  comment = ""
+}
+
 {
-  # accumulate comment lines starting with //
-  if ($0 ~ /^[[:space:]]*\/\//) {
-    c = substr($0, index($0, "//") + 2)
-    comment = (comment ? comment " " : "") trim(c)
+  if ($0 ~ /\/\/[[:space:]]*\* <start json options>/) {
+    in_public = 1
+    comment = ""
+    next
+  }
+  if ($0 ~ /\/\/[[:space:]]*\* <end json options>/) {
+    in_public = 0
+    comment = ""
     next
   }
 
-  re = "^[[:space:]]*.*(GetNumber|GetString|GetBool)[[:space:]]*\\(" \
-       "[[:space:]]*\"([^\"]+)\"[[:space:]]*" \
-       "(,[[:space:]]*\"([^\"]+)\")?" \
-       "([[:space:]]*,[[:space:]]*([^,)]*))?"
+  if (!in_public)
+    next
 
-  if (match($0, re, m)) {
+  if ($0 ~ /^[[:space:]]*\/\//) {
+    c = substr($0, index($0, "//") + 2)
+    c = trim(c)
+    if (c != "")
+      comment = (comment ? comment " " : "") c
+    next
+  }
+
+  if (match($0, /^[[:space:]]*(int|bool|float)[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*(=[^;]+)?;/, m)) {
     type = m[1]
-    arg1 = m[2]
-    arg2 = m[4]
+    name = m[2]
+    init = m[3]
 
+    # default value
     def = ""
-    if (m[6] != "")
-      def = trim(m[6])
+    if (init != "") {
+      # init like "= 60" or "= true"
+      def = init
+      sub(/^=/, "", def)
+      def = trim(def)
+    } else {
+      if (type == "bool")
+        def = "false"
+      else if (type == "int")
+        def = "0"
+      else if (type == "float")
+        def = "0.0"
+      else
+        def = ""
+    }
 
     desc = comment ? comment : "(no description)"
     comment = ""
 
-    if (arg2 != "")
-      printf "* **`MetricZ_%s`**\n  `-metricz-%s` —\n", arg1, arg2
-    else
-      printf "* `-metricz-%s` —\n", arg1
+    printf "* **`%s`** (`%s`) —\n", name, type
 
     wrapped = wrap(desc, 76, "  ")
     if (wrapped != "")
@@ -84,10 +107,11 @@ function wrap(text, width, indent, n, words, i, line, base_len, w, out) {
     if (def != "")
       printf "\n  (default: `%s`)", def
 
-    printf ";\n"
+    printf "\n"
 
     next
   }
 
-  comment = ""
+  if ($0 ~ /[^[:space:]]/)
+    comment = ""
 }

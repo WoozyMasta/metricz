@@ -83,82 +83,82 @@ For DayZ metrics, we strongly recommend using
 
 ## Options [Utils/Config.c](./scripts/3_Game/MetricZ/Utils/Config.c)
 
-* **`MetricZ_InitDelay`**
-  `-metricz-init-delay` —
+* **`configVersion`** (`int`) —
+  Internal config version, do not touch it
+  (default: `CONFIG_VERSION`)
+* **`initDelaySeconds`** (`int`) —
   Delay before the first metric collection in seconds
-  (default: `60`);
-* **`MetricZ_ScrapeInterval`**
-  `-metricz-scrape-interval` —
+  (default: `60`)
+* **`scrapeIntervalSeconds`** (`int`) —
   Interval between metric updates in seconds
-  (default: `15`);
-* **`MetricZ_DisablePlayerMetrics`**
-  `-metricz-disable-player` —
-  Disable player-related metrics collection `dayz_metricz_player_*`;
-* **`MetricZ_DisableZombieMetrics`**
-  `-metricz-disable-zombie` —
+  (default: `15`)
+* **`disablePlayerMetrics`** (`bool`) —
+  Disable player-related metrics collection `dayz_metricz_player_*`
+  (default: `false`)
+* **`disableZombieMetrics`** (`bool`) —
   Disable zombie per-type and mind states metrics collection
-  `dayz_metricz_animals_by_type`;
-* **`MetricZ_DisableAnimalMetrics`**
-  `-metricz-disable-animal` —
+  `dayz_metricz_animals_by_type`
+  (default: `false`)
+* **`disableAnimalMetrics`** (`bool`) —
   Disable animal per-type metrics collection `dayz_metricz_infected_by_type`
-  and `dayz_metricz_infected_mind_state`;
-* **`MetricZ_DisableTransportMetrics`**
-  `-metricz-disable-transport` —
+  and `dayz_metricz_infected_mind_state`
+  (default: `false`)
+* **`disableTransportMetrics`** (`bool`) —
   Disable vehicle and transport metrics collection
-  `dayz_metricz_transport_*`;
-* **`MetricZ_DisableWeaponMetrics`**
-  `-metricz-disable-weapon` —
+  `dayz_metricz_transport_*`
+  (default: `false`)
+* **`disableWeaponMetrics`** (`bool`) —
   Disable weapon per-type (count, shoot, kills and hits) metrics collection
   `dayz_metricz_weapon_shots_total`, `dayz_metricz_weapons_by_type_total`,
   `dayz_metricz_player_killed_by_total` and
-  `dayz_metricz_creature_killed_by_total`;
-* **`MetricZ_DisableEntityHitsMetrics`**
-  `-metricz-disable-entity-hits` —
+  `dayz_metricz_creature_killed_by_total`
+  (default: `false`)
+* **`disableEntityHitsMetrics`** (`bool`) —
   Disable player and zombie/animal hit by ammo type metrics
   `dayz_metricz_player_killed_by_total` and
-  `dayz_metricz_creature_killed_by_total`;
-* **`MetricZ_EntityHitDamageThreshold`**
-  `-metricz-entity-hit-damage-threshold` —
+  `dayz_metricz_creature_killed_by_total`
+  (default: `false`)
+* **`entityHitDamageThreshold`** (`float`) —
   Minimum damage to log in `EEHitBy()`; -1 and less disables threshold.
-  (default: `3`);
-* **`MetricZ_EntityVehicleHitDamageThreshold`**
-  `-metricz-entity-vehicle-hit-damage-threshold` —
+  (default: `3`)
+* **`entityVehicleHitDamageThreshold`** (`float`) —
   Minimum vehicle-hit damage to log in `EEHitBy()`; -1 and less disables
   threshold.
-  (default: `15`);
-* **`MetricZ_DisableTerritoryMetrics`**
-  `-metricz-disable-territory` —
+  (default: `15`)
+* **`disableEntityKillsMetrics`** (`bool`) —
+  Disable player and zombie/animal kill by object killer metrics
+  (default: `false`)
+* **`disableTerritoryMetrics`** (`bool`) —
   Disable territory flag metrics collection
-  `dayz_metricz_territory_lifetime`;
-* **`MetricZ_DisableEffectAreaMetrics`**
-  `-metricz-disable-effect-area` —
+  (default: `false`)
+* **`disableEffectAreaMetrics`** (`bool`) —
   Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.)
-  metrics;
-* **`MetricZ_EnableLocalEffectAreaMetrics`**
-  `-metricz-enable-local-effect-area` —
+  metrics
+  (default: `false`)
+* **`enableLocalEffectAreaMetrics`** (`bool`) —
   Enable Local EffectArea metrics like ContaminatedArea_Local created from
   Grenade_ChemGas This is disabled by default because metrics for such local
   zones will always have unique positions, thereby creating new metric
   series in the TSDB each time. Use with caution, as this may bloat your
-  metrics database!;
-* **`MetricZ_DisableCoordinatesMetrics`**
-  `-metricz-disable-coordinates` —
-  Disable player and transport coordinate metrics;
-* **`MetricZ_DisableGeoCoordinatesFormat`**
-  `-metricz-disable-geo-coordinates-format` —
+  metrics database!
+  (default: `false`)
+* **`disableCoordinatesMetrics`** (`bool`) —
+  Disable player and transport coordinate metrics
+  (default: `false`)
+* **`disableGeoCoordinatesFormat`** (`bool`) —
   Disable conversion of coordinates metrics to geo `EPSG:4326` (WGS84)
   format. By default convert position to lon/lat in `-180/180` and `-90/90`
   range. If disable, all exported coordinates hold vanilla zero relative
-  meters;
-* **`MetricZ_DisableRPCMetrics`**
-  `-metricz-disable-rpc` —
-  Disable RPC metrics collection `dayz_metricz_rpc_input_total`;
-* **`MetricZ_DisableEventMetrics`**
-  `-metricz-disable-event` —
-  Disable event handler metrics collection `dayz_metricz_events_total`;
-* **`MetricZ_MapEffectiveSize`**
-  `-metricz-map-effective-size` —
+  meters
+  (default: `false`)
+* **`disableRPCMetrics`** (`bool`) —
+  Disable RPC metrics collection `dayz_metricz_rpc_input_total`
+  (default: `false`)
+* **`disableEventMetrics`** (`bool`) —
+  Disable event handler metrics collection `dayz_metricz_events_total`
+  (default: `false`)
+* **`mapEffectiveSize`** (`float`) —
   Override effective map tiles size in world units. Useful if the web map
   size is larger than the game world size (for example, the izurvive tiles
   for Chernarus have a size of `15926`, although the world size is `15360`)
-  (default: `0`);
+  (default: `0.0`)
