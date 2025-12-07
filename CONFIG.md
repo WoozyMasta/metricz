@@ -90,6 +90,12 @@ For DayZ metrics, we strongly recommend using
 * **`scrapeIntervalSeconds`** (`int`) —
   Interval between metric updates in seconds
   (default: `15`)
+* **`disableRPCMetrics`** (`bool`) —
+  Disable RPC metrics collection `dayz_metricz_rpc_input_total`
+  (default: `false`)
+* **`disableEventMetrics`** (`bool`) —
+  Disable event handler metrics collection `dayz_metricz_events_total`
+  (default: `false`)
 * **`disablePlayerMetrics`** (`bool`) —
   Disable player-related metrics collection `dayz_metricz_player_*`
   (default: `false`)
@@ -133,13 +139,13 @@ For DayZ metrics, we strongly recommend using
   Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.)
   metrics
   (default: `false`)
-* **`enableLocalEffectAreaMetrics`** (`bool`) —
-  Enable Local EffectArea metrics like ContaminatedArea_Local created from
+* **`disableLocalEffectAreaMetrics`** (`bool`) —
+  Disable Local EffectArea metrics like ContaminatedArea_Local created from
   Grenade_ChemGas This is disabled by default because metrics for such local
   zones will always have unique positions, thereby creating new metric
   series in the TSDB each time. Use with caution, as this may bloat your
   metrics database!
-  (default: `false`)
+  (default: `true`)
 * **`disableCoordinatesMetrics`** (`bool`) —
   Disable player and transport coordinate metrics
   (default: `false`)
@@ -148,12 +154,6 @@ For DayZ metrics, we strongly recommend using
   format. By default convert position to lon/lat in `-180/180` and `-90/90`
   range. If disable, all exported coordinates hold vanilla zero relative
   meters
-  (default: `false`)
-* **`disableRPCMetrics`** (`bool`) —
-  Disable RPC metrics collection `dayz_metricz_rpc_input_total`
-  (default: `false`)
-* **`disableEventMetrics`** (`bool`) —
-  Disable event handler metrics collection `dayz_metricz_events_total`
   (default: `false`)
 * **`mapEffectiveSize`** (`float`) —
   Override effective map tiles size in world units. Useful if the web map

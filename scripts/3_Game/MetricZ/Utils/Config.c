@@ -34,6 +34,14 @@ class MetricZ_Config
 	// Interval between metric updates in seconds
 	int scrapeIntervalSeconds = 15; // 1, 300
 
+	// Disable RPC metrics collection
+	// `dayz_metricz_rpc_input_total`
+	bool disableRPCMetrics;
+
+	// Disable event handler metrics collection
+	// `dayz_metricz_events_total`
+	bool disableEventMetrics;
+
 	// Disable player-related metrics collection
 	// `dayz_metricz_player_*`
 	bool disablePlayerMetrics;
@@ -76,11 +84,11 @@ class MetricZ_Config
 	// Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.) metrics
 	bool disableEffectAreaMetrics;
 
-	// Enable Local EffectArea metrics like ContaminatedArea_Local created from Grenade_ChemGas
+	// Disable Local EffectArea metrics like ContaminatedArea_Local created from Grenade_ChemGas
 	// This is disabled by default because metrics for such local zones will always have unique
 	// positions, thereby creating new metric series in the TSDB each time.
 	// Use with caution, as this may bloat your metrics database!
-	bool enableLocalEffectAreaMetrics;
+	bool disableLocalEffectAreaMetrics = true;
 
 	// Disable player and transport coordinate metrics
 	bool disableCoordinatesMetrics;
@@ -89,14 +97,6 @@ class MetricZ_Config
 	// By default convert position to lon/lat in `-180/180` and `-90/90` range.
 	// If disable, all exported coordinates hold vanilla zero relative meters
 	bool disableGeoCoordinatesFormat;
-
-	// Disable RPC metrics collection
-	// `dayz_metricz_rpc_input_total`
-	bool disableRPCMetrics;
-
-	// Disable event handler metrics collection
-	// `dayz_metricz_events_total`
-	bool disableEventMetrics;
 
 	// Override effective map tiles size in world units.
 	// Useful if the web map size is larger than the game world size
@@ -258,7 +258,7 @@ class MetricZ_Config
 		log += "  DisableEntityKillsMetrics: " + disableEntityKillsMetrics + "\n";
 		log += "  DisableTerritoryMetrics: " + disableTerritoryMetrics + "\n";
 		log += "  DisableEffectAreaMetrics: " + disableEffectAreaMetrics + "\n";
-		log += "  EnableLocalEffectAreaMetrics: " + enableLocalEffectAreaMetrics + "\n";
+		log += "  DisableLocalEffectAreaMetrics: " + disableLocalEffectAreaMetrics + "\n";
 		log += "  DisableCoordinatesMetrics: " + disableCoordinatesMetrics + "\n";
 		log += "  DisableGeoCoordinatesFormat: " + disableGeoCoordinatesFormat + "\n";
 		log += "  DisableRPCMetrics: " + disableRPCMetrics + "\n";
