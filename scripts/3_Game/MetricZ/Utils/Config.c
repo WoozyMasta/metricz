@@ -39,9 +39,6 @@ class MetricZ_Config
 	static bool s_DisableRPCMetrics;
 	static bool s_DisableEventMetrics;
 	static float s_MapEffectiveSize;
-	static string s_MapTilesName;
-	static string s_MapTilesVersion;
-	static string s_MapTilesFormat;
 
 	// server params -> metrics
 	static int s_MaxPlayers = 255; // from serverDZ.cfg:maxPlayers
@@ -127,17 +124,6 @@ class MetricZ_Config
 		// Useful if the web map size is larger than the game world size
 		// (for example, the izurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`)
 		s_MapEffectiveSize = GetNumber("MapEffectiveSize", "map-effective-size", 0, g_Game.GetWorld().GetWorldSize(), 81920);
-
-		// Override map tiles name.
-		// Useful if the name of the web map tiles was not recognized correctly
-		s_MapTilesName = GetString("map-tiles-name");
-
-		// Override map tiles version.
-		// Useful if the web map version has been updated but the MetricZ returns the old version
-		s_MapTilesVersion = GetString("map-tiles-version");
-
-		// Override map tiles format (e.g. `webp`, `jpg`, `png`)
-		s_MapTilesFormat = GetString("map-tiles-format");
 
 		// server params
 		int v = g_Game.ServerConfigGetInt("maxPlayers");
@@ -255,9 +241,6 @@ class MetricZ_Config
 		log += "  DisableRPCMetrics: " + s_DisableRPCMetrics + "\n";
 		log += "  DisableEventMetrics: " + s_DisableEventMetrics + "\n";
 		log += "  MapEffectiveSize: " + MetricZ_Geo.GetMapEffectiveSize() + "\n";
-		log += "  MapTilesName: " + MetricZ_Geo.GetMapTilesName() + "\n";
-		log += "  MapTilesVersion: " + MetricZ_Geo.GetMapTilesVersion() + "\n";
-		log += "  MapTilesFormat: " + MetricZ_Geo.GetMapTilesFormat() + "\n";
 		log += "  MaxPlayers: " + s_MaxPlayers + "\n";
 		log += "  LimitFPS: " + s_LimitFPS + "\n";
 		log += "  BaseLabels: " + MetricZ_LabelUtils.BaseLabels();

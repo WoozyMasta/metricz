@@ -7398,84 +7398,6 @@
       {
         "allowCustomValue": false,
         "current": {
-          "text": "chernarusplus",
-          "value": "chernarusplus"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${data_source}"
-        },
-        "definition": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_name)",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Map Tiles Name",
-        "name": "map_tiles_name",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_name)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "allowCustomValue": false,
-        "current": {
-          "text": "1.27",
-          "value": "1.27"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${data_source}"
-        },
-        "definition": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_version)",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Map Tiles Version",
-        "name": "map_tiles_version",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_version)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 3,
-        "type": "query"
-      },
-      {
-        "allowCustomValue": false,
-        "current": {
-          "text": "webp",
-          "value": "webp"
-        },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${data_source}"
-        },
-        "definition": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_format)",
-        "hide": 2,
-        "includeAll": false,
-        "label": "Map Tiles Format",
-        "name": "map_tiles_format",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(dayz_metricz_status{world=~\"$world\"},map_tiles_format)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "allowCustomValue": false,
-        "current": {
           "text": "topographic",
           "value": "topographic"
         },
@@ -7498,14 +7420,14 @@
       },
       {
         "current": {
-          "text": "https://static.xam.nu/dayz/maps",
-          "value": "https://static.xam.nu/dayz/maps"
+          "text": "https://dzmap.woozymasta.ru/maps",
+          "value": "https://dzmap.woozymasta.ru/maps"
         },
         "description": "Map tiles server url",
         "hide": 2,
         "label": "Map Tiles URL",
         "name": "map_tiles_url",
-        "query": "https://static.xam.nu/dayz/maps",
+        "query": "https://dzmap.woozymasta.ru/maps",
         "skipUrlSync": true,
         "type": "constant"
       },

@@ -162,11 +162,3 @@ For DayZ metrics, we strongly recommend using
   size is larger than the game world size (for example, the izurvive tiles
   for Chernarus have a size of `15926`, although the world size is `15360`)
   (default: `0`);
-* `-metricz-map-tiles-name` —
-  Override map tiles name. Useful if the name of the web map tiles was not
-  recognized correctly;
-* `-metricz-map-tiles-version` —
-  Override map tiles version. Useful if the web map version has been updated
-  but the MetricZ returns the old version;
-* `-metricz-map-tiles-format` —
-  Override map tiles format (e.g. `webp`, `jpg`, `png`);

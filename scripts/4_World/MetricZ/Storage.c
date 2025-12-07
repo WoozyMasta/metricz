@@ -496,13 +496,6 @@ class MetricZ_Storage
 		labels.Insert("game_version", game_version);
 		labels.Insert("save_version", g_Game.SaveVersion().ToString());
 
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
-			labels.Insert("map_tiles_size", MetricZ_Geo.GetMapEffectiveSize().ToString());
-			labels.Insert("map_tiles_name", MetricZ_Geo.GetMapTilesName());
-			labels.Insert("map_tiles_version", MetricZ_Geo.GetMapTilesVersion());
-			labels.Insert("map_tiles_format", MetricZ_Geo.GetMapTilesFormat());
-		}
-
 		s_LabelsExtra = MetricZ_LabelUtils.MakeLabels(labels);
 	}
 
