@@ -20,7 +20,10 @@ modded class Weapon_Base
 	{
 		super.EEInit();
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics)
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (!MetricZ_Config.Get().disableWeaponMetrics)
 			MetricZ_WeaponStats.OnSpawn(this);
 
 		MetricZ_Storage.s_Weapons.Inc();
@@ -31,10 +34,12 @@ modded class Weapon_Base
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		MetricZ_Storage.s_Weapons.Dec();
+		if (MetricZ_Config.IsLoaded()) {
+			MetricZ_Storage.s_Weapons.Dec();
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics)
-			MetricZ_WeaponStats.OnDelete(this);
+			if (!MetricZ_Config.Get().disableWeaponMetrics)
+				MetricZ_WeaponStats.OnDelete(this);
+		}
 
 		super.EEDelete(parent);
 	}
@@ -47,7 +52,10 @@ modded class Weapon_Base
 	{
 		super.OnFire(muzzle_index);
 
-		if (!MetricZ_Config.s_DisableWeaponMetrics)
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (!MetricZ_Config.Get().disableWeaponMetrics)
 			MetricZ_WeaponStats.OnFire(this);
 	}
 

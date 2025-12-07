@@ -33,7 +33,7 @@ modded class DayZGame
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
 		// count all input RPC calls
-		if (!MetricZ_Config.s_DisableRPCMetrics)
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableRPCMetrics)
 			MetricZ_RpcStats.Inc(rpc_type);
 
 		super.OnRPC(sender, target, rpc_type, ctx);
@@ -46,7 +46,7 @@ modded class DayZGame
 	override void OnEvent(EventType eventTypeId, Param params)
 	{
 		// count all events on server
-		if (!MetricZ_Config.s_DisableEventMetrics)
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableEventMetrics)
 			MetricZ_EventStats.Inc(eventTypeId);
 
 		super.OnEvent(eventTypeId, params);

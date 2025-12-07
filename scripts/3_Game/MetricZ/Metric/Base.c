@@ -193,6 +193,7 @@ class MetricZ_MetricBase
 			labels = GetLabels();
 
 		FPrint(fh, m_Name + labels + " 0\n");
+		// sink.Line(m_Name + labels + " 0\n");
 	}
 
 	/**

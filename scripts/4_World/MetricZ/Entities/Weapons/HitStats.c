@@ -35,7 +35,7 @@ class MetricZ_HitStats
 	*/
 	static void LoadCache()
 	{
-		if (s_CacheLoaded || MetricZ_Config.s_DisableEntityHitsMetrics)
+		if (s_CacheLoaded || !MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableEntityHitsMetrics)
 			return;
 
 		s_CacheLoaded = true;

@@ -17,7 +17,7 @@ class MetricZ_Geo
 	static const float MAX_LAT = 85.05112878; //!< Web Mercator latitude clamp
 
 	// world / projection parameters
-	protected static float s_MapEffectiveSize; //!< Effective map size in world units
+	protected static float s_mapEffectiveSize; //!< Effective map size in world units
 	protected static float s_LongitudeScale; //!< Precomputed scale for longitude (360 / size)
 	protected static float s_MercatorScale; //!< Precomputed scale for Mercator Y ((2*PI) / size)
 
@@ -26,7 +26,7 @@ class MetricZ_Geo
 	*/
 	static float GetMapEffectiveSize()
 	{
-		return s_MapEffectiveSize;
+		return s_mapEffectiveSize;
 	}
 
 	/**
@@ -36,14 +36,14 @@ class MetricZ_Geo
 	*/
 	static vector GetPosition(Object obj)
 	{
-		if (!obj)
+		if (!obj || !MetricZ_Config.IsLoaded())
 			return vector.Zero;
 
-		if (s_MapEffectiveSize <= 0)
+		if (s_mapEffectiveSize <= 0)
 			Init();
 
 		vector pos = obj.GetPosition();
-		if (MetricZ_Config.s_DisableGeoCoordinatesFormat)
+		if (MetricZ_Config.Get().disableGeoCoordinatesFormat)
 			return pos;
 
 		float lon, lat;
@@ -59,10 +59,13 @@ class MetricZ_Geo
 	*/
 	static void GetLonLat(vector pos, out float lon, out float lat)
 	{
-		if (s_MapEffectiveSize <= 0)
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.s_DisableGeoCoordinatesFormat) {
+		if (MetricZ_Config.Get().disableGeoCoordinatesFormat) {
 			lon = pos[2];
 			lat = pos[0];
 			return;
@@ -84,10 +87,13 @@ class MetricZ_Geo
 	*/
 	static float GetRadiusDegrees(float radiusMeters)
 	{
-		if (s_MapEffectiveSize <= 0)
+		if (!MetricZ_Config.IsLoaded())
+			return 0;
+
+		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.s_DisableGeoCoordinatesFormat)
+		if (MetricZ_Config.Get().disableGeoCoordinatesFormat)
 			return radiusMeters;
 
 		return radiusMeters * s_LongitudeScale;
@@ -98,18 +104,21 @@ class MetricZ_Geo
 	*/
 	static void Init()
 	{
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
 		// base world size from engine
-		s_MapEffectiveSize = g_Game.GetWorld().GetWorldSize();
+		s_mapEffectiveSize = g_Game.GetWorld().GetWorldSize();
 
 		// apply config override
-		if (MetricZ_Config.s_MapEffectiveSize > 0)
-			s_MapEffectiveSize = MetricZ_Config.s_MapEffectiveSize;
-		if (s_MapEffectiveSize <= 0)
-			s_MapEffectiveSize = 15360;
+		if (MetricZ_Config.Get().mapEffectiveSize > 0)
+			s_mapEffectiveSize = MetricZ_Config.Get().mapEffectiveSize;
+		if (s_mapEffectiveSize <= 0)
+			s_mapEffectiveSize = 15360;
 
 		// recompute scales after override
-		s_LongitudeScale = 360.0 / s_MapEffectiveSize;
-		s_MercatorScale = (2.0 * Math.PI) / s_MapEffectiveSize;
+		s_LongitudeScale = 360.0 / s_mapEffectiveSize;
+		s_MercatorScale = (2.0 * Math.PI) / s_mapEffectiveSize;
 	}
 }
 #endif

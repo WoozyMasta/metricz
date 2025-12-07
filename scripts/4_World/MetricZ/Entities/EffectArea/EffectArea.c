@@ -115,16 +115,16 @@ modded class EffectArea
 	*/
 	protected void MetricZ_Init()
 	{
-		if (m_MetricZ_AreaInit)
+		if (!MetricZ_Config.IsLoaded() || m_MetricZ_AreaInit)
 			return;
 
-		if (!MetricZ_Config.s_EnableLocalEffectAreaMetrics && IsInherited(ContaminatedArea_Local))
+		if (!MetricZ_Config.Get().enableLocalEffectAreaMetrics && IsInherited(ContaminatedArea_Local))
 			return;
 
 		m_MetricZ_AreaInit = true;
 		MetricZ_Storage.s_EffectAreas.Inc();
 
-		if (MetricZ_Config.s_DisableEffectAreaMetrics)
+		if (MetricZ_Config.Get().disableEffectAreaMetrics)
 			return;
 
 		MetricZ_EffectAreaRegistry.Register(this);
@@ -141,10 +141,10 @@ modded class EffectArea
 	*/
 	protected void MetricZ_Delete()
 	{
-		if (!m_MetricZ_AreaInit)
+		if (!MetricZ_Config.IsLoaded() || !m_MetricZ_AreaInit)
 			return;
 
-		if (!MetricZ_Config.s_DisableEffectAreaMetrics) {
+		if (!MetricZ_Config.Get().disableEffectAreaMetrics) {
 			m_MetricZ = null;
 			MetricZ_EffectAreaRegistry.Unregister(this);
 		}

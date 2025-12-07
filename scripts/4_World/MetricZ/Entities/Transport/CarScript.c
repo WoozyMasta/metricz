@@ -22,7 +22,7 @@ modded class CarScript
 	{
 		super.EEOnAfterLoad();
 
-		if (MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableTransportMetrics)
 			return;
 
 		if (!m_MetricZ)
@@ -43,7 +43,7 @@ modded class CarScript
 	{
 		super.EEInit();
 
-		if (MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableTransportMetrics)
 			return;
 
 #ifdef EXPANSIONMODVEHICLE
@@ -77,7 +77,7 @@ modded class CarScript
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics) {
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableTransportMetrics) {
 			m_MetricZ = null;
 
 #ifdef EXPANSIONMODVEHICLE
@@ -102,7 +102,7 @@ modded class CarScript
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics && !m_MetricZ_IsKilled) {
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableTransportMetrics && !m_MetricZ_IsKilled) {
 #ifdef EXPANSIONMODVEHICLE
 			if (IsInherited(ExpansionBoatScript))
 				MetricZ_Storage.s_BoatsDestroys.Inc();
