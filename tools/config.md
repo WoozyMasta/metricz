@@ -2,14 +2,15 @@
 
 > Automatically generated list of configuration options from the source code.
 
-This document lists configuration options and CLI flags
-used by the **MetricZ** mod for DayZ server.
+This document lists configuration options used by the **MetricZ** mod
+for the DayZ server.
 
-Each entry below shows:
+All settings are stored in a single JSON configuration file on the server:
 
-1. the **serverDZ.cfg** option (with `MetricZ_` prefix)
-2. the equivalent **CLI flag** (with `-metricz-` prefix)
-3. a short description taken from the source code comments.
+* `$profile:metricz.json`
+
+The file is created automatically with default values if it does not exist.
+Changes to this file take effect after a server restart.
 
 ## Performance & Database Recommendations
 
@@ -34,15 +35,15 @@ crashes over time.
 If you have thousands of unique players or vehicles per month,
 consider disabling specific modules:
 
-* `-metricz-disable-transport`
+* `disableTransportMetrics`
   (Reduces churn significantly on heavy modded servers)
-* `-metricz-disable-player`
+* `disablePlayerMetrics`
   (If you don't need individual player vitals history)
-* `-metricz-disable-weapon`
+* `disableWeaponMetrics`
   (If you have a lot of modded weapons,
   otherwise a series is created for each type)
-* `-metricz-disable-entity-hits`
-  (If you have a lot of modded ammo or modified `AttackType` AI,
+* `disableEntityHitsMetrics` and `disableEntityKillsMetrics`
+  (If you have a lot of modded weapon and ammo or modified `AttackType` AI,
   otherwise a series is created for each type)
 
 ### Recommended TSDB
@@ -70,13 +71,3 @@ For DayZ metrics, we strongly recommend using
   Counters (like shots fired) reset to `0` on every server restart.
   Use the `increase()` or `rate()` functions in PromQL/MetricsQL
   to handle this automatically.
-
-## Notes
-
-* CLI flags override configuration file values.
-* Boolean options accept:
-  * `true` / `1` — enable feature
-  * `false` / `0` — disable feature
-* Time values are specified in **seconds** in both config and CLI.
-* If a minimum is defined, lower values will be clamped.
-* String parameters can only be passed in CLI flags.
