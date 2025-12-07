@@ -42,8 +42,8 @@ Here is the updated changelog including the new changes.
   player and zombie/animal kill source metrics
 * debug logging of all configuration values when `DIAG` is defined
 * `MetricZ_Geo` helper class for converting world coordinates to `EPSG:4326`
-  (WGS84) and exposing map tiles metadata (name, version, format, workshop ID).
-* new config/CLI options to override map tiles metadata
+  (WGS84).
+* new config/CLI `MapEffectiveSize` options to override map tiles size
 * **`dayz_metricz_player_orientation`**  (`GAUGE`) — player yaw in degrees
 * **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
 * **`dayz_metricz_effect_areas`** (`GAUGE`) — total active effect areas
@@ -52,9 +52,6 @@ Here is the updated changelog including the new changes.
   per-zone metrics with position and radius labels
 * new config options `MetricZ_DisableEffectAreaMetrics` and
   `MetricZ_EnableLocalEffectAreaMetrics`
-* for metric `dayz_metricz_status` optional map tiles metadata labels
-  `map_tiles_size`, `map_tiles_name`, `map_tiles_version`, `map_tiles_format`
-  if exporting coordinates metrics enabled
 
 ### Changed
 
