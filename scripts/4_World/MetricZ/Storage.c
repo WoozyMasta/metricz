@@ -364,7 +364,7 @@ class MetricZ_Storage
 	*/
 	static void Init()
 	{
-		if (s_Initialized)
+		if (s_Initialized || !MetricZ_Config.IsLoaded())
 			return;
 
 		// Core
@@ -470,10 +470,14 @@ class MetricZ_Storage
 		SetLabels();
 
 		s_Status.Set(1);
-		s_ScrapeInterval.Set(MetricZ_Config.s_ScrapeIntervalMs / 1000);
+		s_ScrapeInterval.Set(MetricZ_Config.Get().scrapeIntervalSeconds);
 		s_ScrapeSkippedTotal.Set(0);
-		s_FPSLimit.Set(MetricZ_Config.s_LimitFPS);
-		s_MaxPlayers.Set(MetricZ_Config.s_MaxPlayers);
+		s_FPSLimit.Set(MetricZ_Config.Get().limitFPS);
+		s_MaxPlayers.Set(MetricZ_Config.Get().maxPlayers);
+
+		// Load Cache
+		MetricZ_WeaponStats.LoadCache();
+		MetricZ_HitStats.LoadCache();
 
 		s_Initialized = true;
 	}

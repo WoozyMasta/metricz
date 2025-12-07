@@ -54,6 +54,7 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 			labels = GetLabels();
 
 		FPrint(fh, m_Name + labels + " " + m_Value.ToString() + "\n");
+		// TODO sink.Line(m_Name + labels + " 0");
 	}
 
 	/**

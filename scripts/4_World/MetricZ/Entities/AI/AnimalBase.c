@@ -24,7 +24,10 @@ modded class AnimalBase
 	{
 		super.EEInit();
 
-		if (!MetricZ_Config.s_DisableAnimalMetrics)
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (!MetricZ_Config.Get().disableAnimalMetrics)
 			MetricZ_AnimalStats.OnSpawn(this);
 
 		MetricZ_Storage.s_Animals.Inc();
@@ -35,13 +38,15 @@ modded class AnimalBase
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		MetricZ_Storage.s_Animals.Dec();
+		if (MetricZ_Config.IsLoaded()) {
+			MetricZ_Storage.s_Animals.Dec();
 
-		if (m_MetricZ_IsKilled)
-			MetricZ_Storage.s_AnimalsCorpses.Dec();
+			if (m_MetricZ_IsKilled)
+				MetricZ_Storage.s_AnimalsCorpses.Dec();
 
-		if (!MetricZ_Config.s_DisableAnimalMetrics)
-			MetricZ_AnimalStats.OnDelete(this);
+			if (MetricZ_Config.IsLoaded() || !MetricZ_Config.Get().disableAnimalMetrics)
+				MetricZ_AnimalStats.OnDelete(this);
+		}
 
 		super.EEDelete(parent);
 	}
@@ -51,7 +56,7 @@ modded class AnimalBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!m_MetricZ_IsKilled) {
+		if (MetricZ_Config.IsLoaded() && !m_MetricZ_IsKilled) {
 			m_MetricZ_IsKilled = true;
 
 			if (killer != this)
@@ -59,7 +64,7 @@ modded class AnimalBase
 
 			MetricZ_Storage.s_AnimalsCorpses.Inc();
 
-			if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+			if (!MetricZ_Config.Get().disableWeaponMetrics && killer != this)
 				MetricZ_WeaponStats.OnCreatureKilled(killer);
 		}
 
@@ -73,16 +78,19 @@ modded class AnimalBase
 	{
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
-		if (!MetricZ_Config.s_DisableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (!MetricZ_Config.Get().disableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
 			if (IsDamageDestroyed())
 				m_MetricZ_IsLastHit = true;
 
 			if (damageResult) {
 				float damage = damageResult.GetDamage(dmgZone, "");
-				if (damage < MetricZ_Config.s_EntityHitDamageThreshold)
+				if (damage < MetricZ_Config.Get().entityHitDamageThreshold)
 					return;
 
-				if (source && source.IsTransport() && damage < MetricZ_Config.s_EntityVehicleHitDamageThreshold)
+				if (source && source.IsTransport() && damage < MetricZ_Config.Get().entityVehicleHitDamageThreshold)
 					return;
 			}
 

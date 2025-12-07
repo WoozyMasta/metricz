@@ -119,7 +119,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		    MetricZ_MetricType.GAUGE);
 
 		// position
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			m_PosX = new MetricZ_MetricFloat(
 			    "player_position_x",
 			    "Player world X",
@@ -226,7 +226,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_Wetness);
 		m_Registry.Insert(m_LifeSeconds);
 
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			m_Registry.Insert(m_PosX);
 			m_Registry.Insert(m_PosY);
 			m_Registry.Insert(m_PosZ);
@@ -279,7 +279,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_LifeSeconds.Set(g_Game.GetTickTime() - m_InitTick);
 
 		// position
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			vector pos = MetricZ_Geo.GetPosition(m_Player);
 			m_PosX.Set(pos[0]);
 			m_PosY.Set(pos[1]);

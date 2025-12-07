@@ -52,7 +52,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		    MetricZ_MetricType.GAUGE);
 
 		// position
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			m_PosX = new MetricZ_MetricFloat(
 			    "transport_position_x",
 			    "Transport world X",
@@ -92,7 +92,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 			m_Transport = transport;
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 			          InitMetricsRegistry,
-			          MetricZ_Config.s_ScrapeIntervalMs,
+			          MetricZ_Config.Get().scrapeIntervalSeconds * 1000,
 			          false);
 		}
 	}
@@ -111,7 +111,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_EngineOn);
 		m_Registry.Insert(m_FuelFraction);
 
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			m_Registry.Insert(m_PosX);
 			m_Registry.Insert(m_PosY);
 			m_Registry.Insert(m_PosZ);
@@ -136,7 +136,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Passengers.Set(GetPassengersCount());
 
 		// position
-		if (!MetricZ_Config.s_DisableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
 			vector pos = MetricZ_Geo.GetPosition(m_Transport);
 			m_PosX.Set(pos[0]);
 			m_PosY.Set(pos[1]);

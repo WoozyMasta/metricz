@@ -28,14 +28,14 @@ class MetricZ_Exporter
 		if (s_Instance)
 			return;
 
-		MetricZ_Config.Load();
+		if (!MetricZ_Config.IsLoaded())
+			MetricZ_Config.Get();
+
 		MetricZ_Storage.Init();
-		MetricZ_WeaponStats.LoadCache();
-		MetricZ_HitStats.LoadCache();
 
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,
-		          MetricZ_Config.s_InitDelayMs,
+		          MetricZ_Config.Get().initDelaySeconds * 1000,
 		          false);
 
 		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
@@ -97,43 +97,43 @@ class MetricZ_Exporter
 		MetricZ_Storage.Flush(fh);
 
 		// per-player
-		if (!MetricZ_Config.s_DisablePlayerMetrics)
+		if (!MetricZ_Config.Get().disablePlayerMetrics)
 			MetricZ_EntitiesWriter.FlushPlayers(fh);
 
 		// per-infected AI type and mind state
-		if (!MetricZ_Config.s_DisableZombieMetrics)
+		if (!MetricZ_Config.Get().disableZombieMetrics)
 			MetricZ_ZombieStats.Flush(fh);
 
 		// per-animal type
-		if (!MetricZ_Config.s_DisableAnimalMetrics)
+		if (!MetricZ_Config.Get().disableAnimalMetrics)
 			MetricZ_AnimalStats.Flush(fh);
 
 		// per-vehicle
-		if (!MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.Get().disableTransportMetrics)
 			MetricZ_EntitiesWriter.FlushTransport(fh);
 
 		// weapon shots
-		if (!MetricZ_Config.s_DisableWeaponMetrics)
+		if (!MetricZ_Config.Get().disableWeaponMetrics)
 			MetricZ_WeaponStats.Flush(fh);
 
 		// entity hits
-		if (!MetricZ_Config.s_DisableEntityHitsMetrics)
+		if (!MetricZ_Config.Get().disableEntityHitsMetrics)
 			MetricZ_HitStats.Flush(fh);
 
 		// per-territory
-		if (!MetricZ_Config.s_DisableTerritoryMetrics)
+		if (!MetricZ_Config.Get().disableTerritoryMetrics)
 			MetricZ_EntitiesWriter.FlushTerritory(fh);
 
 		// per-effect-area
-		if (!MetricZ_Config.s_DisableEffectAreaMetrics)
+		if (!MetricZ_Config.Get().disableEffectAreaMetrics)
 			MetricZ_EntitiesWriter.FlushEffectAreas(fh);
 
 		// dayz game RPC inputs
-		if (!MetricZ_Config.s_DisableRPCMetrics)
+		if (!MetricZ_Config.Get().disableRPCMetrics)
 			MetricZ_RpcStats.Flush(fh);
 
 		// dayz game events
-		if (!MetricZ_Config.s_DisableEventMetrics)
+		if (!MetricZ_Config.Get().disableEventMetrics)
 			MetricZ_EventStats.Flush(fh);
 
 		return true;
@@ -152,7 +152,7 @@ class MetricZ_Exporter
 		// Schedule next tick for minimize drift
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,
-		          MetricZ_Config.s_ScrapeIntervalMs,
+		          MetricZ_Config.Get().scrapeIntervalSeconds * 1000,
 		          false);
 
 		if (s_Busy) {

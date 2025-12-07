@@ -23,7 +23,7 @@ modded class ExpansionVehicleBase
 	{
 		super.EEOnAfterLoad();
 
-		if (MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableTransportMetrics)
 			return;
 
 		if (!m_MetricZ)
@@ -45,7 +45,7 @@ modded class ExpansionVehicleBase
 	{
 		super.EEInit();
 
-		if (MetricZ_Config.s_DisableTransportMetrics)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableTransportMetrics)
 			return;
 
 		if (Expansion_IsBoat())
@@ -75,7 +75,7 @@ modded class ExpansionVehicleBase
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics) {
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableTransportMetrics) {
 			if (Expansion_IsBoat())
 				MetricZ_Storage.s_Boats.Dec();
 			else if (Expansion_IsHelicopter() || Expansion_IsPlane())
@@ -94,7 +94,7 @@ modded class ExpansionVehicleBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!MetricZ_Config.s_DisableTransportMetrics && !m_MetricZ_IsKilled) {
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableTransportMetrics && !m_MetricZ_IsKilled) {
 			if (Expansion_IsBoat())
 				MetricZ_Storage.s_BoatsDestroys.Inc();
 			else if (Expansion_IsHelicopter() || Expansion_IsPlane())

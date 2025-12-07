@@ -25,6 +25,9 @@ modded class PlayerBase
 	{
 		super.EEInit();
 
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
 #ifdef EXPANSIONMODAI
 		if (IsInherited(eAIBase)) {
 			if (IsInherited(eAINPCBase))
@@ -36,7 +39,7 @@ modded class PlayerBase
 		}
 #endif
 
-		if (MetricZ_Config.s_DisablePlayerMetrics)
+		if (MetricZ_Config.Get().disablePlayerMetrics)
 			return;
 
 		if (!m_MetricZ) {
@@ -50,16 +53,18 @@ modded class PlayerBase
 	*/
 	override void EEDelete(EntityAI parent)
 	{
+		if (MetricZ_Config.IsLoaded()) {
 #ifdef EXPANSIONMODAI
-		if (IsInherited(eAIBase)) {
-			if (IsInherited(eAINPCBase))
-				MetricZ_Storage.s_ExpansionAINPC.Dec();
-			else
-				MetricZ_Storage.s_ExpansionAI.Dec();
-		}
+			if (IsInherited(eAIBase)) {
+				if (IsInherited(eAINPCBase))
+					MetricZ_Storage.s_ExpansionAINPC.Dec();
+				else
+					MetricZ_Storage.s_ExpansionAI.Dec();
+			}
 #endif
 
-		m_MetricZ = null;
+			m_MetricZ = null;
+		}
 
 		super.EEDelete(parent);
 	}
@@ -69,12 +74,12 @@ modded class PlayerBase
 	*/
 	override void EEKilled(Object killer)
 	{
-		if (!m_MetricZ_IsKilled) {
+		if (MetricZ_Config.IsLoaded() && !m_MetricZ_IsKilled) {
 			m_MetricZ_IsKilled = true;
 
 #ifdef EXPANSIONMODAI
 			if (IsInherited(eAIBase)) {
-				if (!MetricZ_Config.s_DisableEntityKillsMetrics && killer != this)
+				if (!MetricZ_Config.Get().disableEntityKillsMetrics && killer != this)
 					MetricZ_WeaponStats.OnCreatureKilled(killer);
 
 				if (IsInherited(eAINPCBase))
@@ -88,10 +93,10 @@ modded class PlayerBase
 			}
 #endif
 
-			if (!MetricZ_Config.s_DisablePlayerMetrics)
+			if (!MetricZ_Config.Get().disablePlayerMetrics)
 				MetricZ_Storage.s_PlayersDeaths.Inc();
 
-			if (!MetricZ_Config.s_DisableWeaponMetrics && killer != this)
+			if (!MetricZ_Config.Get().disableWeaponMetrics && killer != this)
 				MetricZ_WeaponStats.OnPlayerKilled(killer);
 		}
 
@@ -105,16 +110,19 @@ modded class PlayerBase
 	{
 		super.EEHitBy(damageResult, damageType, source, component, dmgZone, ammo, modelPos, speedCoef);
 
-		if (!MetricZ_Config.s_DisableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
+		if (!MetricZ_Config.Get().disableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
 			if (IsDamageDestroyed())
 				m_MetricZ_IsLastHit = true;
 
 			if (damageResult) {
 				float damage = damageResult.GetDamage(dmgZone, "");
-				if (damage < MetricZ_Config.s_EntityHitDamageThreshold)
+				if (damage < MetricZ_Config.Get().entityHitDamageThreshold)
 					return;
 
-				if (source && source.IsTransport() && damage < MetricZ_Config.s_EntityVehicleHitDamageThreshold)
+				if (source && source.IsTransport() && damage < MetricZ_Config.Get().entityVehicleHitDamageThreshold)
 					return;
 			}
 
@@ -145,12 +153,15 @@ modded class PlayerBase
 	{
 		super.EOnPostFrame(other, extra);
 
+		if (!MetricZ_Config.IsLoaded())
+			return;
+
 #ifdef EXPANSIONMODAI
 		if (IsInherited(eAIBase))
 			return;
 #endif
 
-		if (m_MetricZ || !MetricZ_Config.s_DisablePlayerMetrics)
+		if (m_MetricZ || !MetricZ_Config.Get().disablePlayerMetrics)
 			m_MetricZ.SampleNetwork();
 	}
 }
