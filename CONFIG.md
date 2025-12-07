@@ -5,12 +5,18 @@
 This document lists configuration options used by the **MetricZ** mod
 for the DayZ server.
 
-All settings are stored in a single JSON configuration file on the server:
-
-* `$profile:metricz.json`
+All settings are stored in a `$profile:metricz.json` JSON configuration file
 
 The file is created automatically with default values if it does not exist.
 Changes to this file take effect after a server restart.
+
+> [!IMPORTANT]  
+> On the same host (ideally, across all servers)
+> every server must have a unique `instanceId`.  
+> If multiple servers run the same map (`world`), time series will collide.  
+> Base labels are `{world, instance_id}`.
+> Ensure `instanceId` is unique per server in `serverDZ.cfg`;
+> together with the map name it forms metric identity.
 
 ## Performance & Database Recommendations
 
@@ -25,9 +31,10 @@ This mod generates metrics with unique identifiers:
 * **Players:** Every new SteamID creates a new set of metric series.
 * **Vehicles:** Every spawned vehicle has a unique persistence ID (Hash).
 
-On high-population servers, or servers with Traders and Virtual Garages
-(where vehicles are frequently spawned, bought, and deleted),
-this creates **"High Series Churn"**.
+> [!WARNING]  
+> On high-population servers, or servers with Traders and Virtual Garages
+> (where vehicles are frequently spawned, bought, and deleted),
+> this creates **"High Series Churn"**.
 
 A standard **Prometheus** server stores indices in RAM.
 High churn can lead to excessive memory usage and OOM (Out Of Memory)

@@ -36,19 +36,18 @@ windows_exporter (Windows).
   weapons/shots (`MetricZ_WeaponStats`), weather/world (`MetricZ_Storage`).
 * Writing: first `$profile:metricz.tmp`, then atomic publish to
   `$profile:metricz.prom`.
-* Format
-
+* Format:
   * Prefix: `dayz_metricz_`.
   * Types: GAUGE/COUNTER; COUNTER gets `_total` suffix.
-  * Base labels: `world`, `host`, `instance_id`. Status also includes
-    `game_version`, `save_version`.
+  * Base labels: `world`, `instance_id`, `host` (not guaranteed).
+    Status also includes `game_version`, `save_version`.
 
 ## Quick start
 
 Output file:
 
 * Example profile path: `/dayz-server-dir/profiles/profile_1/metricz.prom`.
-* Write period: `MetricZ_ScrapeInterval` seconds (see config).
+* Write period: `scrapeIntervalSeconds` seconds (see config).
 
 Example content:
 
@@ -63,49 +62,24 @@ Details: [METRICS.md](./METRICS.md)
 ## Mod configuration
 
 > [!IMPORTANT]  
-> On the same host every server must have a unique `instanceId`.  
+> On the same host (ideally, across all servers)
+> every server must have a unique `instanceId`.  
 > If multiple servers run the same map (`world`), time series will collide.  
-> Base labels are `{world, host, instance_id}`.
-> Ensure `instanceId` is unique per server;
+> Base labels are `{world, instance_id}`.
+> Ensure `instanceId` is unique per server in `serverDZ.cfg`;
 > together with the map name it forms metric identity.
 
-In `serverDZ.cfg` (prefix `MetricZ_`; values `0/1`):
+All settings are stored in a `$profile:metricz.json` JSON configuration file
 
-```c
-// seconds
-MetricZ_InitDelay = 60;
-MetricZ_ScrapeInterval = 15;
-
-// switches
-MetricZ_DisablePlayerMetrics = 0;
-MetricZ_DisableTransportMetrics = 1;
-MetricZ_DisableWeaponMetrics = 1;
-MetricZ_DisableTerritoryMetrics = 1;
-MetricZ_DisableCoordinatesMetrics = 1;
-MetricZ_DisableRPCMetrics = 1;
-MetricZ_DisableEventMetrics = 0;
-```
-
-CLI switches (override config; prefix `metricz-`):
-
-```txt
--metricz-init-delay=60 -metricz-scrape-interval=15 -metricz-enable-coordinates=false -metricz-disable-rpc=false -metricz-disable-event=false -metricz-map-tiles-version=May.9
-```
-
-More: [CONFIG.md](./CONFIG.md)
-
-> [!WARNING]  
-> Frequent creation/removal of vehicles (virtual garage, camo nets, etc.)
-> increases the number of time series. The `hash` label encodes persistence.
-> Recreated objects without restoring persistent ID = new series.  
-> If needed, disable transport metrics: `MetricZ_DisableTransportMetrics = 1`.
+Detailed information about all configuration parameters
+can be found in the document [CONFIG.md](./CONFIG.md)
 
 ### Recommendations
 
 * On busy servers keep scrape interval at 5–10 s or higher.
 * If you see a parallel scrape warning, increase the interval.
 * Align [node_exporter]/[windows_exporter] scrape interval with
-  `MetricZ_ScrapeInterval`. Polling an unchanged file more often has no
+  `scrapeIntervalSeconds`. Polling an unchanged file more often has no
   benefit.
 
 ## Prometheus integration: Linux
