@@ -23,7 +23,7 @@ class MetricZ_Config
 	protected static ref MetricZ_Config s_Instance;
 	protected static bool s_Loaded;
 
-	// * [start public options]
+	// * <start json options>
 
 	// Internal config version, do not touch it
 	int configVersion = CONFIG_VERSION;
@@ -103,7 +103,7 @@ class MetricZ_Config
 	// (for example, the izurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`)
 	float mapEffectiveSize; // g_Game.GetWorld().GetWorldSize(), 81920
 
-	// * [end public options]
+	// * <end json options>
 
 	// server params -> metrics
 	[NonSerialized()]
