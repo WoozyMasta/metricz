@@ -42,36 +42,35 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 
 	/**
 	    \brief Write value line.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param labels Optional labels override, if blank try use internal labels
 	*/
-	override void Flush(FileHandle fh, string labels = "")
+	override void Flush(MetricZ_Sink sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		FPrint(fh, m_Name + labels + " " + m_Value.ToString() + "\n");
-		// TODO sink.Line(m_Name + labels + " 0");
+		sink.Line(m_Name + labels + " " + m_Value.ToString());
 	}
 
 	/**
 	    \brief Write HELP/TYPE then value.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param labels Optional labels override, if blank try use internal labels
 	*/
-	override void FlushWithHead(FileHandle fh, string labels = "")
+	override void FlushWithHead(MetricZ_Sink sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		WriteHeaders(fh);
-		Flush(fh, labels);
+		WriteHeaders(sink);
+		Flush(sink, labels);
 	}
 }
 #endif

@@ -83,30 +83,32 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Emit metrics to file.
+	    \param MetricZ_Sink sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_Sink sink)
 	{
+		if (!sink)
+			return;
+
 #ifdef DIAG
 		float t0 = g_Game.GetTickTime();
 #endif
-		if (!fh)
-			return;
 
 		if (s_PlayerHit.Count() > 0) {
-			s_MetricPlayerHit.WriteHeaders(fh);
+			s_MetricPlayerHit.WriteHeaders(sink);
 
 			foreach (string aKey, int aVal : s_PlayerHit) {
 				s_MetricPlayerHit.Set(aVal);
-				s_MetricPlayerHit.Flush(fh, s_LabelsAmmo.Get(aKey));
+				s_MetricPlayerHit.Flush(sink, s_LabelsAmmo.Get(aKey));
 			}
 		}
 
 		if (s_CreatureHit.Count() > 0) {
-			s_MetricCreatureHit.WriteHeaders(fh);
+			s_MetricCreatureHit.WriteHeaders(sink);
 
 			foreach (string caKey, int caVal : s_CreatureHit) {
 				s_MetricCreatureHit.Set(caVal);
-				s_MetricCreatureHit.Flush(fh, s_LabelsAmmo.Get(caKey));
+				s_MetricCreatureHit.Flush(sink, s_LabelsAmmo.Get(caKey));
 			}
 		}
 

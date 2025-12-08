@@ -59,6 +59,9 @@ class MetricZ_Exporter
 	*/
 	void Shutdown()
 	{
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().enableRemoteExport)
+			return;
+
 		// stop future scrapes
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
 		DeleteFile(MetricZ_Config.METRICS_TEMP);
@@ -68,16 +71,15 @@ class MetricZ_Exporter
 
 		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
 
-		FileHandle fh = OpenFile(MetricZ_Config.METRICS_FILE, FileMode.WRITE);
-		if (!fh)
+		MetricZ_Sink sink = new MetricZ_Sink();
+		if (!sink.Begin())
 			return;
 
 		MetricZ_Storage.s_Status.Set(0);
-		MetricZ_Storage.s_Status.FlushWithHead(fh, MetricZ_Storage.GetExtraLabels());
+		MetricZ_Storage.s_Status.FlushWithHead(sink, MetricZ_Storage.GetExtraLabels());
 
-		CloseFile(fh);
+		sink.End();
 	}
-
 
 	/**
 	    \brief Flush all enabled collectors into an open file.
@@ -85,58 +87,58 @@ class MetricZ_Exporter
 	        - Writes world-level metrics from MetricZ_Storage.
 	        - Appends per-player, per-entity and event metrics depending on config.
 	        - Does not close the file handle.
-	    \param fh Open file handle to write to (METRICS_TEMP file).
 	    \return true on success, false if fh is invalid.
 	*/
-	bool Flush(FileHandle fh)
+	bool Flush()
 	{
-		if (!fh)
+		MetricZ_Sink sink = new MetricZ_Sink();
+		if (!sink.Begin())
 			return false;
 
 		// world metrics
-		MetricZ_Storage.Flush(fh);
+		MetricZ_Storage.Flush(sink);
 
 		// per-player
 		if (!MetricZ_Config.Get().disablePlayerMetrics)
-			MetricZ_EntitiesWriter.FlushPlayers(fh);
+			MetricZ_EntitiesWriter.FlushPlayers(sink);
 
 		// per-infected AI type and mind state
 		if (!MetricZ_Config.Get().disableZombieMetrics)
-			MetricZ_ZombieStats.Flush(fh);
+			MetricZ_ZombieStats.Flush(sink);
 
 		// per-animal type
 		if (!MetricZ_Config.Get().disableAnimalMetrics)
-			MetricZ_AnimalStats.Flush(fh);
+			MetricZ_AnimalStats.Flush(sink);
 
 		// per-vehicle
 		if (!MetricZ_Config.Get().disableTransportMetrics)
-			MetricZ_EntitiesWriter.FlushTransport(fh);
+			MetricZ_EntitiesWriter.FlushTransport(sink);
 
 		// weapon shots
 		if (!MetricZ_Config.Get().disableWeaponMetrics)
-			MetricZ_WeaponStats.Flush(fh);
+			MetricZ_WeaponStats.Flush(sink);
 
 		// entity hits
 		if (!MetricZ_Config.Get().disableEntityHitsMetrics)
-			MetricZ_HitStats.Flush(fh);
+			MetricZ_HitStats.Flush(sink);
 
 		// per-territory
 		if (!MetricZ_Config.Get().disableTerritoryMetrics)
-			MetricZ_EntitiesWriter.FlushTerritory(fh);
+			MetricZ_EntitiesWriter.FlushTerritory(sink);
 
 		// per-effect-area
 		if (!MetricZ_Config.Get().disableEffectAreaMetrics)
-			MetricZ_EntitiesWriter.FlushEffectAreas(fh);
+			MetricZ_EntitiesWriter.FlushEffectAreas(sink);
 
 		// dayz game RPC inputs
 		if (!MetricZ_Config.Get().disableRPCMetrics)
-			MetricZ_RpcStats.Flush(fh);
+			MetricZ_RpcStats.Flush(sink);
 
 		// dayz game events
 		if (!MetricZ_Config.Get().disableEventMetrics)
-			MetricZ_EventStats.Flush(fh);
+			MetricZ_EventStats.Flush(sink);
 
-		return true;
+		return sink.End();
 	}
 
 	/**
@@ -171,32 +173,14 @@ class MetricZ_Exporter
 		ErrorEx("MetricZ start update on " + t0 + "s server tick", ErrorExSeverity.INFO);
 #endif
 
-		FileHandle fh = OpenFile(MetricZ_Config.METRICS_TEMP, FileMode.WRITE);
-		if (!fh) {
-			s_Busy = false;
-			ErrorEx("MetricZ open file " + MetricZ_Config.METRICS_TEMP + " failed");
-			return;
-		}
-
 		// refresh world gauges before flush
 		MetricZ_Storage.Update();
 
-		// write full snapshot into METRICS_TEMP
-		if (!Flush(fh)) {
-			CloseFile(fh);
+		// write full snapshot
+		if (!Flush()) {
 			s_Busy = false;
-			ErrorEx("MetricZ flush failed", ErrorExSeverity.ERROR);
 			return;
 		}
-
-		CloseFile(fh);
-
-		// publish new snapshot
-		DeleteFile(MetricZ_Config.METRICS_FILE);
-		if (!CopyFile(MetricZ_Config.METRICS_TEMP, MetricZ_Config.METRICS_FILE))
-			ErrorEx("MetricZ publish failed " + MetricZ_Config.METRICS_TEMP + " -> " + MetricZ_Config.METRICS_FILE);
-
-		DeleteFile(MetricZ_Config.METRICS_TEMP);
 
 		// update labels cache if needed
 		MetricZ_PersistentCache.Save();

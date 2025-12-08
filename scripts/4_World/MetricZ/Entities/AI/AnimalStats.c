@@ -66,21 +66,21 @@ class MetricZ_AnimalStats
 
 	/**
 	    \brief Emit HELP/TYPE and all animals_by_type.
-	    \param fh Open file handle.
+	    \param MetricZ_Sink sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_Sink sink)
 	{
+		if (!sink)
+			return;
+
 #ifdef DIAG
 		float t0 = g_Game.GetTickTime();
 #endif
 
-		if (!fh)
-			return;
-
 		if (s_CountByType.Count() == 0)
 			return;
 
-		s_MetricCountByType.WriteHeaders(fh);
+		s_MetricCountByType.WriteHeaders(sink);
 
 		foreach (string key, int val : s_CountByType) {
 			s_MetricCountByType.Set(val);
@@ -94,7 +94,7 @@ class MetricZ_AnimalStats
 				s_LabelsByType.Set(key, labels);
 			}
 
-			s_MetricCountByType.Flush(fh, labels);
+			s_MetricCountByType.Flush(sink, labels);
 		}
 
 #ifdef DIAG

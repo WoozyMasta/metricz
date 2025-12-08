@@ -30,54 +30,54 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	*/
-	void Flush(FileHandle fh)
+	void Flush(MetricZ_Sink sink)
 	{
-		if (!fh || m_Registry.Count() < 1)
+		if (!sink || m_Registry.Count() < 1)
 			return;
 
-		foreach (MetricZ_MetricBase m : m_Registry)
-			m.Flush(fh, LabelsFor(m));
+		foreach (MetricZ_MetricBase metric : m_Registry)
+			metric.Flush(sink, LabelsFor(metric));
 	}
 
 	/**
 	    \brief Flush single metric by index.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param idx Metric index in registry
 	*/
-	void FlushAt(FileHandle fh, int idx)
+	void FlushAt(MetricZ_Sink sink, int idx)
 	{
-		if (!fh || idx < 0 || idx >= m_Registry.Count())
+		if (!sink || idx < 0 || idx >= m_Registry.Count())
 			return;
 
-		m_Registry[idx].Flush(fh, LabelsFor(m_Registry[idx]));
+		m_Registry[idx].Flush(sink, LabelsFor(m_Registry[idx]));
 	}
 
 	/**
 	    \brief Write HELP/TYPE for all metrics.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	*/
-	void WriteHeaders(FileHandle fh)
+	void WriteHeaders(MetricZ_Sink sink)
 	{
-		if (!fh || m_Registry.Count() < 1)
+		if (!sink || m_Registry.Count() < 1)
 			return;
 
-		foreach (MetricZ_MetricBase m : m_Registry)
-			m.WriteHeaders(fh);
+		foreach (MetricZ_MetricBase metric : m_Registry)
+			metric.WriteHeaders(sink);
 	}
 
 	/**
 	    \brief Write HELP/TYPE for one metric by index.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param idx Metric index in registry
 	*/
-	void WriteHeaderAt(FileHandle fh, int idx)
+	void WriteHeaderAt(MetricZ_Sink sink, int idx)
 	{
-		if (!fh || idx < 0 || idx >= m_Registry.Count())
+		if (!sink || idx < 0 || idx >= m_Registry.Count())
 			return;
 
-		m_Registry[idx].WriteHeaders(fh);
+		m_Registry[idx].WriteHeaders(sink);
 	}
 
 	/**

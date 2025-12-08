@@ -156,16 +156,16 @@ class MetricZ_ZombieStats
 
 	/**
 	    \brief Emit HELP/TYPE and all state/type samples.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_Sink sink)
 	{
+		if (!sink)
+			return;
+
 #ifdef DIAG
 		float t0 = g_Game.GetTickTime();
 #endif
-
-		if (!fh)
-			return;
 
 		bool hasStates = (s_StareStorage.Count() > 0);
 		bool hasTypes = (s_TypeStorage.Count() > 0);
@@ -176,7 +176,7 @@ class MetricZ_ZombieStats
 		// mind states
 		if (hasStates) {
 			EnsureNames();
-			s_MetricMindState.WriteHeaders(fh);
+			s_MetricMindState.WriteHeaders(sink);
 
 			foreach (int id, int val : s_StareStorage) {
 				s_MetricMindState.Set(val);
@@ -188,13 +188,13 @@ class MetricZ_ZombieStats
 				mindLabels.Insert("state_id", id.ToString());
 				mindLabels.Insert("state", name);
 
-				s_MetricMindState.Flush(fh, MetricZ_LabelUtils.MakeLabels(mindLabels));
+				s_MetricMindState.Flush(sink, MetricZ_LabelUtils.MakeLabels(mindLabels));
 			}
 		}
 
 		// zombie types
 		if (hasTypes) {
-			s_MetricCountByType.WriteHeaders(fh);
+			s_MetricCountByType.WriteHeaders(sink);
 
 			foreach (string type, int count : s_TypeStorage) {
 				s_MetricCountByType.Set(count);
@@ -208,7 +208,7 @@ class MetricZ_ZombieStats
 					s_TypeLabels.Set(type, typeLabels);
 				}
 
-				s_MetricCountByType.Flush(fh, typeLabels);
+				s_MetricCountByType.Flush(sink, typeLabels);
 			}
 		}
 

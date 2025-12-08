@@ -599,20 +599,20 @@ class MetricZ_Storage
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_Sink sink)
 	{
-		if (!s_Initialized || s_Registry.Count() < 1)
+		if (!sink || !s_Initialized || s_Registry.Count() < 1)
 			return;
 
 		foreach (MetricZ_MetricBase metric : s_Registry) {
 			if (metric == s_Status)
-				metric.FlushWithHead(fh, s_LabelsExtra);
+				metric.FlushWithHead(sink, s_LabelsExtra);
 			else if (metric.HasLabels())
-				metric.Flush(fh);
+				metric.Flush(sink);
 			else
-				metric.FlushWithHead(fh, s_Labels);
+				metric.FlushWithHead(sink, s_Labels);
 		}
 	}
 

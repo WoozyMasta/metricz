@@ -168,49 +168,48 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Write HELP and TYPE headers.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	*/
-	void WriteHeaders(FileHandle fh)
+	void WriteHeaders(MetricZ_Sink sink)
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
-		FPrint(fh, "# HELP " + m_Name + " " + m_Help + "\n");
-		FPrint(fh, "# TYPE " + m_Name + " " + TypeToText() + "\n");
+		sink.Line("# HELP " + m_Name + " " + m_Help);
+		sink.Line("# TYPE " + m_Name + " " + TypeToText());
 	}
 
 	/**
 	    \brief Write metric value.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param labels Optional preformatted label set "{k=\"v\"}"
 	*/
-	void Flush(FileHandle fh, string labels = "")
+	void Flush(MetricZ_Sink sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		FPrint(fh, m_Name + labels + " 0\n");
-		// sink.Line(m_Name + labels + " 0\n");
+		sink.Line(m_Name + labels + " 0");
 	}
 
 	/**
 	    \brief Write headers then value.
-	    \param fh Open file handle
+	    \param MetricZ_Sink sink instance
 	    \param labels Optional preformatted label set
 	*/
-	void FlushWithHead(FileHandle fh, string labels = "")
+	void FlushWithHead(MetricZ_Sink sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		WriteHeaders(fh);
-		Flush(fh, labels);
+		WriteHeaders(sink);
+		Flush(sink, labels);
 	}
 }
 #endif
