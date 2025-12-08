@@ -33,22 +33,19 @@ class MetricZ_EventStats
 	/**
 	    \brief Emit HELP/TYPE and per-event samples.
 	    \details Builds the EventType->name map lazily. Writes one sample per EventType with labels {id, event}.
-	    \param fh Open file handle.
+	    \param MetricZ_Sink sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_Sink sink)
 	{
+		if (!sink || s_EventsRegistry.Count() == 0)
+			return;
+
 #ifdef DIAG
 		float t0 = g_Game.GetTickTime();
 #endif
 
-		if (!fh)
-			return;
-
-		if (s_EventsRegistry.Count() == 0)
-			return;
-
 		MakeNameMap();
-		s_EventTotal.WriteHeaders(fh);
+		s_EventTotal.WriteHeaders(sink);
 
 		for (int i = 0; i < s_EventsRegistry.Count(); i++) {
 			int id = s_EventsRegistry.GetKey(i);
@@ -61,7 +58,7 @@ class MetricZ_EventStats
 			labels.Insert("id", id.ToString());
 			labels.Insert("event", name);
 
-			s_EventTotal.Flush(fh, MetricZ_LabelUtils.MakeLabels(labels));
+			s_EventTotal.Flush(sink, MetricZ_LabelUtils.MakeLabels(labels));
 		}
 
 #ifdef DIAG

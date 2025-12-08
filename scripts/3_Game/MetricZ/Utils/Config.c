@@ -34,6 +34,15 @@ class MetricZ_Config
 	// Interval between metric updates in seconds
 	int scrapeIntervalSeconds = 15; // 1, 300
 
+	int bufferLines = 64; // 4, 16384
+	bool bufferedFileExport = true; // false
+	bool atomicFileExport = true; // true
+	bool enableRemoteExport = true;
+	string remoteEndpointURL;
+	int remoteMaxRetries = 3; // 0, 10
+	int remoteRetryDelayMs = 1000; // 100, scrapeIntervalSeconds * 1000
+	int remoteRetryMaxBackoffMs = 15000; // 1000, scrapeIntervalSeconds * 1000
+
 	// Disable RPC metrics collection
 	// `dayz_metricz_rpc_input_total`
 	bool disableRPCMetrics;
@@ -235,9 +244,23 @@ class MetricZ_Config
 		// Core timing & jitter
 		initDelaySeconds = Math.Clamp(initDelaySeconds, 0, 300);
 		scrapeIntervalSeconds = Math.Clamp(scrapeIntervalSeconds, 1, 100);
+
+		bufferLines = Math.Clamp(bufferLines, 4, 16384);
+		remoteMaxRetries = Math.Clamp(remoteMaxRetries, 0, 10);
+		remoteRetryDelayMs = Math.Clamp(remoteRetryDelayMs, 100, scrapeIntervalSeconds * 1000);
+		remoteRetryMaxBackoffMs = Math.Clamp(remoteRetryMaxBackoffMs, 1000, scrapeIntervalSeconds * 1000);
+
 		entityHitDamageThreshold = Math.Clamp(entityHitDamageThreshold, -1, 100);
 		entityVehicleHitDamageThreshold = Math.Clamp(entityVehicleHitDamageThreshold, -15, 100);
 		mapEffectiveSize = Math.Clamp(mapEffectiveSize, g_Game.GetWorld().GetWorldSize(), 81920);
+
+
+		if (enableRemoteExport && remoteEndpointURL == string.Empty) {
+			enableRemoteExport = false;
+			ErrorEx(
+			    "MetricZ: `enableRemoteExport` cannot be enabled, URL must be specified in `remoteEndpointURL` parameter!",
+			    ErrorExSeverity.WARNING)
+		}
 	}
 
 	protected void DebugConfig()
