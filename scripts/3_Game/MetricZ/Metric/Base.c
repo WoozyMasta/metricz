@@ -168,9 +168,9 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Write HELP and TYPE headers.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	void WriteHeaders(MetricZ_Sink sink)
+	void WriteHeaders(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
@@ -181,10 +181,10 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Write metric value.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional preformatted label set "{k=\"v\"}"
 	*/
-	void Flush(MetricZ_Sink sink, string labels = "")
+	void Flush(MetricZ_SinkBase sink, string labels = "")
 	{
 		if (!sink)
 			return;
@@ -197,10 +197,10 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Write headers then value.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional preformatted label set
 	*/
-	void FlushWithHead(MetricZ_Sink sink, string labels = "")
+	void FlushWithHead(MetricZ_SinkBase sink, string labels = "")
 	{
 		if (!sink)
 			return;

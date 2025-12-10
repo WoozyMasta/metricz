@@ -83,9 +83,9 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Emit metrics to file.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;

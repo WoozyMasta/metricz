@@ -155,9 +155,9 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Flush all weapon metrics (shots, live counts, kills).
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;

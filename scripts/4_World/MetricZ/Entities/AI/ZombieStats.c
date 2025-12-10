@@ -156,9 +156,9 @@ class MetricZ_ZombieStats
 
 	/**
 	    \brief Emit HELP/TYPE and all state/type samples.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;

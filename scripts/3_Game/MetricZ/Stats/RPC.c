@@ -33,9 +33,9 @@ class MetricZ_RpcStats
 	    \brief Emit HELP/TYPE and per-RPC samples.
 	    \details Uses the in-memory registry and writes one sample per rpc_type with label {id="<id>"}.
 	              Headers written once per family.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink || s_InputRPCsRegistry.Count() == 0)
 			return;

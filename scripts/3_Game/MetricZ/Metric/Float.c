@@ -42,10 +42,10 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 
 	/**
 	    \brief Write value line.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional labels override, if blank try use internal labels
 	*/
-	override void Flush(MetricZ_Sink sink, string labels = "")
+	override void Flush(MetricZ_SinkBase sink, string labels = "")
 	{
 		if (!sink)
 			return;
@@ -58,10 +58,10 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 
 	/**
 	    \brief Write HELP/TYPE then value.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional labels override, if blank try use internal labels
 	*/
-	override void FlushWithHead(MetricZ_Sink sink, string labels = "")
+	override void FlushWithHead(MetricZ_SinkBase sink, string labels = "")
 	{
 		if (!sink)
 			return;

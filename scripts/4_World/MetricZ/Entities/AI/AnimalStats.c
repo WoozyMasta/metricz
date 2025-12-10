@@ -66,9 +66,9 @@ class MetricZ_AnimalStats
 
 	/**
 	    \brief Emit HELP/TYPE and all animals_by_type.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
