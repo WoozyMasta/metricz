@@ -129,30 +129,8 @@ class MetricZ_LabelUtils
 			s_BaseLabel += "host=\"" + Escape(host) + "\",";
 
 		// base: instance id (allowed to be "0")
-		string instanceId = g_Game.ServerConfigGetInt("instanceId").ToString();
-
-		// fallback instance id
-		if (instanceId == "0") {
-			GetCLIParam("port", instanceId);
-			if (instanceId != "0") {
-				ErrorEx(
-				    "MetricZ instanceId is 0. Used game port " + instanceId + " as instanceId.",
-				    ErrorExSeverity.INFO);
-			} else {
-				instanceId = g_Game.ServerConfigGetInt("steamQueryPort").ToString();
-				if (instanceId != "0") {
-					ErrorEx(
-					    "MetricZ instanceId and game port is 0. Used steam query port " + instanceId + " as instanceId.",
-					    ErrorExSeverity.INFO);
-				} else
-					ErrorEx(
-					    "MetricZ instanceId is 0. Set unique 'instanceId' in server.cfg!",
-					    ErrorExSeverity.WARNING);
-			}
-		}
-
-		s_BaseLabel += "instance_id=\"" + instanceId + "\"";
-		s_BaseLabelReady = (instanceId != string.Empty);
+		s_BaseLabel += "instance_id=\"" + MetricZ_InstanceID.Get() + "\"";
+		s_BaseLabelReady = true;
 
 		return s_BaseLabel;
 	}

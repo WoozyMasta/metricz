@@ -5,19 +5,24 @@
 */
 
 #ifdef SERVER
-class MetricZ_RestCallback : RestCallback
+class MetricZ_CallbackBase : RestCallback
 {
+	private int m_Attempt;
+	private int m_StartedAt;
 	protected ref MetricZ_RestClient m_Client;
-	protected string m_Body;
-	protected int m_Attempt;
-	protected int m_StartedAt;
 
-	void MetricZ_RestCallback(MetricZ_RestClient client, string body)
+	void MetricZ_CallbackBase(MetricZ_RestClient client)
 	{
 		m_Client = client;
-		m_Body = body;
 		m_Attempt = 0;
 		m_StartedAt = g_Game.GetTime();
+	}
+
+	void ~MetricZ_CallbackBase()
+	{
+#ifdef DIAG
+		ErrorEx("MetricZ: callback destroyed" + GetDuration(), ErrorExSeverity.INFO);
+#endif
 	}
 
 	protected string GetDuration()
@@ -33,7 +38,7 @@ class MetricZ_RestCallback : RestCallback
 		}
 
 		if (m_Attempt >= MetricZ_Config.Get().remoteMaxRetries) {
-			ErrorEx("MetricZ REST: all retries failed" + GetDuration(), ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: REST all retries failed" + GetDuration(), ErrorExSeverity.ERROR);
 			OnDone();
 			return;
 		}
@@ -48,7 +53,7 @@ class MetricZ_RestCallback : RestCallback
 		int delay = Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
 		string attempt = m_Attempt.ToString() + "/" + MetricZ_Config.Get().remoteMaxRetries.ToString();
-		ErrorEx("MetricZ REST: retry " + attempt + " after " + delay.ToString() + "ms", ErrorExSeverity.WARNING);
+		ErrorEx("MetricZ: REST retry " + attempt + " after " + delay.ToString() + "ms", ErrorExSeverity.WARNING);
 
 		if (!g_Game) {
 			OnDone();
@@ -60,10 +65,7 @@ class MetricZ_RestCallback : RestCallback
 
 	protected void SendAgain()
 	{
-		if (m_Client)
-			m_Client.PostBody(m_Body, this);
-		else
-			OnDone();
+		OnDone();
 	}
 
 	protected void OnDone()
@@ -72,20 +74,19 @@ class MetricZ_RestCallback : RestCallback
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(SendAgain);
 
 		m_Client = null;
-		m_Body = "";
 		delete this;
 	}
 
 	override void OnError(int errorCode)
 	{
-		string msg = "MetricZ REST error: " + EnumTools.EnumToString(ERestResultState, errorCode) + GetDuration();
+		string msg = "MetricZ: REST error: " + EnumTools.EnumToString(ERestResultState, errorCode) + GetDuration();
 		ErrorEx(msg, ErrorExSeverity.WARNING);
 		Retry();
 	}
 
 	override void OnTimeout()
 	{
-		string msg = "MetricZ REST timeout" + GetDuration();
+		string msg = "MetricZ: REST timeout" + GetDuration();
 		ErrorEx(msg, ErrorExSeverity.WARNING);
 		Retry();
 	}
@@ -93,7 +94,7 @@ class MetricZ_RestCallback : RestCallback
 	override void OnSuccess(string data, int dataSize)
 	{
 #ifdef DIAG
-		ErrorEx("MetricZ REST success, size " + dataSize.ToString() + GetDuration(), ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: REST success, size " + dataSize.ToString() + GetDuration(), ErrorExSeverity.INFO);
 #endif
 
 		OnDone();

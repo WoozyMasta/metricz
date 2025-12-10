@@ -71,7 +71,7 @@ class MetricZ_Exporter
 
 		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
 
-		MetricZ_Sink sink = new MetricZ_Sink();
+		MetricZ_FileSink sink = new MetricZ_FileSink(0);
 		if (!sink.Begin())
 			return;
 
@@ -91,7 +91,12 @@ class MetricZ_Exporter
 	*/
 	bool Flush()
 	{
-		MetricZ_Sink sink = new MetricZ_Sink();
+		MetricZ_SinkBase sink;
+		if (MetricZ_Config.Get().enableRemoteExport && MetricZ_Config.Get().remoteEndpointURL != string.Empty)
+			sink = new MetricZ_RestSink(MetricZ_Config.Get().bufferLines);
+		else
+			sink = new MetricZ_FileSink(MetricZ_Config.Get().bufferLines);
+
 		if (!sink.Begin())
 			return false;
 

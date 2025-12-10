@@ -19,6 +19,8 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
+* support for sending metrics to the proxy and aggregation backend
+  [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
 * **`dayz_metricz_eai_deaths_total`** (`COUNTER`) —
   Total number of Expansion AI deaths (optional)
 * **`dayz_metricz_eai_npc_deaths_total`** (`COUNTER`) —

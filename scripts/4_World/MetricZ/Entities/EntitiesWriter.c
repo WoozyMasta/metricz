@@ -13,9 +13,9 @@ class MetricZ_EntitiesWriter
 	/**
 	    \brief Flush all player metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all players.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushPlayers(MetricZ_Sink sink)
+	static void FlushPlayers(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
@@ -61,9 +61,9 @@ class MetricZ_EntitiesWriter
 	/**
 	    \brief Flush all transport metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all transport.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushTransport(MetricZ_Sink sink)
+	static void FlushTransport(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
@@ -122,9 +122,9 @@ class MetricZ_EntitiesWriter
 	/**
 	    \brief Flush all territory metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all territory.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushTerritory(MetricZ_Sink sink)
+	static void FlushTerritory(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
@@ -169,9 +169,9 @@ class MetricZ_EntitiesWriter
 
 	/**
 	    \brief Flush weapon stats as a grouped family.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushWeapons(MetricZ_Sink sink)
+	static void FlushWeapons(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;
@@ -182,9 +182,9 @@ class MetricZ_EntitiesWriter
 	/**
 	    \brief Flush all EffectArea metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all EffectArea.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushEffectAreas(MetricZ_Sink sink)
+	static void FlushEffectAreas(MetricZ_SinkBase sink)
 	{
 		if (!sink)
 			return;

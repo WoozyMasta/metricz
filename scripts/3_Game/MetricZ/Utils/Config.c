@@ -24,6 +24,7 @@ class MetricZ_Config
 	protected static bool s_Loaded;
 
 	// * <start json options>
+	string instance_id;
 
 	// Internal config version, do not touch it
 	int configVersion = CONFIG_VERSION;
@@ -42,6 +43,8 @@ class MetricZ_Config
 	int remoteMaxRetries = 3; // 0, 10
 	int remoteRetryDelayMs = 1000; // 100, scrapeIntervalSeconds * 1000
 	int remoteRetryMaxBackoffMs = 15000; // 1000, scrapeIntervalSeconds * 1000
+	int remoteReadTimeout = 5;
+	int remoteConnectionTimeout = 5;
 
 	// Disable RPC metrics collection
 	// `dayz_metricz_rpc_input_total`
@@ -151,7 +154,7 @@ class MetricZ_Config
 	*/
 	static bool IsLoaded()
 	{
-		return s_Loaded;
+		return (s_Instance && s_Loaded);
 	}
 
 	/**

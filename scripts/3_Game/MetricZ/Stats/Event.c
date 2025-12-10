@@ -33,9 +33,9 @@ class MetricZ_EventStats
 	/**
 	    \brief Emit HELP/TYPE and per-event samples.
 	    \details Builds the EventType->name map lazily. Writes one sample per EventType with labels {id, event}.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink || s_EventsRegistry.Count() == 0)
 			return;

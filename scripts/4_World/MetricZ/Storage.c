@@ -599,9 +599,9 @@ class MetricZ_Storage
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(MetricZ_Sink sink)
+	static void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink || !s_Initialized || s_Registry.Count() < 1)
 			return;

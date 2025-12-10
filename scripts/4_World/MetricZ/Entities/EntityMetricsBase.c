@@ -30,9 +30,9 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	void Flush(MetricZ_Sink sink)
+	void Flush(MetricZ_SinkBase sink)
 	{
 		if (!sink || m_Registry.Count() < 1)
 			return;
@@ -43,10 +43,10 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Flush single metric by index.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param idx Metric index in registry
 	*/
-	void FlushAt(MetricZ_Sink sink, int idx)
+	void FlushAt(MetricZ_SinkBase sink, int idx)
 	{
 		if (!sink || idx < 0 || idx >= m_Registry.Count())
 			return;
@@ -56,9 +56,9 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Write HELP/TYPE for all metrics.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	*/
-	void WriteHeaders(MetricZ_Sink sink)
+	void WriteHeaders(MetricZ_SinkBase sink)
 	{
 		if (!sink || m_Registry.Count() < 1)
 			return;
@@ -69,10 +69,10 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Write HELP/TYPE for one metric by index.
-	    \param MetricZ_Sink sink instance
+	    \param MetricZ_SinkBase sink instance
 	    \param idx Metric index in registry
 	*/
-	void WriteHeaderAt(MetricZ_Sink sink, int idx)
+	void WriteHeaderAt(MetricZ_SinkBase sink, int idx)
 	{
 		if (!sink || idx < 0 || idx >= m_Registry.Count())
 			return;
