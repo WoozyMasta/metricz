@@ -1,117 +1,173 @@
 #!/usr/bin/awk -f
 
-function trim(s) {
-  sub(/^[[:space:]]+/, "", s)
-  sub(/[[:space:]]+$/, "", s)
-  return s
-}
+function print_wrapped(text, words, i, w, line, len, n) {
+  gsub(/[ \t]+/, " ", text)
+  gsub(/^ | $/, "", text)
 
-# simple word-wrap to given width with indent
-function wrap(text, width, indent,   n, words, i, line, base_len, w, out, new_len) {
-  text = trim(text)
-  if (text == "")
-    return ""
+  if (text == "") return
 
-  n = split(text, words, /[[:space:]]+/)
-  line = indent
-  base_len = length(indent)
+  n = split(text, words, " ")
+  line = "  "
+  len = 2
 
   for (i = 1; i <= n; i++) {
     w = words[i]
-    if (w == "")
-      continue
-
-    if (line == indent)
-      new_len = base_len + length(w)
-    else
-      new_len = length(line) + 1 + length(w)
-
-    if (new_len > width) {
-      if (line != indent)
-        out = (out ? out "\n" : "") line
-      line = indent w
+    if (len + length(w) + 1 > 76) {
+      print line
+      line = "  " w
+      len = 2 + length(w)
     } else {
-      if (line == indent)
-        line = indent w
-      else
+      if (line == "  ") {
+        line = line w
+        len += length(w)
+      } else {
         line = line " " w
+        len += 1 + length(w)
+      }
     }
   }
-
-  if (line != indent)
-    out = (out ? out "\n" : "") line
-
-  return out
+  if (line != "  ") print line
 }
 
 BEGIN {
-  in_public = 0
-  comment = ""
+  in_comment_block = 0
+  desc_buffer = ""
+  skip_next = 0
+  current_prefix = ""
 }
 
 {
-  if ($0 ~ /\/\/[[:space:]]*\* <start json options>/) {
-    in_public = 1
-    comment = ""
+  raw_line = $0
+  gsub(/^[ \t]+|[ \t]+$/, "", raw_line)
+}
+
+/^[ \t]*#/ {
+  desc_buffer = ""
+  next
+}
+
+/\/\*/ {
+  in_comment_block = 1
+  sub(/^[ \t]*\/\*[ \t]*/, "", raw_line)
+  if (raw_line !~ /\*\//) {
+    if (raw_line != "") desc_buffer = desc_buffer " " raw_line
     next
   }
-  if ($0 ~ /\/\/[[:space:]]*\* <end json options>/) {
-    in_public = 0
-    comment = ""
-    next
+}
+
+/\*\// {
+  in_comment_block = 0
+  sub(/[ \t]*\*\/.*$/, "", raw_line)
+  if (raw_line != "") desc_buffer = desc_buffer " " raw_line
+  next
+}
+
+in_comment_block {
+  sub(/^\*[ \t]*/, "", raw_line)
+  sub(/\\brief[ \t]*/, "", raw_line)
+  if (raw_line != "") desc_buffer = desc_buffer " " raw_line
+  next
+}
+
+/^[ \t]*\/\// {
+  sub(/^[ \t]*\/\/[ \t]*/, "", raw_line)
+  if (raw_line !~ /^---/) {
+    desc_buffer = desc_buffer " " raw_line
+  }
+  next
+}
+
+/\[NonSerialized/ {
+  skip_next = 1
+  next
+}
+
+/^class / {
+  match($0, /class [a-zA-Z0-9_]+/)
+  class_name = substr($0, RSTART+6, RLENGTH-6)
+
+  if (class_name in class_map) {
+    current_prefix = class_map[class_name] "."
+  } else {
+    current_prefix = ""
   }
 
-  if (!in_public)
-    next
-
-  if ($0 ~ /^[[:space:]]*\/\//) {
-    c = substr($0, index($0, "//") + 2)
-    c = trim(c)
-    if (c != "")
-      comment = (comment ? comment " " : "") c
-    next
+  if (class_name == "MetricZ_ConfigDTO") {
+    display_name = "Config"
+  } else {
+    sub(/^MetricZ_ConfigDTO_/, "", class_name)
+    display_name = class_name
   }
 
-  if (match($0, /^[[:space:]]*(int|bool|float)[[:space:]]+([A-Za-z_][A-Za-z0-9_]*)[[:space:]]*(=[^;]+)?;/, m)) {
-    type = m[1]
-    name = m[2]
-    init = m[3]
+  print ""
+  print "### " display_name
+  print ""
 
-    # default value
-    def = ""
-    if (init != "") {
-      # init like "= 60" or "= true"
-      def = init
-      sub(/^=/, "", def)
-      def = trim(def)
-    } else {
-      if (type == "bool")
-        def = "false"
-      else if (type == "int")
-        def = "0"
-      else if (type == "float")
-        def = "0.0"
-      else
-        def = ""
+  desc_buffer = ""
+  skip_next = 0
+  next
+}
+
+/void [a-zA-Z0-9_]+\(/ || (/^[a-zA-Z0-9_]+ \(/) {
+  desc_buffer = ""
+  skip_next = 0
+  next
+}
+
+/;/ && !/\(/ {
+  if ($0 ~ /^[ \t]*(ref )?[a-zA-Z0-9_<>]+[ \t]+[a-zA-Z0-9_]+/) {
+    if (skip_next) {
+      skip_next = 0
+      desc_buffer = ""
+      next
     }
 
-    desc = comment ? comment : "(no description)"
-    comment = ""
+    line = raw_line
+    eq_idx = index(line, "=")
+    semi_idx = index(line, ";")
+    end_decl_idx = (eq_idx > 0) ? eq_idx : semi_idx
 
-    printf "* **`%s`** (`%s`) —\n", name, type
+    declaration_part = substr(line, 1, end_decl_idx - 1)
+    sub(/[ \t]+$/, "", declaration_part)
 
-    wrapped = wrap(desc, 76, "  ")
-    if (wrapped != "")
-      printf "%s", wrapped
+    n = split(declaration_part, parts, " ")
+    name = parts[n]
+    type = parts[1]
+    for (i=2; i<n; i++) type = type " " parts[i]
 
-    if (def != "")
-      printf "\n  (default: `%s`)", def
+    clean_type = type
+    sub(/^ref /, "", clean_type)
+    class_map[clean_type] = name
 
-    printf "\n"
+    default_val = ""
+    if (eq_idx > 0) {
+      val_part = substr(line, eq_idx + 1, semi_idx - eq_idx - 1)
+      gsub(/^[ \t]+|[ \t]+$/, "", val_part)
+      if (substr(val_part, 1, 1) == "\"") {
+        match(val_part, /".*"/)
+        val_part = substr(val_part, RSTART, RLENGTH)
+      } else {
+        sub(/[ \t]*\/\/.*$/, "", val_part)
+        gsub(/[ \t]+$/, "", val_part)
+      }
+      default_val = val_part
+    }
 
+    header = "* **`" current_prefix name "`** (`" type "`)"
+    if (default_val != "") {
+      header = header " = " default_val
+    }
+    header = header " -"
+
+    print header
+    print_wrapped(desc_buffer)
+
+    desc_buffer = ""
     next
   }
+}
 
-  if ($0 ~ /[^[:space:]]/)
-    comment = ""
+/}/ {
+  desc_buffer = ""
+  skip_next = 0
 }

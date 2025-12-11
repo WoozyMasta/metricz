@@ -42,14 +42,14 @@ crashes over time.
 If you have thousands of unique players or vehicles per month,
 consider disabling specific modules:
 
-* `disableTransportMetrics`
+* `disabled_metrics.transports`
   (Reduces churn significantly on heavy modded servers)
-* `disablePlayerMetrics`
+* `disabled_metrics.players`
   (If you don't need individual player vitals history)
-* `disableWeaponMetrics`
+* `disabled_metrics.weapons`
   (If you have a lot of modded weapons,
   otherwise a series is created for each type)
-* `disableEntityHitsMetrics` and `disableEntityKillsMetrics`
+* `disabled_metrics.hits` and `disabled_metrics.kills`
   (If you have a lot of modded weapon and ammo or modified `AttackType` AI,
   otherwise a series is created for each type)
 

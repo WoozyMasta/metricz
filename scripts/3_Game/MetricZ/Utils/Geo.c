@@ -43,7 +43,7 @@ class MetricZ_Geo
 			Init();
 
 		vector pos = obj.GetPosition();
-		if (MetricZ_Config.Get().disableGeoCoordinatesFormat)
+		if (MetricZ_Config.Get().geo.disable_world_coordinates)
 			return pos;
 
 		float lon, lat;
@@ -65,7 +65,7 @@ class MetricZ_Geo
 		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.Get().disableGeoCoordinatesFormat) {
+		if (MetricZ_Config.Get().geo.disable_world_coordinates) {
 			lon = pos[2];
 			lat = pos[0];
 			return;
@@ -93,7 +93,7 @@ class MetricZ_Geo
 		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.Get().disableGeoCoordinatesFormat)
+		if (MetricZ_Config.Get().geo.disable_world_coordinates)
 			return radiusMeters;
 
 		return radiusMeters * s_LongitudeScale;
@@ -111,8 +111,8 @@ class MetricZ_Geo
 		s_mapEffectiveSize = g_Game.GetWorld().GetWorldSize();
 
 		// apply config override
-		if (MetricZ_Config.Get().mapEffectiveSize > 0)
-			s_mapEffectiveSize = MetricZ_Config.Get().mapEffectiveSize;
+		if (MetricZ_Config.Get().geo.world_effective_size > 0)
+			s_mapEffectiveSize = MetricZ_Config.Get().geo.world_effective_size;
 		if (s_mapEffectiveSize <= 0)
 			s_mapEffectiveSize = 15360;
 

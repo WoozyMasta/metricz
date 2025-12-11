@@ -18,10 +18,10 @@ class MetricZ_FileSink : MetricZ_SinkBase
 			return false;
 
 		string file;
-		if (MetricZ_Config.Get().atomicFileExport)
-			file = MetricZ_Config.METRICS_TEMP;
+		if (MetricZ_Config.Get().file.atomic)
+			file = MetricZ_Constants.TEMP_FILE;
 		else
-			file = MetricZ_Config.METRICS_FILE;
+			file = MetricZ_Constants.PROM_FILE;
 
 		m_Fh = OpenFile(file, FileMode.WRITE);
 		if (!m_Fh) {
@@ -56,17 +56,17 @@ class MetricZ_FileSink : MetricZ_SinkBase
 			m_Fh = null;
 		}
 
-		if (MetricZ_Config.Get().atomicFileExport) {
-			DeleteFile(MetricZ_Config.METRICS_FILE);
+		if (MetricZ_Config.Get().file.atomic) {
+			DeleteFile(MetricZ_Constants.PROM_FILE);
 
-			if (!CopyFile(MetricZ_Config.METRICS_TEMP, MetricZ_Config.METRICS_FILE)) {
+			if (!CopyFile(MetricZ_Constants.TEMP_FILE, MetricZ_Constants.PROM_FILE)) {
 				ErrorEx(
-				    "MetricZ: atomic publish failed '" + MetricZ_Config.METRICS_TEMP + "' -> '" + MetricZ_Config.METRICS_FILE + "'",
+				    "MetricZ: atomic publish failed '" + MetricZ_Constants.TEMP_FILE + "' -> '" + MetricZ_Constants.PROM_FILE + "'",
 				    ErrorExSeverity.ERROR);
 				return false;
 			}
 
-			DeleteFile(MetricZ_Config.METRICS_TEMP);
+			DeleteFile(MetricZ_Constants.TEMP_FILE);
 		}
 
 		return true;

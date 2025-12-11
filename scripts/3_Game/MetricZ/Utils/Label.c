@@ -129,7 +129,7 @@ class MetricZ_LabelUtils
 			s_BaseLabel += "host=\"" + Escape(host) + "\",";
 
 		// base: instance id (allowed to be "0")
-		s_BaseLabel += "instance_id=\"" + MetricZ_InstanceID.Get() + "\"";
+		s_BaseLabel += "instance_id=\"" + MetricZ_Config.Get().settings.instance_id + "\"";
 		s_BaseLabelReady = true;
 
 		return s_BaseLabel;

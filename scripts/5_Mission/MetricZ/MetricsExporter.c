@@ -35,7 +35,7 @@ class MetricZ_Exporter
 
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,
-		          MetricZ_Config.Get().initDelaySeconds * 1000,
+		          MetricZ_Config.Get().settings.init_delay_sec * 1000,
 		          false);
 
 		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
@@ -59,19 +59,23 @@ class MetricZ_Exporter
 	*/
 	void Shutdown()
 	{
-		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().enableRemoteExport)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().http.enabled)
 			return;
 
 		// stop future scrapes
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
-		DeleteFile(MetricZ_Config.METRICS_TEMP);
+		DeleteFile(MetricZ_Constants.TEMP_FILE);
 
 		s_Instance = null;
 		s_Busy = false;
 
 		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
 
-		MetricZ_FileSink sink = new MetricZ_FileSink(0);
+		MetricZ_FileSink sink = new MetricZ_FileSink();
+		if (!sink)
+			return;
+
+		sink.SetBuffer(0);
 		if (!sink.Begin())
 			return;
 
@@ -91,11 +95,38 @@ class MetricZ_Exporter
 	*/
 	bool Flush()
 	{
+		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
+		if (!cfg)
+			return false;
+
 		MetricZ_SinkBase sink;
-		if (MetricZ_Config.Get().enableRemoteExport && MetricZ_Config.Get().remoteEndpointURL != string.Empty)
-			sink = new MetricZ_RestSink(MetricZ_Config.Get().bufferLines);
-		else
-			sink = new MetricZ_FileSink(MetricZ_Config.Get().bufferLines);
+
+		if (cfg.file.enabled && cfg.http.enabled) {
+			MetricZ_CompositeSink composite = new MetricZ_CompositeSink();
+			if (!composite)
+				return false;
+			composite.AddSink(new MetricZ_RestSink(), cfg.http.buffer);
+			composite.AddSink(new MetricZ_FileSink(), cfg.file.buffer);
+			sink = composite;
+
+			ErrorEx("MetricZ: Do not use both exports in production (file.enabled=1, http.enabled=1)", ErrorExSeverity.WARNING);
+
+		} else if (cfg.http.enabled) {
+			sink = new MetricZ_RestSink();
+			if (!sink)
+				return false;
+			sink.SetBuffer(cfg.http.buffer)
+
+		} else if (cfg.file.enabled) {
+			sink = new MetricZ_FileSink();
+			if (!sink)
+				return false;
+			sink.SetBuffer(cfg.file.buffer)
+
+		} else {
+			ErrorEx("MetricZ: No exports enabled in config (file.enabled=0, http.enabled=0)", ErrorExSeverity.WARNING);
+			return false;
+		}
 
 		if (!sink.Begin())
 			return false;
@@ -104,43 +135,43 @@ class MetricZ_Exporter
 		MetricZ_Storage.Flush(sink);
 
 		// per-player
-		if (!MetricZ_Config.Get().disablePlayerMetrics)
+		if (!cfg.disabled_metrics.players)
 			MetricZ_EntitiesWriter.FlushPlayers(sink);
 
 		// per-infected AI type and mind state
-		if (!MetricZ_Config.Get().disableZombieMetrics)
+		if (!cfg.disabled_metrics.zombies)
 			MetricZ_ZombieStats.Flush(sink);
 
 		// per-animal type
-		if (!MetricZ_Config.Get().disableAnimalMetrics)
+		if (!cfg.disabled_metrics.animals)
 			MetricZ_AnimalStats.Flush(sink);
 
 		// per-vehicle
-		if (!MetricZ_Config.Get().disableTransportMetrics)
+		if (!cfg.disabled_metrics.transports)
 			MetricZ_EntitiesWriter.FlushTransport(sink);
 
 		// weapon shots
-		if (!MetricZ_Config.Get().disableWeaponMetrics)
+		if (!cfg.disabled_metrics.weapons)
 			MetricZ_WeaponStats.Flush(sink);
 
 		// entity hits
-		if (!MetricZ_Config.Get().disableEntityHitsMetrics)
+		if (!cfg.disabled_metrics.hits)
 			MetricZ_HitStats.Flush(sink);
 
 		// per-territory
-		if (!MetricZ_Config.Get().disableTerritoryMetrics)
+		if (!cfg.disabled_metrics.territories)
 			MetricZ_EntitiesWriter.FlushTerritory(sink);
 
 		// per-effect-area
-		if (!MetricZ_Config.Get().disableEffectAreaMetrics)
+		if (!cfg.disabled_metrics.areas)
 			MetricZ_EntitiesWriter.FlushEffectAreas(sink);
 
 		// dayz game RPC inputs
-		if (!MetricZ_Config.Get().disableRPCMetrics)
+		if (!cfg.disabled_metrics.rpc_input)
 			MetricZ_RpcStats.Flush(sink);
 
 		// dayz game events
-		if (!MetricZ_Config.Get().disableEventMetrics)
+		if (!cfg.disabled_metrics.events)
 			MetricZ_EventStats.Flush(sink);
 
 		return sink.End();
@@ -159,7 +190,7 @@ class MetricZ_Exporter
 		// Schedule next tick for minimize drift
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 		          Update,
-		          MetricZ_Config.Get().scrapeIntervalSeconds * 1000,
+		          MetricZ_Config.Get().settings.collect_interval_sec * 1000,
 		          false);
 
 		if (s_Busy) {
