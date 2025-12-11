@@ -52,23 +52,27 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		    MetricZ_MetricType.GAUGE);
 
 		// position
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_PosX = new MetricZ_MetricFloat(
 			    "transport_position_x",
 			    "Transport world X",
 			    MetricZ_MetricType.GAUGE);
-			m_PosY = new MetricZ_MetricFloat(
-			    "transport_position_y",
-			    "Transport world Y",
-			    MetricZ_MetricType.GAUGE);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_PosY = new MetricZ_MetricFloat(
+				    "transport_position_y",
+				    "Transport world Y",
+				    MetricZ_MetricType.GAUGE);
 			m_PosZ = new MetricZ_MetricFloat(
 			    "transport_position_z",
 			    "Transport world Z",
 			    MetricZ_MetricType.GAUGE);
-			m_Yaw = new MetricZ_MetricFloat(
-			    "transport_orientation",
-			    "Transport yaw degrees",
-			    MetricZ_MetricType.GAUGE);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Yaw = new MetricZ_MetricFloat(
+				    "transport_orientation",
+				    "Transport yaw degrees",
+				    MetricZ_MetricType.GAUGE);
 		}
 	}
 
@@ -92,7 +96,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 			m_Transport = transport;
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
 			          InitMetricsRegistry,
-			          MetricZ_Config.Get().scrapeIntervalSeconds * 1000,
+			          MetricZ_Config.Get().settings.collect_interval_sec * 1000,
 			          false);
 		}
 	}
@@ -111,11 +115,15 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_EngineOn);
 		m_Registry.Insert(m_FuelFraction);
 
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_Registry.Insert(m_PosX);
-			m_Registry.Insert(m_PosY);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_Registry.Insert(m_PosY);
 			m_Registry.Insert(m_PosZ);
-			m_Registry.Insert(m_Yaw);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Registry.Insert(m_Yaw);
 		}
 
 		SetLabels();
@@ -136,12 +144,16 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		m_Passengers.Set(GetPassengersCount());
 
 		// position
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			vector pos = MetricZ_Geo.GetPosition(m_Transport);
 			m_PosX.Set(pos[0]);
-			m_PosY.Set(pos[1]);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_PosY.Set(pos[1]);
 			m_PosZ.Set(pos[2]);
-			m_Yaw.Set(m_Transport.GetOrientation()[0]);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Yaw.Set(m_Transport.GetOrientation()[0]);
 		}
 
 		// speed m/s via physics velocity

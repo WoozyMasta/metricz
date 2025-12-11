@@ -51,7 +51,7 @@ class MetricZ_WeaponStats
 	*/
 	static void LoadCache()
 	{
-		if (s_CacheLoaded || !MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disableWeaponMetrics)
+		if (s_CacheLoaded || !MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disabled_metrics.weapons)
 			return;
 
 		s_CacheLoaded = true;

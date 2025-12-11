@@ -119,23 +119,28 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		    MetricZ_MetricType.GAUGE);
 
 		// position
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_PosX = new MetricZ_MetricFloat(
 			    "player_position_x",
 			    "Player world X",
 			    MetricZ_MetricType.GAUGE);
-			m_PosY = new MetricZ_MetricFloat(
-			    "player_position_y",
-			    "Player world Y",
-			    MetricZ_MetricType.GAUGE);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_PosY = new MetricZ_MetricFloat(
+				    "player_position_y",
+				    "Player world Y",
+				    MetricZ_MetricType.GAUGE);
+
 			m_PosZ = new MetricZ_MetricFloat(
 			    "player_position_z",
 			    "Player world Z",
 			    MetricZ_MetricType.GAUGE);
-			m_Yaw = new MetricZ_MetricFloat(
-			    "player_orientation",
-			    "Player yaw degrees",
-			    MetricZ_MetricType.GAUGE);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Yaw = new MetricZ_MetricFloat(
+				    "player_orientation",
+				    "Player yaw degrees",
+				    MetricZ_MetricType.GAUGE);
 		}
 
 		// identity
@@ -226,11 +231,15 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_Registry.Insert(m_Wetness);
 		m_Registry.Insert(m_LifeSeconds);
 
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_Registry.Insert(m_PosX);
-			m_Registry.Insert(m_PosY);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_Registry.Insert(m_PosY);
 			m_Registry.Insert(m_PosZ);
-			m_Registry.Insert(m_Yaw);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Registry.Insert(m_Yaw);
 		}
 
 		m_Registry.Insert(m_PingMin);
@@ -279,12 +288,16 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		m_LifeSeconds.Set(g_Game.GetTickTime() - m_InitTick);
 
 		// position
-		if (!MetricZ_Config.Get().disableCoordinatesMetrics) {
+		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			vector pos = MetricZ_Geo.GetPosition(m_Player);
 			m_PosX.Set(pos[0]);
-			m_PosY.Set(pos[1]);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
+				m_PosY.Set(pos[1]);
 			m_PosZ.Set(pos[2]);
-			m_Yaw.Set(m_Player.GetOrientation()[0]);
+
+			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
+				m_Yaw.Set(m_Player.GetOrientation()[0]);
 		}
 
 		// ping & throttle

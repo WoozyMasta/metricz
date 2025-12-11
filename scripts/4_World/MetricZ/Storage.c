@@ -470,10 +470,10 @@ class MetricZ_Storage
 		SetLabels();
 
 		s_Status.Set(1);
-		s_ScrapeInterval.Set(MetricZ_Config.Get().scrapeIntervalSeconds);
+		s_ScrapeInterval.Set(MetricZ_Config.Get().settings.collect_interval_sec);
 		s_ScrapeSkippedTotal.Set(0);
-		s_FPSLimit.Set(MetricZ_Config.Get().limitFPS);
-		s_MaxPlayers.Set(MetricZ_Config.Get().maxPlayers);
+		s_FPSLimit.Set(MetricZ_Config.Get().fps_limit);
+		s_MaxPlayers.Set(MetricZ_Config.Get().max_players);
 
 		// Load Cache
 		MetricZ_WeaponStats.LoadCache();

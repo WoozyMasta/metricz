@@ -19,6 +19,8 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
+* configuration has been completely moved to a new format in the JSON file ⚠️
+* buffered metric export is now available in all metrics sink writers
 * support for sending metrics to the proxy and aggregation backend
   [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
 * **`dayz_metricz_eai_deaths_total`** (`COUNTER`) —
@@ -36,27 +38,28 @@ Here is the updated changelog including the new changes.
   Count of players killed by source
 * **`dayz_metricz_creature_killed_by_total`** (`COUNTER`) —
   Count of creatures (Infected/Animals/AI) killed by source
-* configuration options `MetricZ_DisableEntityHitsMetrics`,
-  `MetricZ_EntityHitDamageThreshold` and
-  `MetricZ_EntityVehicleHitDamageThreshold` to control entity hit
-  metrics
-* configuration option `MetricZ_DisableEntityKillsMetrics` to disable
+* configuration options `disabled_metrics.hits`, `thresholds.hit_damage` and
+  `thresholds.hit_damage_vehicle` to control entity hit metrics
+* configuration option `disabled_metrics.kills` to disable
   player and zombie/animal kill source metrics
 * debug logging of all configuration values when `DIAG` is defined
 * `MetricZ_Geo` helper class for converting world coordinates to `EPSG:4326`
   (WGS84).
-* new config/CLI `MapEffectiveSize` options to override map tiles size
+* new config/CLI `geo.world_effective_size` options to override map tiles size
 * **`dayz_metricz_player_orientation`**  (`GAUGE`) — player yaw in degrees
 * **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
 * **`dayz_metricz_effect_areas`** (`GAUGE`) — total active effect areas
   (static/dynamic zones)
 * **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
   per-zone metrics with position and radius labels
-* new config options `MetricZ_DisableEffectAreaMetrics` and
-  `MetricZ_EnableLocalEffectAreaMetrics`
+* new config options `disabled_metrics.areas` and `disabled_metrics.local_areas`
+* new config options `disabled_metrics.positions_height` and `disabled_metrics.positions_yaw`
 
 ### Changed
 
+* sink writers have been implemented for writing metrics to disk,
+  sending them over the network, or both simultaneously
+* for file export, atomic write mode is now optional
 * fixed an issue when trying to calculate network ping for eAI
 * fixed double counting of destroyed vehicles when saving/loading
 * stricter `EEKilled()` checking for objects deaths
@@ -73,7 +76,7 @@ Here is the updated changelog including the new changes.
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name
 * `MetricZ_Config` now robustly handles missing or `0` values from
-  `server.cfg` by respecting default values, while allowing explicit `-1`
+  `serverDZ.cfg` by respecting default values, while allowing explicit `-1`
   to set a value to `0` where applicable
 * fixed **`dayz_metricz_artillery_barrages_total`** calculation logic
 * replaced `MetricZ_EnableCoordinatesMetrics` with inverted

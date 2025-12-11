@@ -31,7 +31,7 @@ modded class ZombieBase
 
 		MetricZ_Storage.s_Infected.Inc();
 
-		if (!MetricZ_Config.Get().disableZombieMetrics)
+		if (!MetricZ_Config.Get().disabled_metrics.zombies)
 			MetricZ_ZombieStats.OnSpawn(this);
 	}
 
@@ -46,7 +46,7 @@ modded class ZombieBase
 			if (m_MetricZ_IsKilled)
 				MetricZ_Storage.s_InfectedCorpses.Dec();
 
-			if (!MetricZ_Config.Get().disableZombieMetrics)
+			if (!MetricZ_Config.Get().disabled_metrics.zombies)
 				MetricZ_ZombieStats.OnDelete(this, m_MetricZ_State);
 		}
 
@@ -66,13 +66,13 @@ modded class ZombieBase
 
 			MetricZ_Storage.s_InfectedCorpses.Inc();
 
-			if (!MetricZ_Config.Get().disableZombieMetrics) {
+			if (!MetricZ_Config.Get().disabled_metrics.zombies) {
 				MetricZ_ZombieStats.OnKilled(m_MetricZ_State);
 				m_MetricZ_State = MetricZ_ZombieStats.MINDSTATE_DEAD;
 			} else
 				m_MetricZ_State = -1;
 
-			if (!MetricZ_Config.Get().disableWeaponMetrics && killer != this)
+			if (!MetricZ_Config.Get().disabled_metrics.weapons && killer != this)
 				MetricZ_WeaponStats.OnCreatureKilled(killer);
 		}
 
@@ -89,16 +89,16 @@ modded class ZombieBase
 		if (!MetricZ_Config.IsLoaded())
 			return;
 
-		if (!MetricZ_Config.Get().disableEntityHitsMetrics && source != this && !m_MetricZ_IsLastHit) {
+		if (!MetricZ_Config.Get().disabled_metrics.hits && source != this && !m_MetricZ_IsLastHit) {
 			if (IsDamageDestroyed())
 				m_MetricZ_IsLastHit = true;
 
 			if (damageResult) {
 				float damage = damageResult.GetDamage(dmgZone, "");
-				if (damage < MetricZ_Config.Get().entityHitDamageThreshold)
+				if (damage < MetricZ_Config.Get().thresholds.hit_damage)
 					return;
 
-				if (source && source.IsTransport() && damage < MetricZ_Config.Get().entityVehicleHitDamageThreshold)
+				if (source && source.IsTransport() && damage < MetricZ_Config.Get().thresholds.hit_damage_vehicle)
 					return;
 			}
 

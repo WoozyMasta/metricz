@@ -23,7 +23,7 @@ modded class Weapon_Base
 		if (!MetricZ_Config.IsLoaded())
 			return;
 
-		if (!MetricZ_Config.Get().disableWeaponMetrics)
+		if (!MetricZ_Config.Get().disabled_metrics.weapons)
 			MetricZ_WeaponStats.OnSpawn(this);
 
 		MetricZ_Storage.s_Weapons.Inc();
@@ -37,7 +37,7 @@ modded class Weapon_Base
 		if (MetricZ_Config.IsLoaded()) {
 			MetricZ_Storage.s_Weapons.Dec();
 
-			if (!MetricZ_Config.Get().disableWeaponMetrics)
+			if (!MetricZ_Config.Get().disabled_metrics.weapons)
 				MetricZ_WeaponStats.OnDelete(this);
 		}
 
@@ -55,7 +55,7 @@ modded class Weapon_Base
 		if (!MetricZ_Config.IsLoaded())
 			return;
 
-		if (!MetricZ_Config.Get().disableWeaponMetrics)
+		if (!MetricZ_Config.Get().disabled_metrics.weapons)
 			MetricZ_WeaponStats.OnFire(this);
 	}
 

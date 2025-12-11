@@ -27,9 +27,10 @@ class MetricZ_RestClient : Managed
 		if (m_Ctx)
 			return;
 
-		string baseUrl = MetricZ_Config.Get().remoteEndpointURL;
-		if (baseUrl == string.Empty) {
-			ErrorEx("MetricZ: rest-url is empty", ErrorExSeverity.ERROR);
+		string url = MetricZ_Config.Get().http.url;
+
+		if (!MetricZ_Config.Get().http.enabled) {
+			ErrorEx("MetricZ: rest is disabled", ErrorExSeverity.WARNING);
 			return;
 		}
 
@@ -42,13 +43,13 @@ class MetricZ_RestClient : Managed
 			return;
 		}
 
-		m_Rest.SetOption(ERestOption.ERESTOPTION_READOPERATION, MetricZ_Config.Get().remoteReadTimeout);
-		m_Rest.SetOption(ERestOption.ERESTOPTION_CONNECTION, MetricZ_Config.Get().remoteConnectionTimeout);
+		m_Rest.SetOption(ERestOption.ERESTOPTION_READOPERATION, MetricZ_Config.Get().http.read_timeout_sec);
+		m_Rest.SetOption(ERestOption.ERESTOPTION_CONNECTION, MetricZ_Config.Get().http.connect_timeout_sec);
 #ifdef DIAG
 		m_Rest.EnableDebug(true);
 #endif
 
-		m_Ctx = m_Rest.GetRestContext(baseUrl);
+		m_Ctx = m_Rest.GetRestContext(url);
 		if (!m_Ctx) {
 			ErrorEx("MetricZ: GetRestContext failed", ErrorExSeverity.ERROR);
 			return;
@@ -64,7 +65,7 @@ class MetricZ_RestClient : Managed
 
 		Init();
 
-		string url = "/api/v1/ingest/" + MetricZ_InstanceID.Get();
+		string url = "/api/v1/ingest/" + MetricZ_Config.Get().settings.instance_id;
 
 		string txn = sink.GetTransactionID();
 		if (txn != string.Empty)
@@ -92,7 +93,7 @@ class MetricZ_RestClient : Managed
 
 		Init();
 
-		string url = "/api/v1/commit/" + MetricZ_InstanceID.Get() + "/" + txn;
+		string url = "/api/v1/commit/" + MetricZ_Config.Get().settings.instance_id + "/" + txn;
 
 		cb.SetTxn(txn);
 		m_Ctx.POST(cb, url, string.Empty);

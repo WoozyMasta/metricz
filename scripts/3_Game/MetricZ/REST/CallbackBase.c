@@ -32,12 +32,12 @@ class MetricZ_CallbackBase : RestCallback
 
 	protected void Retry()
 	{
-		if (!MetricZ_Config.Get().enableRemoteExport) {
+		if (!MetricZ_Config.Get().http.enabled) {
 			OnDone();
 			return;
 		}
 
-		if (m_Attempt >= MetricZ_Config.Get().remoteMaxRetries) {
+		if (m_Attempt >= MetricZ_Config.Get().http.max_retries) {
 			ErrorEx("MetricZ: REST all retries failed" + GetDuration(), ErrorExSeverity.ERROR);
 			OnDone();
 			return;
@@ -45,14 +45,14 @@ class MetricZ_CallbackBase : RestCallback
 
 		m_Attempt++;
 
-		int baseDelay = MetricZ_Config.Get().remoteRetryDelayMs;
+		int baseDelay = MetricZ_Config.Get().http.retry_delay_ms;
 		int backoff = baseDelay << (m_Attempt - 1);
-		if (backoff > MetricZ_Config.Get().remoteRetryMaxBackoffMs)
-			backoff = MetricZ_Config.Get().remoteRetryMaxBackoffMs;
+		if (backoff > MetricZ_Config.Get().http.retry_max_backoff_ms)
+			backoff = MetricZ_Config.Get().http.retry_max_backoff_ms;
 
 		int delay = Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
-		string attempt = m_Attempt.ToString() + "/" + MetricZ_Config.Get().remoteMaxRetries.ToString();
+		string attempt = m_Attempt.ToString() + "/" + MetricZ_Config.Get().http.max_retries.ToString();
 		ErrorEx("MetricZ: REST retry " + attempt + " after " + delay.ToString() + "ms", ErrorExSeverity.WARNING);
 
 		if (!g_Game) {

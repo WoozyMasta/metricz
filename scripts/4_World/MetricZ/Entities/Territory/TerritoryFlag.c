@@ -25,7 +25,7 @@ modded class TerritoryFlag
 
 		MetricZ_Storage.s_TerritoryFlags.Inc();
 
-		if (MetricZ_Config.Get().disableTerritoryMetrics)
+		if (MetricZ_Config.Get().disabled_metrics.territories)
 			return;
 
 		MetricZ_TerritoryRegistry.Register(this);
@@ -40,7 +40,7 @@ modded class TerritoryFlag
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disableTerritoryMetrics) {
+		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disabled_metrics.territories) {
 			m_MetricZ = null;
 			MetricZ_TerritoryRegistry.Unregister(this);
 		}
