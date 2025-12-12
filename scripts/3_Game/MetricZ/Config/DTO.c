@@ -20,7 +20,7 @@ class MetricZ_ConfigDTO
 		geo = new MetricZ_ConfigDTO_Geo();
 	}
 
-	// Internal configuration version. Do not modify.
+	// Internal configuration version. **Do not modify**.
 	string version = MetricZ_Constants.VERSION;
 
 	// Base settings for metric collection.

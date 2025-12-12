@@ -5,6 +5,9 @@ Dependency is optional: wrap all calls in `#ifdef METRICZ`.
 
 ## Compile-time guard
 
+To avoid hard dependency errors when MetricZ is not installed,
+wrap your integration code:
+
 ```cpp
 #ifdef SERVER
 #ifdef METRICZ
@@ -17,303 +20,242 @@ If MetricZ is not loaded, the block is skipped.
 
 ## Core metric types
 
+The mod provides wrapper classes for Prometheus metric types.
+
+> [!NOTE]  
+> Metric names are provided *without* the `dayz_metricz_` prefix -
+> it is added automatically.
+
 ```cpp
-class MetricZ_MetricInt;
-class MetricZ_MetricFloat;
-class MetricZ_MetricBase;
+class MetricZ_MetricInt;   // Integer counters and gauges
+class MetricZ_MetricFloat; // Floating point gauges
+class MetricZ_MetricBase;  // Base class
 enum MetricZ_MetricType { GAUGE, COUNTER }
 ```
 
-Metric names are provided *without* the `dayz_metricz_` prefix —
-it is added automatically.
+## Defining and Registering Metrics
+
+The standard way to add metrics is to extend the `MetricZ_Storage` class.
+This ensures your metrics are initialized, stored in the global registry,
+and automatically exported to all active sinks (File, HTTP, etc.).
+
+> [!NOTE]  
+> Do not use `protected` visibility for the static metric variable if
+> you intend to access it from other classes (e.g., `PlayerBase`).  
+> Use `static ref` (package/public visibility).
+
+### Example: Counting Player Jumps
+
+Define and Register:*
 
 ```cpp
+// 4_World/MyMod/MetricZ_Integration.c
+
+modded class MetricZ_Storage
+{
 #ifdef METRICZ
-static ref MetricZ_MetricInt s_MyModJumps = new MetricZ_MetricInt(
-  "my_mod_jumps",
-  "Total player jumps triggered by my mod",
-  MetricZ_MetricType.COUNTER
-);
+    // Define the metric instance (static, accessible)
+    static ref MetricZ_MetricInt s_MyMod_PlayerJumps = new MetricZ_MetricInt(
+        "player_jumps",                 // Name (will be dayz_metricz_player_jumps_total)
+        "Total player jump starts",     // Help string
+        MetricZ_MetricType.COUNTER      // Type
+    );
+
+    override static void Init()
+    {
+        super.Init(); // Run MetricZ built-in initialization first
+
+        // Register your metric in the global registry
+        // This ensures it gets written to file/sent via HTTP automatically
+        s_Registry.Insert(s_MyMod_PlayerJumps);
+    }
 #endif
+}
+```
+
+Instrument the Gameplay Code:
+
+```cpp
+// 4_World/MyMod/PlayerBase.c
+
+modded class PlayerBase
+{
+    override void OnJumpStart()
+    {
+#ifdef METRICZ
+        // Check if storage is initialized to avoid null pointer access during early startup
+        if (MetricZ_Storage.IsInitialized())
+            MetricZ_Storage.s_MyMod_PlayerJumps.Inc();
+#endif
+
+        super.OnJumpStart();
+    }
+}
+```
+
+Result:
+
+```PromQL
+# HELP dayz_metricz_player_jumps_total Total player jump starts
+# TYPE dayz_metricz_player_jumps_total counter
+dayz_metricz_player_jumps_total{world="chernarusplus",host="dz01",instance_id="1"} 42
 ```
 
 ## Labels
 
-Static label example:
+Labels allow you to add dimensions to your metrics.
+Base labels (`world`, `host`, `instance_id`) are added
+automatically to all metrics.
+
+### Static Labels
+
+If a metric always has a fixed set of extra labels, define them during initialization.
 
 ```cpp
 #ifdef METRICZ
 static ref MetricZ_MetricInt s_MyItemUses = new MetricZ_MetricInt(
-  "my_item_uses",
-  "MySuperItem use count",
-  MetricZ_MetricType.COUNTER
+    "my_item_uses",
+    "Specific item use count",
+    MetricZ_MetricType.COUNTER
 );
 
-static void InitMyMetrics()
+// Call this inside MetricZ_Storage::Init or immediately after creation
+void SetupMyLabels()
 {
-  s_MyItemUses.MakeLabel("item", "MySuperItem");
+    // Single label
+    s_MyItemUses.MakeLabel("item", "MySuperItem");
+    
+    // OR Multiple labels
+    // map<string, string> labels = new map<string, string>();
+    // labels.Insert("tier", "5");
+    // labels.Insert("rarity", "legendary");
+    // s_MyItemUses.MakeLabels(labels);
 }
 #endif
 ```
 
-Base labels added automatically:
+### Dynamic Labels (Advanced)
 
-* `world`
-* `host`
-* `instance_id`
+If you need high-cardinality metrics
+(e.g., counting interactions per item type),
+you cannot use a single `MetricZ_MetricInt`
+instance because it holds one value.
 
-Additional labels:
+You must implement a management class similar to
+`MetricZ_WeaponStats` or `MetricZ_ZombieStats` that:
 
-* `metric.MakeLabel("key","value")`
-* `metric.MakeLabels(map<string,string>)`
+1. Maintains a `map<string, int>` of counters.
+1. Maintains a `map<string, string>` of pre-formatted labels strings.
+1. Iterates over the map in a `Flush()` method and writes to the sink.
 
-Keep label cardinality controlled.
+See `3_Game/MetricZ/Stats/RPC.c` or
+`4_World/MetricZ/Entities/Weapons/HitStats.c`
+in the source code for reference implementations.*
 
-## Registering metrics from another mod
+## Entity Label Overrides
 
-You can extend MetricZ by modifying its storage class via
-`modded class MetricZ_Storage`.
+MetricZ uses heuristics to determine readable names for
+Zombies, Animals, and Weapons.
+If your mod adds custom entities that are not correctly categorized by the
+default logic, you can override the helper methods in your entity classes.
 
-Pattern:
+### Custom Zombie Name
 
-```cpp
-modded class MetricZ_Storage
-{
-#ifdef METRICZ
-  protected static ref MetricZ_MetricInt s_MyCustomMetric = new MetricZ_MetricInt(
-    "my_custom_metric",
-    "Description of my custom metric",
-    MetricZ_MetricType.COUNTER
-  );
-
-  override static void Init()
-  {
-    super.Init(); // run MetricZ built-in initialization
-    s_Registry.Insert(s_MyCustomMetric); // register your metric
-  }
-#endif
-}
-```
-
-After insertion into `s_Registry`, the metric is automatically written into
-`metricz.prom` on each scrape.
-
-<!-- Works only from 1.29 game version -->
-This allows clean optional integration without patching MetricZ code.
-
-## Examples
-
-### Counting player jumps
-
-```cpp
-modded class MetricZ_Storage
-{
-#ifdef METRICZ
-  protected static ref MetricZ_MetricInt s_PlayerJumps = new MetricZ_MetricInt(
-    "player_jumps",
-    "Total player jump starts",
-    MetricZ_MetricType.COUNTER
-  );
-
-  override static void Init()
-  {
-    super.Init();
-    s_Registry.Insert(s_PlayerJumps);
-  }
-#endif
-}
-```
-
-Use it in gameplay code:
-
-```cpp
-modded class PlayerBase
-{
-#ifdef METRICZ
-  override void OnJumpStart()
-  {
-    MetricZ_Storage.s_PlayerJumps.Inc();
-    super.OnJumpStart();
-  }
-#endif
-}
-```
-
-Resulting metric:
-
-```PromQL
-dayz_metricz_player_jumps_total{world="..",host="..",instance_id=".."} N
-```
-
-### Counting interactions with a custom mod item
-
-Register the metric:
-
-```cpp
-modded class MetricZ_Storage
-{
-#ifdef METRICZ
-  protected static ref MetricZ_MetricInt s_MySuperItemToggles = new MetricZ_MetricInt(
-    "my_super_item_toggles",
-    "Number of ActionToggleMySuperItem completions",
-    MetricZ_MetricType.COUNTER
-  );
-
-  override static void Init()
-  {
-    super.Init();
-    s_Registry.Insert(s_MySuperItemToggles);
-  }
-#endif
-}
-```
-
-Increment from your action:
-
-```cpp
-modded class ActionToggleMySuperItem
-{
-  override void OnFinishProgress(ActionData action_data)
-  {
-#ifdef METRICZ
-    MetricZ_Storage.s_MySuperItemToggles.Inc();
-#endif
-    super.OnFinishProgress(action_data);
-  }
-}
-```
-
-If needed, attach a static label:
-
-```cpp
-#ifdef METRICZ
-static void InitMyMetrics()
-{
-  MetricZ_Storage.s_MySuperItemToggles.MakeLabel("item", "MySuperItem");
-}
-#endif
-```
-
-## Override labels
-
-By default, typed metrics derive their label values dynamically.
-If your mod introduces custom entities, you can override label
-resolution and provide your own value.
-
-### Zombie
-
-For `dayz_metricz_infected_by_type`, the zombie type is derived
-from the `aiAgentTemplate` name.
-If you use a vanilla agent or a custom one that maps incorrectly,
-you can override it:
+Default logic checks `aiAgentTemplate`.
+If your zombie uses a custom template or generic class, override:
 
 ```cpp
 class MySuperZombie : ZombieBase
 {
 #ifdef METRICZ
-  override string MetricZ_GetLabelTypeName()
-  {
-    return "my_super_zombie";
-  }
+    override string MetricZ_GetLabelTypeName()
+    {
+        return "my_super_zombie"; // Resulting label: type="my_super_zombie"
+    }
 #endif
 }
 ```
 
-### Animal
+### Custom Animal Name
 
-For `dayz_metricz_animals_by_type`, the animal type is resolved from the
-`Skinning` config (`ObtainedSteaks` / `ObtainedPelt`).
-If your animal drops items that map it to the wrong vanilla type
-(e.g. a crow mapped as `chicken`), override the label:
+Default logic looks at Skinning config (Steaks/Pelt).
 
 ```cpp
 class MySuperAnimal : AnimalBase
 {
 #ifdef METRICZ
-  override string MetricZ_GetLabelTypeName()
-  {
-    return "my_super_animal";
-  }
+    override string MetricZ_GetLabelTypeName()
+    {
+        return "my_super_animal";
+    }
 #endif
 }
 ```
 
-### Weapon
+### Custom Weapon Name
 
-For `dayz_metricz_weapons_by_type` and `dayz_metricz_weapon_shots_total`,
-the weapon type is derived from the class name by trimming common suffixes.
-This works well for vanilla weapons but may produce unexpected names
-for modded classes. Override and provide a stable, generic name for
-all variants of the same weapon:
+Default logic strips common suffixes (color, camo, damage state).
 
 ```cpp
 class MySuperWeapon : Weapon_Base
 {
 #ifdef METRICZ
-  override string MetricZ_GetLabelTypeName()
-  {
-    return "my_super_weapon";
-  }
+    override string MetricZ_GetLabelTypeName()
+    {
+        return "my_super_rifle";
+    }
 #endif
 }
 ```
 
-### Food
+### Custom Item Name
 
-For `Edible_Base`, food categories are static and defined in
-`enum MetricZ_FoodTypes`. The default resolver uses many heuristics:
-boolean flags, inheritance, liquid type, stack unit, impact sound, etc.
-If you want to classify your item explicitly, override the getter:
+Applies to any `ItemBase`.
+
+```cpp
+class MyModdedItem : ItemBase
+{
+#ifdef METRICZ
+    override string MetricZ_GetLabelTypeName()
+    {
+        return "my_clean_item_name";
+    }
+#endif
+}
+```
+
+### Custom Food Category
+
+MetricZ groups food into static enums (Fruit, Meat, Canned, etc.)
+to keep series cardinality low.
+If your item isn't categorized correctly:
 
 ```cpp
 class MySuperJarFood : Edible_Base
 {
 #ifdef METRICZ
-  override MetricZ_FoodTypes MetricZ_GetFoodType()
-  {
-    return MetricZ_FoodTypes.JAR;
-  }
+    override MetricZ_FoodTypes MetricZ_GetFoodType()
+    {
+        // Must return a value from MetricZ_FoodTypes enum
+        // See 4_World/MetricZ/Entities/Items/Edible_Base.c
+        return MetricZ_FoodTypes.JAR;
+    }
 #endif
 }
 ```
 
-## Advance
+## Best Practices
 
-For more advanced scenarios, see the built-in MetricZ implementations:
-
-* for **many dynamic labels on a single metric**, check `infected_mind_state`
-  and `infected_by_type` — they show how to create and cache per-label
-  metric instances efficiently;
-* for **per-object metrics** where each entity needs its own dedicated
-  time series, examine `territory_lifetime` and `transport_health`;
-* for **a fixed, predefined label set**, follow the pattern used by the
-  `food` metric with its `food_type` label.
-
-### Custom exporter flush
-
-If you maintain your own exporter or want to append additional metrics
-after MetricZ has written its snapshot, you can extend the exporter
-instead of touching MetricZ internals.
-
-Example: call your own registry after the built-in flush completes:
-
-```cpp
-#ifdef SERVER
-#ifdef METRICZ
-modded class MetricZ_Exporter
-{
-  override bool Flush(FileHandle fh)
-  {
-    // run MetricZ built-in collectors first
-    if (!super.Flush(fh))
-      return false;
-
-    // then append your own metrics
-    MyMetricsStorage.FlushMetrics(fh);
-
-    return true;
-  }
-}
-#endif
-#endif
-```
+1. **Cardinality:**
+  Do not create labels with user input(player names, chat messages) or
+  unique IDs (GUIDs) unless absolutely necessary.
+  High cardinality slows down Prometheus.
+    * *Bad:* `my_metric{player_name="Survivor123"}` (Unlimited variations).
+    * *Good:* `my_metric{player_type="police"}` (Fixed variations).
+1. **Performance:**
+  The export loop runs every 15s (default).
+  Keep your metric updates lightweight (e.g., increment integer counters).
+  Do not perform heavy calculations inside the `MetricZ_Storage` getters.
+1. **Sink Agnostic:**
+  By registering in `MetricZ_Storage.s_Registry`, your metrics automatically
+  support both File Export and HTTP Push. You do not need to handle IO manually.
