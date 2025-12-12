@@ -23,6 +23,8 @@ Here is the updated changelog including the new changes.
   `$profile:metricz/config.json` ⚠️
 * metrics are now exported to a separate directory `$profile:metricz/export/` ⚠️
 * buffered metric export is now available in all metrics sink writers
+* configuration option `http.serialized` to enable native C++ JSON
+  serialization for HTTP payloads, reducing execution time from x4-x5 times
 * support for sending metrics to the proxy and aggregation backend
   [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
 * **`dayz_metricz_http_requests_total`** (`COUNTER`) —

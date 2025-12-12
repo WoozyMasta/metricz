@@ -83,8 +83,13 @@ class MetricZ_RestSink : MetricZ_SinkBase
 			MetricZ_CallbackPostMetrics cb = new MetricZ_CallbackPostMetrics(m_Client);
 			if (!cb)
 				ErrorEx("MetricZ: callback not created", ErrorExSeverity.ERROR);
-			else
-				m_Client.PostMetrics(GetBufferChunk(), m_TxnId, chunkIdx, cb);
+			else {
+				if (MetricZ_Config.Get().http.serialized)
+					m_Client.PostMetrics(GetJsonBufferChunk(), m_TxnId, chunkIdx, cb);
+				else
+					m_Client.PostMetrics(GetBufferChunk(), m_TxnId, chunkIdx, cb);
+			}
+
 		}
 
 		super.BufferFlush();
