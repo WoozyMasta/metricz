@@ -83,7 +83,7 @@ For DayZ metrics, we strongly recommend using
 
 ### Config
 
-* **`version`** (`int`) = MetricZ_Constants.VERSION -
+* **`version`** (`string`) = MetricZ_Constants.VERSION -
   Internal configuration version. Do not modify.
 * **`settings`** (`ref MetricZ_ConfigDTO_BaseSettings`) -
   Base settings for metric collection.
@@ -130,6 +130,15 @@ For DayZ metrics, we strongly recommend using
   This adds extra I/O overhead and takes nearly x2-3 as long to write, but
   it is crucial to prevent the collector from reading incomplete files.
   Disabling this is not recommended.
+* **`file.file_name`** (`string`) -
+  File name override (without extension) Default file path
+  `$profile:metricz/export/metricz_${instance_id}.prom`. File path with
+  override `$profile:metricz/export/${file_name}.prom`.
+* **`file.delete_on_shutdown`** (`bool`) -
+  Delete the PROM file when shutting down the server. This is not
+  recommended to be enabled by default, since upon completion of work, a
+  single metric `dayz_metricz_status=0` is written to the file to indicate
+  that the server is shut down.
 
 ### HttpExport
 
@@ -167,14 +176,17 @@ For DayZ metrics, we strongly recommend using
   Disables RPC metrics collection. `dayz_metricz_rpc_input_total`
 * **`disabled_metrics.events`** (`bool`) -
   Disables event handler metrics collection. `dayz_metricz_events_total`
+* **`disabled_metrics.http`** (`bool`) -
+  Disables http metrics collection. This will not apply if remote mertic
+  export is disabled. `dayz_metricz_http_*`
 * **`disabled_metrics.players`** (`bool`) -
   Disables player-related metrics collection. `dayz_metricz_player_*`
 * **`disabled_metrics.zombies`** (`bool`) -
   Disables zombie per-type and mind state metrics collection.
-  `dayz_metricz_animals_by_type`
+  `dayz_metricz_animals_by_type` and `dayz_metricz_infected_mind_state`
 * **`disabled_metrics.animals`** (`bool`) -
   Disables animal per-type metrics collection.
-  `dayz_metricz_infected_by_type` and `dayz_metricz_infected_mind_state`
+  `dayz_metricz_infected_by_type`
 * **`disabled_metrics.transports`** (`bool`) -
   Disables vehicle and transport metrics collection.
   `dayz_metricz_transport_*`

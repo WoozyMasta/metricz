@@ -90,10 +90,6 @@ class MetricZ_HitStats
 		if (!sink)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		if (s_PlayerHit.Count() > 0) {
 			s_MetricPlayerHit.WriteHeaders(sink);
 
@@ -111,10 +107,6 @@ class MetricZ_HitStats
 				s_MetricCreatureHit.Flush(sink, s_LabelsAmmo.Get(caKey));
 			}
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: damage_stats scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**

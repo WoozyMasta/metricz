@@ -40,10 +40,6 @@ class MetricZ_RpcStats
 		if (!sink || s_InputRPCsRegistry.Count() == 0)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		// headers once
 		s_RpcTotal.WriteHeaders(sink);
 
@@ -59,10 +55,6 @@ class MetricZ_RpcStats
 
 			s_RpcTotal.Flush(sink, MetricZ_LabelUtils.MakeLabels(labels));
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: rpc_input_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

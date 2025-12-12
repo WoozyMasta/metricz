@@ -40,10 +40,6 @@ class MetricZ_EventStats
 		if (!sink || s_EventsRegistry.Count() == 0)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		MakeNameMap();
 		s_EventTotal.WriteHeaders(sink);
 
@@ -60,10 +56,6 @@ class MetricZ_EventStats
 
 			s_EventTotal.Flush(sink, MetricZ_LabelUtils.MakeLabels(labels));
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: events_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**

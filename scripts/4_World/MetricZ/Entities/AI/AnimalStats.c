@@ -73,10 +73,6 @@ class MetricZ_AnimalStats
 		if (!sink)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		if (s_CountByType.Count() == 0)
 			return;
 
@@ -96,10 +92,6 @@ class MetricZ_AnimalStats
 
 			s_MetricCountByType.Flush(sink, labels);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: animals_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

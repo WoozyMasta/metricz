@@ -8,6 +8,7 @@ url() {
 cd /p/metricz
 
 ./tools/validate.sh "$PWD"
+./tools/update-contstants.sh "$PWD"
 ./tools/config.sh "$PWD"
 ./tools/metrics.sh "$PWD"
 ./tools/astyle.sh "$PWD"

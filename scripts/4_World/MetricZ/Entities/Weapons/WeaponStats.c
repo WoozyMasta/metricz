@@ -164,10 +164,6 @@ class MetricZ_WeaponStats
 		if (!sink)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		// total shots + per-weapon shots
 		if (s_ShotsByWeapon.Count() > 0) {
 			s_MetricShotsByType.WriteHeaders(sink);
@@ -207,12 +203,6 @@ class MetricZ_WeaponStats
 				s_MetricCreatureKills.Flush(sink, LabelsFor(key4));
 			}
 		}
-
-#ifdef DIAG
-		ErrorEx(
-		    "MetricZ weapon_shots / weapons_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s",
-		    ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
