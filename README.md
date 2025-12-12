@@ -3,51 +3,70 @@
 <!-- markdownlint-disable-next-line MD033 -->
 <img src="logo.png" alt="MetricZ" align="right" width="300">
 
-DayZ server instrumentation via the Prometheus textfile collector. The mod
-gathers engine and world metrics and writes atomically to
-`$profile:metricz.prom`. Integrates with node_exporter (Linux) or
-windows_exporter (Windows).
+DayZ server instrumentation via the Prometheus textfile collector
+or direct HTTP Push.
+The mod gathers engine and world metrics and exports them for monitoring.
+Integrates seamlessly with node_exporter (Linux), windows_exporter (Windows),
+or the specialized [MetricZ Exporter].
 
 ## Why
 
 * Observe the server and game loop in DayZ.
 * Server-side only. No client required. Works on vanilla servers.
-* Low overhead: Mission timer and a single pass over entities per scrape
-  tick.
-* Safety: atomic writes, switchable metric groups, controlled label
-  cardinality.
+* Low overhead: Mission timer and a single pass over entities per scrape tick.
+* Flexible Export: Write to local file (Textfile Collector) or push via HTTP.
+* Safety: atomic writes, buffered output, controlled label cardinality.
 * Self-hosted: full control over your data.
 * Free. Supporting the author is optional.
 
 <!-- markdownlint-disable-next-line MD033 -->
 <br clear="right"/>
 
+> [!CAUTION]  
+> This mod **only exports raw data**. Installing it will not magically make
+> graphs appear in your admin panel.  
+> To visualize this data, you must install and configure an observability stack:
+>
+> 1. **Collector:** `node_exporter`, `windows_exporter`, or `metricz-exporter`.
+> 1. **Time Series Database:** `Prometheus`, `VictoriaMetrics` or `Mimir`.
+> 1. **Visualization:** `Grafana`.
+>
+> If you have never worked with these tools, be prepared to read their
+> documentation and spend time configuring the environment.
+
+## Architecture
+
+* **Hooks:** `DayZGame.OnRPC` and `OnEvent` (RPC/Event),
+  `MissionServer` (init, scheduler, lifecycle),
+  `MissionServer.OnUpdate` (FPS sampling).
+* **Collectors:**
+  * Player (`MetricZ_PlayerMetrics`) - vitals, position, network stats.
+  * Transport (`MetricZ_TransportMetrics`) - speed, fuel, damage, passengers.
+  * Territories & Bases (`MetricZ_TerritoryMetrics`, `MetricZ_Storage`).
+  * AI & Environment (Zombies, Animals, Weather, EffectAreas).
+  * Weapons & Ballistics (Shots, Hits by ammo type).
+* **Sinks (Export):**
+  * File: Writes to `$profile:metricz/export/` (atomic write via `.tmp` file).
+  * HTTP: Pushes metrics to a remote endpoint via POST requests
+    (chunked, with transaction support).
+* **Format:** Prometheus text format (OpenMetrics compatible).
+  * Prefix: `dayz_metricz_`.
+  * Types: GAUGE/COUNTER.
+  * Base labels: `world`, `instance_id`, `host` (not guaranteed).
+
 > [!TIP]  
 > It works best when combined with structured logs using the [LogZ] mod.
 > While MetricZ handles performance counters, LogZ captures non-metric
 > event data as structured NDJSON logs, enabling deeper tracing and analysis.
 
-## Architecture
-
-* Hooks: `DayZGame.OnRPC` and `OnEvent` (RPC/Event), `MissionServer` (init,
-  scheduler, FPS), `MissionServer.OnUpdate` (FPS sampling).
-* Collectors: player (`MetricZ_PlayerMetrics`), transport
-  (`MetricZ_TransportMetrics`), territories (`MetricZ_TerritoryMetrics`),
-  weapons/shots (`MetricZ_WeaponStats`), weather/world (`MetricZ_Storage`).
-* Writing: first `$profile:metricz.tmp`, then atomic publish to
-  `$profile:metricz.prom`.
-* Format:
-  * Prefix: `dayz_metricz_`.
-  * Types: GAUGE/COUNTER; COUNTER gets `_total` suffix.
-  * Base labels: `world`, `instance_id`, `host` (not guaranteed).
-    Status also includes `game_version`, `save_version`.
-
 ## Quick start
 
-Output file:
+By default, the mod writes to a file for use with a local exporter
+(node_exporter or windows_exporter).
 
-* Example profile path: `/dayz-server-dir/profiles/profile_1/metricz.prom`.
-* Write period: `collect_interval_sec` seconds (see config).
+* Path: `$profile:metricz/export/metricz_{instance_id}.prom`.
+* Config: `$profile:metricz/config.json` (created on first run).
+* Frequency: Defined by `collect_interval_sec` (default 15s).
 
 Example content:
 
@@ -69,81 +88,82 @@ Details: [METRICS.md](./METRICS.md)
 > Ensure `instanceId` is unique per server in `serverDZ.cfg`;
 > together with the map name it forms metric identity.
 
-All settings are stored in a `$profile:metricz.json` JSON configuration file
+Settings are stored in `$profile:metricz/config.json`.
+The mod automatically migrates the config version if updated.
 
 Detailed information about all configuration parameters
 can be found in the document [CONFIG.md](./CONFIG.md)
 
 ### Recommendations
 
-* On busy servers keep scrape interval at 5–10 s or higher.
-* If you see a parallel scrape warning, increase the interval.
-* Align [node_exporter]/[windows_exporter] scrape interval with
-  `collect_interval_sec`. Polling an unchanged file more often has no
-  benefit.
+* Interval: Keep `collect_interval_sec` at 15s or higher on busy servers.
+* Concurrency: If you see "scrape skipped" warnings, increase the interval.
+* Exporter: Align your [node_exporter]/[windows_exporter]
+  scrape interval with `collect_interval_sec`.
 
-## Prometheus integration: Linux
+## Prometheus integration: File Export
+
+Assuming your server profiles are in `/dayz-server-dir/profiles/`.
+The metrics are now generated inside a subdirectory `metricz/export/`.
+
+> [!TIP]  
+> Instead of symlinks, you can mount the entire `$profile/metricz/export/`
+> directory as a separate volume.
+>
+> * **RAM Disk:** Mount it to RAM to reduce SSD wear
+>   (MetricZ rewrites the file every 15s).
+> * **Docker:** Mount a shared volume between the DayZ container
+>   and the Node Exporter container.
+
+### Linux (Symlinks method)
 
 Shared directory with symlinks:
 
 ```bash
-mkdir -p /dayz-server-dir/profiles/metricz
-ln -s ../profile_1/metricz.prom /dayz-server-dir/profiles/metricz/metricz_1.prom
-ln -s ../profile_2/metricz.prom /dayz-server-dir/profiles/metricz/metricz_2.prom
-ln -s ../profile_3/metricz.prom /dayz-server-dir/profiles/metricz/metricz_3.prom
-```
-
-Access for node_exporter:
-
-```bash
-usermod -aG dayz-server prometheus  # if required
+mkdir -p /dayz-server-dir/profiles/metrics_collector
+# Link the specific .prom file from the export subdirectory
+ln -s ../profile_1/metricz/export/metricz_1.prom /dayz-server-dir/profiles/metrics_collector/metricz_1.prom
+ln -s ../profile_2/metricz/export/metricz_2.prom /dayz-server-dir/profiles/metrics_collector/metricz_2.prom
 ```
 
 Start node_exporter:
 
 ```bash
 /usr/local/bin/node_exporter \
-  --collector.textfile.directory=/dayz-server-dir/profiles/metricz
+  --collector.textfile.directory=/dayz-server-dir/profiles/metrics_collector
 ```
 
-`prometheus.yml` snippet:
+`prometheus.yml`:
 
 ```yaml
 scrape_configs:
-  - job_name: node
+  - job_name: dayz_node
     static_configs:
       - targets: ['node-exporter-host:9100']
 ```
 
-## Prometheus integration: Windows
+### Windows (Symlinks method)
 
-Profile paths, example:
-
-```txt
-C:\dayz-server\profiles\profile_1\metricz.prom
-```
+The file path structure is: `C:\dayz-server\profiles\profile_1\metricz\export\metricz_1.prom`.
 
 Shared directory with links:
 
 ```cmd
-mkdir C:\dayz-server\profiles\metricz
-mklink C:\dayz-server\profiles\metricz\metricz_1.prom C:\dayz-server\profiles\profile_1\metricz.prom
-mklink C:\dayz-server\profiles\metricz\metricz_2.prom C:\dayz-server\profiles\profile_2\metricz.prom
-mklink C:\dayz-server\profiles\metricz\metricz_3.prom C:\dayz-server\profiles\profile_3\metricz.prom
+mkdir C:\dayz-server\profiles\metrics_collector
+mklink C:\dayz-server\profiles\metrics_collector\metricz_1.prom C:\dayz-server\profiles\profile_1\metricz\export\metricz_1.prom
+mklink C:\dayz-server\profiles\metrics_collector\metricz_2.prom C:\dayz-server\profiles\profile_2\metricz\export\metricz_2.prom
 ```
 
-Admin rights required. Alternative: scheduled copy instead of links.
+`windows_exporter` (textfile collector):
 
-`windows_exporter` (textfile):
-
-### MSI
+MSI Arguments:
 
 ```powershell
 msiexec /i windows_exporter.msi --% ENABLED_COLLECTORS="[defaults],textfile" `
-  TEXTFILE_DIRS="C:\dayz-server\profiles\metricz"
+  TEXTFILE_DIRS="C:\dayz-server\profiles\metrics_collector"
 ```
 
-### YAML
+YAML Config:
 
 ```yaml
 collectors:
@@ -151,17 +171,39 @@ collectors:
 collector:
   textfile:
     directories:
-      - "C:\\dayz-server\\profiles\\metricz"
+      - "C:\\dayz-server\\profiles\\metrics_collector"
 ```
 
-`prometheus.yml` snippet:
+## HTTP Export & Enrichment
 
-```yaml
-scrape_configs:
-  - job_name: windows
-    static_configs:
-      - targets: ['windows-exporter-host:9182']
-```
+MetricZ supports pushing metrics directly to a dedicated backend service.
+We provide a specialized cross-platform Go backend: [MetricZ Exporter].
+
+This service goes beyond simple ingestion; it acts as a bridge to enrich
+your data with information not available to the Game Script API.
+
+### Features of MetricZ Exporter
+
+1. Ingestion: Accepts chunked metrics and transaction groups sent
+  by the mod (lowering memory pressure on the game server).
+1. Steam A2S_INFO: Enriches metrics with real-time Steam Query data:
+    * Server Name and Description.
+    * Player Queue length (crucial for monitoring full servers).
+1. BattlEye RCon: Enriches player metrics with administrative data:
+    * IP Addresses and GeoIP location data.
+    * BattlEye GUID (appended to the existing DayZ GUID and SteamID).
+
+### Setup
+
+1. Download and run [metricz-exporter] on your server or a separate machine.
+1. In `$profile:metricz/config.json`, set:
+    * `file.enabled`: `false`
+    * `http.enabled`: `true`
+    * `http.url`: `http://your-exporter-ip:8098`
+    * `http.user` / `http.password`:
+      (If authentication is configured in the exporter).
+
+See [CONFIG.md](./CONFIG.md) for detailed mod configuration.
 
 ## Dashboards (Grafana)
 
@@ -209,7 +251,8 @@ scrape_configs:
 
 Built-in support for modifications:
 
-* [DayZ-Expansion-AI]
+* [DayZ-Expansion-AI] (AI & AI NPC counts and deaths)
+* [DayZ-Expansion-Vehicles] (Boats, Helicopters, Planes categorization)
 
 ## Mod Integration (for modders)
 
@@ -217,16 +260,16 @@ See: [INTEGRATION.md](./INTEGRATION.md)
 
 Covers:
 
-* optional `#ifdef METRICZ` integration
-* adding custom metrics
-* registering metrics via `modded class MetricZ_Storage`
-* examples for player actions and item interactions
+* Optional `#ifdef METRICZ` integration.
+* Adding custom metrics using `MetricZ_Storage`.
+* Hooking into player actions or item interactions.
 
 ## Debugging
 
 * Enable `-dologs` and `-filePatching` if needed.
-* For detailed tracing use `DayZDiag_x64.exe` and a build with `DIAG` to get
-  `INFO` logs from the code.
+* For detailed tracing, use `DayZDiag_x64.exe`.
+  The mod contains `#ifdef DIAG` blocks that output detailed execution traces
+  (configuration load, sink operations, HTTP callbacks) to the script log.
 
 ## 👉 [Support Me](https://gist.github.com/WoozyMasta/7b0cabb538236b7307002c1fbc2d94ea)
 
@@ -237,6 +280,11 @@ At the very least, a Like and Subscribe on the [MetricZ]
 Steam Workshop page would be greatly appreciated!
 
 <!-- Links --->
+[MetricZ Exporter]: https://github.com/WoozyMasta/metricz-exporter
+[node_exporter]: https://github.com/prometheus/node_exporter
+[windows_exporter]: https://github.com/prometheus-community/windows_exporter
+
 [LogZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3610709966
 [MetricZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002
 [DayZ-Expansion-AI]: https://steamcommunity.com/sharedfiles/filedetails/?id=2792982069
+[DayZ-Expansion-Vehicles]: https://steamcommunity.com/sharedfiles/filedetails/?id=2291785437
