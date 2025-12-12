@@ -51,38 +51,32 @@ class MetricZ_RestClient : Managed
 
 		m_Ctx = m_Rest.GetRestContext(url);
 		if (!m_Ctx) {
-			ErrorEx("MetricZ: GetRestContext failed", ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: failed in GetRestContext", ErrorExSeverity.ERROR);
 			return;
 		}
 
 		m_Ctx.SetHeader("text/plain");
 	}
 
-	void PostMetrics(MetricZ_RestSink sink, MetricZ_CallbackPostMetrics cb)
+	void PostMetrics(string body, string txn, int chunk, MetricZ_CallbackPostMetrics cb)
 	{
-		if (!sink || !cb)
+		if (!cb || body == string.Empty)
 			return;
 
 		Init();
 
 		string url = "/api/v1/ingest/" + MetricZ_Config.Get().settings.instance_id;
-
-		string txn = sink.GetTransactionID();
 		if (txn != string.Empty)
-			url += "/" + txn;
+			url += "/" + txn + "/" + chunk.ToString();
 
-		string body;
-		if (!cb.IsConfigured()) {
-			body = sink.GetBufferChunk();
-			cb.SetBody(body);
-			cb.SetSink(sink);
-		} else
-			body = cb.GetBody();
+		if (!cb.IsReady())
+			cb.Setup(body, txn, chunk);
 
+		MetricZ_HttpStats.AddBytes(body.Length());
 		m_Ctx.POST(cb, url, body);
 
 #ifdef DIAG
-		ErrorEx("MetricZ: POST metrics " + url, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: metrics POST " + url, ErrorExSeverity.INFO);
 #endif
 	}
 
@@ -99,7 +93,7 @@ class MetricZ_RestClient : Managed
 		m_Ctx.POST(cb, url, string.Empty);
 
 #ifdef DIAG
-		ErrorEx("MetricZ: POST commit " + url, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: commit POST " + url, ErrorExSeverity.INFO);
 #endif
 	}
 }

@@ -16,6 +16,10 @@ modded class Edible_Base
 	{
 		super.EEInit();
 
+		// because food metrics init later, need check is storage inited
+		if (!MetricZ_Storage.IsInitialized())
+			return;
+
 		if (!IsInherited(Bottle_Base))
 			MetricZ_Storage.s_Food.Inc();
 
@@ -27,10 +31,12 @@ modded class Edible_Base
 	*/
 	override void EEDelete(EntityAI parent)
 	{
-		if (!IsInherited(Bottle_Base))
-			MetricZ_Storage.s_Food.Dec();
+		if (MetricZ_Storage.IsInitialized()) {
+			if (!IsInherited(Bottle_Base))
+				MetricZ_Storage.s_Food.Dec();
 
-		MetricZ_Storage.FoodMetricChange(MetricZ_GetFoodType(), false);
+			MetricZ_Storage.FoodMetricChange(MetricZ_GetFoodType(), false);
+		}
 
 		super.EEDelete(parent);
 	}

@@ -17,6 +17,13 @@ class MetricZ_SinkBase
 	private bool m_IsBuffered;
 	private bool m_Busy;
 
+	void ~MetricZ_SinkBase()
+	{
+#ifdef DIAG
+		ErrorEx("MetricZ: destroyed sink " + ClassName(), ErrorExSeverity.INFO);
+#endif
+	}
+
 	/**
 	    \brief Constructor for the base sink.
 	    \param bufferLimit Defines the buffering strategy:
@@ -47,7 +54,7 @@ class MetricZ_SinkBase
 		m_Busy = true;
 
 #ifdef DIAG
-		ErrorEx("MetricZ: Sink: begin", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: sink: begin", ErrorExSeverity.INFO);
 #endif
 
 		return true;
@@ -79,7 +86,7 @@ class MetricZ_SinkBase
 		m_Busy = false;
 
 #ifdef DIAG
-		ErrorEx("MetricZ: Sink: end", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: sink: end", ErrorExSeverity.INFO);
 #endif
 
 		return true;

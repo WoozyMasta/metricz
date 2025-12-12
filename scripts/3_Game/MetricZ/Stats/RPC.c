@@ -61,7 +61,7 @@ class MetricZ_RpcStats
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ rpc_input_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: rpc_input_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 }

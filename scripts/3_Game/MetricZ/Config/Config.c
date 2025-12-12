@@ -41,7 +41,7 @@ class MetricZ_Config
 			s_Config = null;
 
 		s_Loaded = false;
-		ErrorEx("MetricZ configuration reset", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: configuration reset", ErrorExSeverity.INFO);
 	}
 
 	/**
@@ -61,7 +61,9 @@ class MetricZ_Config
 	protected void Load()
 	{
 		// Read or create/update JSON config
-		LoadOrCreateFile();
+		LoadConfigFile();
+
+		InitFileExport();
 
 		// Init geo cache
 		MetricZ_Geo.Init();
@@ -70,13 +72,18 @@ class MetricZ_Config
 		MetricZ_PersistentCache.Load();
 	}
 
-	protected void LoadOrCreateFile()
+	/**
+	    \brief Load, create or update JSON configuration file
+	*/
+	protected void LoadConfigFile()
 	{
-		string cfg = MetricZ_Constants.CONFIG_FILE;
+		if (!FileExist(MetricZ_Constants.WORK_DIR))
+			MakeDirectory(MetricZ_Constants.WORK_DIR);
 
+		string cfgFile = MetricZ_Constants.CONFIG_FILE;
 		string error;
-		if (FileExist(cfg)) {
-			if (!JsonFileLoader<MetricZ_ConfigDTO>.LoadFile(cfg, s_Config, error)) {
+		if (FileExist(cfgFile)) {
+			if (!JsonFileLoader<MetricZ_ConfigDTO>.LoadFile(cfgFile, s_Config, error)) {
 				ErrorEx(error);
 				return;
 			}
@@ -86,12 +93,12 @@ class MetricZ_Config
 			if (s_Config.version != MetricZ_Constants.VERSION) {
 				s_Config.version = MetricZ_Constants.VERSION;
 
-				if (!JsonFileLoader<MetricZ_ConfigDTO>.SaveFile(cfg, s_Config, error)) {
+				if (!JsonFileLoader<MetricZ_ConfigDTO>.SaveFile(cfgFile, s_Config, error)) {
 					ErrorEx(error);
 					return;
 				}
 
-				ErrorEx("Saved upgraded MetricZ config file: " + cfg, ErrorExSeverity.INFO);
+				ErrorEx("MetricZ: saved upgraded config file: " + cfgFile, ErrorExSeverity.INFO);
 			}
 
 			SetLoaded();
@@ -101,13 +108,44 @@ class MetricZ_Config
 		// Write initial or upgraded config
 		s_Config.version = MetricZ_Constants.VERSION;
 
-		if (!JsonFileLoader<MetricZ_ConfigDTO>.SaveFile(cfg, s_Config, error)) {
+		if (!JsonFileLoader<MetricZ_ConfigDTO>.SaveFile(cfgFile, s_Config, error)) {
 			ErrorEx(error);
 			return;
 		}
 
-		ErrorEx("Saved new MetricZ config file: " + cfg, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: saved new config file: " + cfgFile, ErrorExSeverity.INFO);
 		SetLoaded();
+	}
+
+	/**
+	    \brief Initialize path for file export with legacy file path support
+	*/
+	protected void InitFileExport()
+	{
+		if (FileExist(MetricZ_Constants.LEGACY_PROM_FILE)) {
+			s_Config.file.prom_file_path = MetricZ_Constants.LEGACY_PROM_FILE;
+			s_Config.file.temp_file_path = MetricZ_Constants.LEGACY_TMP_FILE;
+
+			string msg = "MetricZ: Legacy export path detected!\n";
+			msg += "File found at: '" + MetricZ_Constants.LEGACY_PROM_FILE + "'\n";
+			msg += "ACTION REQUIRED: Please delete this file to enable the new 'export/' directory structure.\n";
+			msg += "NOTE: You must also update your external metrics collector path.\n";
+			msg += "WARNING: Support for legacy paths will be removed in future releases.\n";
+			ErrorEx(msg, ErrorExSeverity.WARNING);
+
+			return;
+		}
+
+		string exportDir = MetricZ_Constants.EXPORT_DIR;
+		if (s_Config.file.enabled && !FileExist(exportDir))
+			MakeDirectory(exportDir);
+
+		string fileName = s_Config.file.file_name;
+		if (fileName == string.Empty)
+			fileName = "metricz_" + s_Config.settings.instance_id;
+
+		s_Config.file.prom_file_path = exportDir + fileName + ".prom";
+		s_Config.file.temp_file_path = exportDir + fileName + ".tmp";
 	}
 
 	/**
@@ -124,14 +162,20 @@ class MetricZ_Config
 		DebugConfig();
 #endif
 
-		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
+		string ver = string.Format(
+		                 "%1 (%2) build %3",
+		                 MetricZ_Constants.VERSION,
+		                 MetricZ_Constants.COMMIT_SHA,
+		                 MetricZ_Constants.BUILD_DATE);
+
+		ErrorEx("MetricZ: loaded " + ver, ErrorExSeverity.INFO);
 	}
 
 	protected void DebugConfig()
 	{
 		string json;
 		JsonSerializer().WriteToString(s_Config, true, json);
-		ErrorEx("MetricZ configuration trace:\n" + json, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: configuration trace:\n" + json, ErrorExSeverity.INFO);
 	}
 }
 #endif

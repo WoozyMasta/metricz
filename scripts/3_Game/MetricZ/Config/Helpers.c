@@ -72,7 +72,7 @@ class MetricZ_Helpers
 		    "MetricZ instanceId is 0. Set unique 'instanceId' in serverDZ.cfg or override in 'instance_id' in metricz.json",
 		    ErrorExSeverity.WARNING);
 
-		return "0"
+		return "0";
 	}
 
 	/**

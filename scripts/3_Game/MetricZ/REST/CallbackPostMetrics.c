@@ -7,81 +7,45 @@
 #ifdef SERVER
 class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 {
-	protected int m_Idx;
 	protected string m_Body;
-	protected bool m_IsConfigured;
-	protected ref MetricZ_RestSink m_Sink;
+	protected string m_TxnId;
+	protected int m_Idx;
+	protected bool m_IsReady;
 
-	void SetBody(string body)
+	void Setup(string body, string txn, int idx)
 	{
-		if (body == string.Empty)
-			return;
-
 		m_Body = body;
-		m_IsConfigured = true;
+		m_TxnId = txn;
+		m_Idx = idx;
+		m_IsReady = true;
 	}
 
-	void SetSink(MetricZ_RestSink sink)
+	bool IsReady()
 	{
-		if (!sink)
-			return;
-
-		m_Sink = sink;
-		m_Idx = sink.GetChunkCount();
-	}
-
-	bool IsConfigured()
-	{
-		return m_IsConfigured;
-	}
-
-	string GetBody()
-	{
-		return m_Body;
+		return m_IsReady;
 	}
 
 	override protected void SendAgain()
 	{
-		if (m_IsConfigured && m_Client)
-			m_Client.PostMetrics(m_Sink, this);
+		if (m_TxnId != string.Empty && !MetricZ_RestTransactionManager.IsActive(m_TxnId)) {
+#ifdef DIAG
+			ErrorEx("MetricZ: Abort retry for stale txn: " + m_TxnId, ErrorExSeverity.INFO);
+#endif
+			OnDone();
+			return;
+		}
+
+		if (m_IsReady && m_Client)
+			m_Client.PostMetrics(m_Body, m_TxnId, m_Idx, this);
 		else
 			OnDone();
 	}
 
-	override protected void OnDone()
-	{
-		m_Sink = null;
-
-		super.OnDone();
-	}
 
 	override void OnSuccess(string data, int dataSize)
 	{
-		if (!m_Sink) {
-			super.OnSuccess(data, dataSize);
-			return;
-		}
-
-		string txn = m_Sink.GetTransactionID();
-		if (txn == string.Empty) {
-			super.OnSuccess(data, dataSize);
-			return;
-		}
-
-		m_Sink.SetChunkDone(m_Idx);
-		if (!m_Sink.IsAllChunksDone()) {
-			super.OnSuccess(data, dataSize);
-			return;
-		}
-
-		if (!m_Client) {
-			ErrorEx("MetricZ: client not found", ErrorExSeverity.ERROR);
-			OnDone();
-			return;
-		}
-
-		MetricZ_CallbackCommitMetrics cb = new MetricZ_CallbackCommitMetrics(m_Client);
-		m_Client.CommitMetrics(txn, cb);
+		if (m_TxnId != string.Empty)
+			MetricZ_RestTransactionManager.OnChunkSuccess(m_TxnId, m_Idx);
 
 		super.OnSuccess(data, dataSize);
 	}

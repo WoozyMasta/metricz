@@ -54,7 +54,7 @@ class MetricZ_EntitiesWriter
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ player_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: player_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 
@@ -115,7 +115,7 @@ class MetricZ_EntitiesWriter
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ transport_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: transport_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 
@@ -163,7 +163,7 @@ class MetricZ_EntitiesWriter
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ territory_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: territory_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 
@@ -223,7 +223,7 @@ class MetricZ_EntitiesWriter
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ effect_areas_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: effect_areas_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 }
