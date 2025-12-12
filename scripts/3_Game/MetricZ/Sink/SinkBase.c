@@ -12,10 +12,11 @@
 */
 class MetricZ_SinkBase
 {
-	private ref array<string> m_Buffer;
 	private int m_BufferLimit;
 	private bool m_IsBuffered;
 	private bool m_Busy;
+	private ref array<string> m_Buffer;
+	private static ref JsonSerializer m_Serializer;
 
 	void ~MetricZ_SinkBase()
 	{
@@ -143,6 +144,27 @@ class MetricZ_SinkBase
 			chunk += line + "\n";
 
 		return chunk;
+	}
+
+	/**
+	    \brief Combine all buffered lines into a single JSON array.
+	    \return string The complete one line json text string.
+	*/
+	string GetJsonBufferChunk()
+	{
+		if (!IsBuffered() || m_Buffer.Count() == 0)
+			return string.Empty;
+
+		string json;
+		if (!m_Serializer)
+			m_Serializer = new JsonSerializer();
+
+		if (!m_Serializer.WriteToString(m_Buffer, false, json)) {
+			ErrorEx("MetricZ: sink json serialization failed", ErrorExSeverity.ERROR);
+			return string.Empty;
+		}
+
+		return json;
 	}
 
 	/**

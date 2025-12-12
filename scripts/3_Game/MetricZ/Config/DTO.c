@@ -142,14 +142,25 @@ class MetricZ_ConfigDTO_HttpExport
 	// Enables publishing metrics via HTTP POST to the metricz-exporter service.
 	bool enabled;
 
+	// Serializes metrics into a JSON array `["metric 1", "metric 2"]` before sending.
+	// true  - Uses engine native C++ serialization. Extremely fast (~3-5ms).
+	// Requires a backend that supports JSON arrays (e.g. metricz-exporter).
+	// false - Uses script-based string concatenation. Slower (~9ms buffered, ~30ms unbuffered).
+	//
+	// Recommended: true (approx. 2x faster than buffered text and 5x faster than unbuffered).
+	bool serialized = true;
+
 	// Buffer size (in lines) per HTTP POST request.
 	// <= 0 - Disable buffer, send all metrics in one request.
 	// > 0 - Send metrics chunked by the set line count.
 	//
-	// Recommended range: 64-512 for optimal performance.
+	// With 'serialized=true', the buffer setting has minimal impact on CPU performance.
+	// A value of -1 is recommended to reduce the number of HTTP requests.
+	// Use chunking (e.g. 512) only if you encounter network payload limits.
+	//
+	// With 'serialized=false' recommended range 64-512 for optimal performance.
 	// HTTP POST is not disk-dependent, but building one huge request body requires more CPU time.
-	// If you experience high latency or network issues, try disabling the buffer.
-	int buffer = 128;
+	int buffer = -1;
 
 	// Remote URL of the metricz-exporter instance.
 	string url = "http://127.0.0.1:8098";

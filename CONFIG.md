@@ -36,32 +36,52 @@ performance-constrained hardware to highlight the relative
 impact of configuration changes.
 
 > [!NOTE]  
-> On typical production hardware, execution times are significantly lower
-> (e.g., File I/O often takes < 2ms).
+> On typical production hardware, execution times are significantly lower  
+> (e.g., File I/O often takes ~1ms, HTTP Serialized export ~0ms).
 
 ### File Export Strategy
 
-* Buffering (`buffer`):
-  * Recommended: `16` - `64` lines; 32 by default.
-    This is the sweet spot for performance
-  * Values of `0` (No buffer) significantly increase execution time
-    (approx. +50% overhead) due to frequent system I/O calls.
-  * Large values (`2048+`) are _slower_ than small buffers because huge
-    string allocations cause memory management spikes.
-* Atomicity (`atomic`):
-  * Recommended: `true`.
-  * Enabling atomic writes adds overhead (writes to a `.tmp` file + rename),
-    taking roughly 2x longer than direct writes.
-    However, disabling it allows collectors to read incomplete files,
-    causing data errors. The integrity benefit outweighs the slight delay.
+**Buffering** (`buffer`):
+
+* Recommended: `16` - `64` lines; 32 by default.
+  This is the sweet spot for performance
+* Values of `0` (No buffer) significantly increase execution time
+  (approx. +50% overhead) due to frequent system I/O calls.
+* Large values (`2048+`) are _slower_ than small buffers because huge
+  string allocations cause memory management spikes.
+
+**Atomicity** (`atomic`):
+
+* Recommended: `true`.
+* Enabling atomic writes adds overhead (writes to a `.tmp` file + rename),
+  taking roughly 2x longer than direct writes.
+  However, disabling it allows collectors to read incomplete files,
+  causing data errors. The integrity benefit outweighs the slight delay.
 
 ### HTTP Export Strategy
 
-* Buffering (`buffer`):
-  * Recommended: `64` - `512` lines; 128 by default.
-  * Sending metrics in chunks reduces network overhead.
-  * Value of `0` is the slowest option (approx. 2.5x slower than buffered),
-    as it creates a separate HTTP request for every single metric line.
+**Serialization** (`serialized`):
+
+* Recommended: `true` (Default).
+* Switches the payload format to a JSON array of strings.
+* Performance: This uses the game engine's native C++ JSON serializer,
+  bypassing the slow string concatenation of the scripting language.
+  * Serialized (JSON): ~4ms (Fastest).
+  * Text Buffered: ~9ms (~2x slower).
+  * Text Unbuffered: ~30ms (~6x slower).
+
+**Buffering** (`buffer`):
+
+* With Serialization (`true`):
+  * Recommended: `-1` (Unlimited).
+  * Since serialization is handled natively, creating one large request
+    is extremely efficient.
+    Chunking is only necessary if you hit network payload size limits.
+* Without Serialization (`false`):
+  * Recommended: `64` - `512` lines.
+  * Necessary to avoid freezing the server.
+    Sending all metrics in one text blob causes massive CPU spikes
+    due to string manipulation overhead.
 
 Use [MetricZ Exporter](https://github.com/WoozyMasta/metricz-exporter)
 to retrieve metrics by publishing via HTTP request.
@@ -193,14 +213,23 @@ For DayZ metrics, we strongly recommend using
 
 * **`http.enabled`** (`bool`) -
   Enables publishing metrics via HTTP POST to the metricz-exporter service.
-* **`http.buffer`** (`int`) = 128 -
+* **`http.serialized`** (`bool`) = true -
+  Serializes metrics into a JSON array `["metric 1", "metric 2"]` before
+  sending. true - Uses engine native C++ serialization. Extremely fast
+  (~3-5ms). Requires a backend that supports JSON arrays (e.g.
+  metricz-exporter). false - Uses script-based string concatenation. Slower
+  (~9ms buffered, ~30ms unbuffered). Recommended: true (approx. 2x faster
+  than buffered text and 5x faster than unbuffered).
+* **`http.buffer`** (`int`) = -1 -
   Buffer size (in lines) per HTTP POST request. <= 0 - Disable buffer, send
   all metrics in one request. > 0 - Send metrics chunked by the set line
-  count. Recommended range: 64-512 for optimal performance. HTTP POST is not
-  disk-dependent, but building one huge request body requires more CPU time.
-  If you experience high latency or network issues, try disabling the
-  buffer.
-* **`http.url`** (`string`) = "http://127.0.0.1:8098" -
+  count. With 'serialized=true', the buffer setting has minimal impact on
+  CPU performance. A value of -1 is recommended to reduce the number of HTTP
+  requests. Use chunking (e.g. 512) only if you encounter network payload
+  limits. With 'serialized=false' recommended range 64-512 for optimal
+  performance. HTTP POST is not disk-dependent, but building one huge
+  request body requires more CPU time.
+* **`http.url`** (`string`) = "<http://127.0.0.1:8098>" -
   Remote URL of the metricz-exporter instance.
 * **`http.user`** (`string`) = "metricz" -
   Username for Basic Auth protected publishing in metricz-exporter.

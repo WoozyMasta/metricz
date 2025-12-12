@@ -94,6 +94,9 @@ class MetricZ_RestClient : Managed
 		if (txn != string.Empty)
 			url += "/" + txn + "/" + chunk.ToString();
 
+		if (MetricZ_Config.Get().http.serialized)
+			url += "?format=json";
+
 		// If callback is fresh (not a retry), configure it with current data
 		if (!cb.IsReady())
 			cb.Setup(body, txn, chunk);
