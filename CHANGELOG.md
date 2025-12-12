@@ -19,10 +19,18 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
-* configuration has been completely moved to a new format in the JSON file ⚠️
+* configuration has been completely moved to a new format in the JSON file
+  `$profile:metricz/config.json` ⚠️
+* metrics are now exported to a separate directory `$profile:metricz/export/` ⚠️
 * buffered metric export is now available in all metrics sink writers
 * support for sending metrics to the proxy and aggregation backend
   [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
+* **`dayz_metricz_http_requests_total`** (`COUNTER`) —
+  Total HTTP requests by type and status
+* **`dayz_metricz_http_retries_total`** (`COUNTER`) —
+  Total HTTP callback retries
+* **`dayz_metricz_http_sent_bytes_total`** (`COUNTER`) —
+  Total bytes sent via HTTP body
 * **`dayz_metricz_eai_deaths_total`** (`COUNTER`) —
   Total number of Expansion AI deaths (optional)
 * **`dayz_metricz_eai_npc_deaths_total`** (`COUNTER`) —
@@ -59,7 +67,10 @@ Here is the updated changelog including the new changes.
 
 * sink writers have been implemented for writing metrics to disk,
   sending them over the network, or both simultaneously
-* for file export, atomic write mode is now optional
+* for file export, atomic write mode is now optional (but recommended)
+* updated `MetricZ_Helpers::GetInstanceID` logic: if `instanceId` is missing
+  in server config, it now attempts to use the Game Port or Steam Query Port
+  as a fallback before defaulting to "0"
 * fixed an issue when trying to calculate network ping for eAI
 * fixed double counting of destroyed vehicles when saving/loading
 * stricter `EEKilled()` checking for objects deaths
@@ -75,15 +86,12 @@ Here is the updated changelog including the new changes.
 * weapon type name for labels now use `MetricZ_ObjectName::GetName()`
 * `MetricZ_ObjectName::StripSuffix()` now returns bool on success and
   accepts an `inout` type name
-* `MetricZ_Config` now robustly handles missing or `0` values from
-  `serverDZ.cfg` by respecting default values, while allowing explicit `-1`
-  to set a value to `0` where applicable
 * fixed **`dayz_metricz_artillery_barrages_total`** calculation logic
 * replaced `MetricZ_EnableCoordinatesMetrics` with inverted
   `MetricZ_DisableCoordinatesMetrics` (`-metricz-disable-coordinates`) ⚠️
 * coordinate metrics now use `MetricZ_Geo` and can export either raw world
   coordinates or WGS84 lon/lat based on
-  `MetricZ_DisableGeoCoordinatesFormat` ⚠️
+  `geo.disable_world_coordinates` ⚠️
 * labels for **`dayz_metricz_territory_lifetime`** changed: replaced
   `x`/`y`/`z` with `longitude`/`latitude` and added `refresher_radius` ⚠️
 * documentation rendering in `CONFIG.md` has been updated and improved
