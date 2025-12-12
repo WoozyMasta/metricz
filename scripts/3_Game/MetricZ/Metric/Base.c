@@ -19,8 +19,9 @@ class MetricZ_MetricBase
 {
 	protected string m_Name;
 	protected string m_Help;
+	protected string m_Type;
 	protected string m_Labels;
-	protected MetricZ_MetricType m_Type;
+	protected MetricZ_MetricType m_EType;
 
 	/**
 	    \brief Constructor.
@@ -30,12 +31,13 @@ class MetricZ_MetricBase
 	*/
 	void MetricZ_MetricBase(string name, string help, MetricZ_MetricType type = 0)
 	{
-		m_Name = MetricZ_Config.NS + name;
+		m_Name = MetricZ_Constants.NAMESPACE + name;
 		if (type == MetricZ_MetricType.COUNTER)
 			m_Name += "_total";
 
-		m_Help = help;
-		m_Type = type;
+		m_EType = type;
+		m_Help = "# HELP " + m_Name + " " + help;
+		m_Type = "# TYPE " + m_Name + " " + TypeToText();
 	}
 
 	/**
@@ -94,7 +96,7 @@ class MetricZ_MetricBase
 	*/
 	string GetHelp()
 	{
-		return "# HELP " + m_Name + " " + m_Help;
+		return m_Help;
 	}
 
 	/**
@@ -103,7 +105,7 @@ class MetricZ_MetricBase
 	*/
 	string GetType()
 	{
-		return "# TYPE " + m_Name + " " + TypeToText();
+		return m_Type;
 	}
 
 	/**
@@ -112,7 +114,7 @@ class MetricZ_MetricBase
 	*/
 	MetricZ_MetricType GetMetricType()
 	{
-		return m_Type;
+		return m_EType;
 	}
 
 	/**
@@ -154,7 +156,7 @@ class MetricZ_MetricBase
 	*/
 	private string TypeToText()
 	{
-		switch (m_Type) {
+		switch (m_EType) {
 		case MetricZ_MetricType.GAUGE:
 			return "gauge";
 
@@ -162,54 +164,54 @@ class MetricZ_MetricBase
 			return "counter";
 		}
 
-		ErrorEx("Invalid metric type " + m_Type.ToString() + " for " + m_Name);
+		ErrorEx("MetricZ: invalid metric type " + m_EType.ToString() + " for " + m_Name);
 		return "gauge";
 	}
 
 	/**
 	    \brief Write HELP and TYPE headers.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	*/
-	void WriteHeaders(FileHandle fh)
+	void WriteHeaders(MetricZ_SinkBase sink)
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
-		FPrint(fh, "# HELP " + m_Name + " " + m_Help + "\n");
-		FPrint(fh, "# TYPE " + m_Name + " " + TypeToText() + "\n");
+		sink.Line(m_Help);
+		sink.Line(m_Type);
 	}
 
 	/**
 	    \brief Write metric value.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional preformatted label set "{k=\"v\"}"
 	*/
-	void Flush(FileHandle fh, string labels = "")
+	void Flush(MetricZ_SinkBase sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		FPrint(fh, m_Name + labels + " 0\n");
+		sink.Line(m_Name + labels + " 0");
 	}
 
 	/**
 	    \brief Write headers then value.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	    \param labels Optional preformatted label set
 	*/
-	void FlushWithHead(FileHandle fh, string labels = "")
+	void FlushWithHead(MetricZ_SinkBase sink, string labels = "")
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (labels == string.Empty)
 			labels = GetLabels();
 
-		WriteHeaders(fh);
-		Flush(fh, labels);
+		WriteHeaders(sink);
+		Flush(sink, labels);
 	}
 }
 #endif

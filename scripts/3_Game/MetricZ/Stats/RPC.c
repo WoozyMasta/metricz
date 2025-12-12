@@ -33,22 +33,15 @@ class MetricZ_RpcStats
 	    \brief Emit HELP/TYPE and per-RPC samples.
 	    \details Uses the in-memory registry and writes one sample per rpc_type with label {id="<id>"}.
 	              Headers written once per family.
-	    \param fh Open file handle.
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
-		if (!fh)
-			return;
-
-		if (s_InputRPCsRegistry.Count() == 0)
+		if (!sink || s_InputRPCsRegistry.Count() == 0)
 			return;
 
 		// headers once
-		s_RpcTotal.WriteHeaders(fh);
+		s_RpcTotal.WriteHeaders(sink);
 
 		// emit per id
 		for (int i = 0; i < s_InputRPCsRegistry.Count(); i++) {
@@ -60,12 +53,8 @@ class MetricZ_RpcStats
 			map<string, string> labels = new map<string, string>();
 			labels.Insert("id", id.ToString());
 
-			s_RpcTotal.Flush(fh, MetricZ_LabelUtils.MakeLabels(labels));
+			s_RpcTotal.Flush(sink, MetricZ_LabelUtils.MakeLabels(labels));
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ rpc_input_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

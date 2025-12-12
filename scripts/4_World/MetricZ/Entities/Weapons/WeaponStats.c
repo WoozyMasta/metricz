@@ -51,7 +51,7 @@ class MetricZ_WeaponStats
 	*/
 	static void LoadCache()
 	{
-		if (s_CacheLoaded || MetricZ_Config.s_DisableWeaponMetrics)
+		if (s_CacheLoaded || !MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disabled_metrics.weapons)
 			return;
 
 		s_CacheLoaded = true;
@@ -67,15 +67,17 @@ class MetricZ_WeaponStats
 		}
 
 		array<string> knownKillers = MetricZ_PersistentCache.GetKeys(MetricZ_CacheKey.KILLER_OBJECT);
-		foreach (string killer : knownKillers) {
-			if (!s_PlayerKills.Contains(killer)) {
-				s_PlayerKills.Insert(killer, 0);
-				LabelsFor(killer);
-			}
+		if (knownKillers) {
+			foreach (string killer : knownKillers) {
+				if (!s_PlayerKills.Contains(killer)) {
+					s_PlayerKills.Insert(killer, 0);
+					LabelsFor(killer);
+				}
 
-			if (!s_CreatureKills.Contains(killer)) {
-				s_CreatureKills.Insert(killer, 0);
-				LabelsFor(killer);
+				if (!s_CreatureKills.Contains(killer)) {
+					s_CreatureKills.Insert(killer, 0);
+					LabelsFor(killer);
+				}
 			}
 		}
 	}
@@ -155,61 +157,52 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Flush all weapon metrics (shots, live counts, kills).
-	    \param fh Open file handle.
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-		if (!fh)
+		if (!sink)
 			return;
 
 		// total shots + per-weapon shots
 		if (s_ShotsByWeapon.Count() > 0) {
-			s_MetricShotsByType.WriteHeaders(fh);
+			s_MetricShotsByType.WriteHeaders(sink);
 
 			foreach (string key, int val : s_ShotsByWeapon) {
 				s_MetricShotsByType.Set(val);
-				s_MetricShotsByType.Flush(fh, LabelsFor(key));
+				s_MetricShotsByType.Flush(sink, LabelsFor(key));
 			}
 		}
 
 		// live weapons per type
 		if (s_CountByType.Count() > 0) {
-			s_MetricCountByType.WriteHeaders(fh);
+			s_MetricCountByType.WriteHeaders(sink);
 
 			foreach (string key2, int val2 : s_CountByType) {
 				s_MetricCountByType.Set(val2);
-				s_MetricCountByType.Flush(fh, LabelsFor(key2));
+				s_MetricCountByType.Flush(sink, LabelsFor(key2));
 			}
 		}
 
 		// player kills
 		if (s_PlayerKills.Count() > 0) {
-			s_MetricPlayerKills.WriteHeaders(fh);
+			s_MetricPlayerKills.WriteHeaders(sink);
 
 			foreach (string key3, int val3 : s_PlayerKills) {
 				s_MetricPlayerKills.Set(val3);
-				s_MetricPlayerKills.Flush(fh, LabelsFor(key3));
+				s_MetricPlayerKills.Flush(sink, LabelsFor(key3));
 			}
 		}
 
 		// creature kills
 		if (s_CreatureKills.Count() > 0) {
-			s_MetricCreatureKills.WriteHeaders(fh);
+			s_MetricCreatureKills.WriteHeaders(sink);
 
 			foreach (string key4, int val4 : s_CreatureKills) {
 				s_MetricCreatureKills.Set(val4);
-				s_MetricCreatureKills.Flush(fh, LabelsFor(key4));
+				s_MetricCreatureKills.Flush(sink, LabelsFor(key4));
 			}
 		}
-
-#ifdef DIAG
-		ErrorEx(
-		    "MetricZ weapon_shots / weapons_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s",
-		    ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**

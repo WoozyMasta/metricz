@@ -13,15 +13,11 @@ class MetricZ_EntitiesWriter
 	/**
 	    \brief Flush all player metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all players.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushPlayers(FileHandle fh)
+	static void FlushPlayers(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
-		if (!fh)
+		if (!sink)
 			return;
 
 		array<ref MetricZ_PlayerMetrics> pms = new array<ref MetricZ_PlayerMetrics>();
@@ -47,29 +43,21 @@ class MetricZ_EntitiesWriter
 
 		int metricsCount = pms[0].Count();
 		for (int i = 0; i < metricsCount; i++) {
-			pms[0].WriteHeaderAt(fh, i);
+			pms[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_PlayerMetrics pmCurrent : pms)
-				pmCurrent.FlushAt(fh, i);
+				pmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ player_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
 	    \brief Flush all transport metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all transport.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushTransport(FileHandle fh)
+	static void FlushTransport(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
-		if (!fh)
+		if (!sink)
 			return;
 
 		array<Transport> list;
@@ -108,24 +96,21 @@ class MetricZ_EntitiesWriter
 
 		int metricsCount = tms[0].Count();
 		for (int i = 0; i < metricsCount; i++) {
-			tms[0].WriteHeaderAt(fh, i);
+			tms[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_TransportMetrics tmCurrent : tms)
-				tmCurrent.FlushAt(fh, i);
+				tmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ transport_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
-	static void FlushTerritory(FileHandle fh)
+	/**
+	    \brief Flush all territory metrics in interleaved order.
+	    \details For each metric index: write HELP/TYPE once, then values for all territory.
+	    \param MetricZ_SinkBase sink instance
+	*/
+	static void FlushTerritory(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
-		if (!fh)
+		if (!sink)
 			return;
 
 		array<TerritoryFlag> list;
@@ -151,35 +136,33 @@ class MetricZ_EntitiesWriter
 
 		int n = fms[0].Count();
 		for (int i = 0; i < n; i++) {
-			fms[0].WriteHeaderAt(fh, i);
+			fms[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_TerritoryMetrics fmCurrent : fms)
-				fmCurrent.FlushAt(fh, i);
+				fmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ territory_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
 	    \brief Flush weapon stats as a grouped family.
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void FlushWeapons(FileHandle fh)
+	static void FlushWeapons(MetricZ_SinkBase sink)
 	{
-		if (!fh)
+		if (!sink)
 			return;
 
-		MetricZ_WeaponStats.Flush(fh);
+		MetricZ_WeaponStats.Flush(sink);
 	}
 
-	static void FlushEffectAreas(FileHandle fh)
+	/**
+	    \brief Flush all EffectArea metrics in interleaved order.
+	    \details For each metric index: write HELP/TYPE once, then values for all EffectArea.
+	    \param MetricZ_SinkBase sink instance
+	*/
+	static void FlushEffectAreas(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
-		if (!fh)
+		if (!sink)
 			return;
 
 		array<EffectArea> list;
@@ -205,15 +188,11 @@ class MetricZ_EntitiesWriter
 
 		int n = ams[0].Count();
 		for (int i = 0; i < n; i++) {
-			ams[0].WriteHeaderAt(fh, i);
+			ams[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_EffectAreaMetrics amCurrent : ams)
-				amCurrent.FlushAt(fh, i);
+				amCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ effect_areas_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

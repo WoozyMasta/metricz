@@ -1,15 +1,70 @@
 # MetricZ Configuration
 
-> Automatically generated list of configuration options from the source code.
+This document lists configuration options used by the **MetricZ** mod
+for the DayZ server.
 
-This document lists configuration options and CLI flags
-used by the **MetricZ** mod for DayZ server.
+All settings are stored in a `$profile:metricz/config.json`
+JSON configuration file.
 
-Each entry below shows:
+The file is created automatically with default values if it does not exist.
+Changes to this file take effect after a server restart.
 
-1. the **serverDZ.cfg** option (with `MetricZ_` prefix)
-2. the equivalent **CLI flag** (with `-metricz-` prefix)
-3. a short description taken from the source code comments.
+> [!IMPORTANT]  
+> On the same host (ideally, across all servers)
+> every server must have a unique `instanceId`.  
+> If multiple servers run the same map (`world`), time series will collide.  
+> Base labels are `{world, instance_id}`.
+> Ensure `instanceId` is unique per server in `serverDZ.cfg`;
+> together with the map name it forms metric identity.
+
+## File Locations
+
+The mod generates metrics in the server profile directory.
+
+* **Default** `$profile:metricz/export/metricz_{instance_id}.prom`  
+  Standard path. Used if `file_name` is empty.
+* **Custom** `$profile:metricz/export/{file_name}.prom`  
+  Used if `file_name` is set in config.
+* **Legacy** `$profile:metricz.prom` (_Deprecated_ ⚠️)  
+  Used only if this file already exists.
+  Delete it to migrate to the new folder structure.
+
+## Export Performance Tuning
+
+The following data is based on stress tests performed on
+performance-constrained hardware to highlight the relative
+impact of configuration changes.
+
+> [!NOTE]  
+> On typical production hardware, execution times are significantly lower
+> (e.g., File I/O often takes < 2ms).
+
+### File Export Strategy
+
+* Buffering (`buffer`):
+  * Recommended: `16` - `64` lines; 32 by default.
+    This is the sweet spot for performance
+  * Values of `0` (No buffer) significantly increase execution time
+    (approx. +50% overhead) due to frequent system I/O calls.
+  * Large values (`2048+`) are _slower_ than small buffers because huge
+    string allocations cause memory management spikes.
+* Atomicity (`atomic`):
+  * Recommended: `true`.
+  * Enabling atomic writes adds overhead (writes to a `.tmp` file + rename),
+    taking roughly 2x longer than direct writes.
+    However, disabling it allows collectors to read incomplete files,
+    causing data errors. The integrity benefit outweighs the slight delay.
+
+### HTTP Export Strategy
+
+* Buffering (`buffer`):
+  * Recommended: `64` - `512` lines; 128 by default.
+  * Sending metrics in chunks reduces network overhead.
+  * Value of `0` is the slowest option (approx. 2.5x slower than buffered),
+    as it creates a separate HTTP request for every single metric line.
+
+Use [MetricZ Exporter](https://github.com/WoozyMasta/metricz-exporter)
+to retrieve metrics by publishing via HTTP request.
 
 ## Performance & Database Recommendations
 
@@ -24,9 +79,10 @@ This mod generates metrics with unique identifiers:
 * **Players:** Every new SteamID creates a new set of metric series.
 * **Vehicles:** Every spawned vehicle has a unique persistence ID (Hash).
 
-On high-population servers, or servers with Traders and Virtual Garages
-(where vehicles are frequently spawned, bought, and deleted),
-this creates **"High Series Churn"**.
+> [!WARNING]  
+> On high-population servers, or servers with Traders and Virtual Garages
+> (where vehicles are frequently spawned, bought, and deleted),
+> this creates **"High Series Churn"**.
 
 A standard **Prometheus** server stores indices in RAM.
 High churn can lead to excessive memory usage and OOM (Out Of Memory)
@@ -34,16 +90,15 @@ crashes over time.
 If you have thousands of unique players or vehicles per month,
 consider disabling specific modules:
 
-* `-metricz-disable-transport`
-  (Reduces churn significantly on heavy modded servers)
-* `-metricz-disable-player`
-  (If you don't need individual player vitals history)
-* `-metricz-disable-weapon`
-  (If you have a lot of modded weapons,
-  otherwise a series is created for each type)
-* `-metricz-disable-entity-hits`
-  (If you have a lot of modded ammo or modified `AttackType` AI,
-  otherwise a series is created for each type)
+* `disabled_metrics.transports`
+  Reduces churn significantly on heavy modded servers.
+* `disabled_metrics.players`
+  If you don't need individual player vitals history.
+* `disabled_metrics.weapons`
+  If you have a lot of modded weapons,
+  otherwise a series is created for each type.
+* `disabled_metrics.hits` / `disabled_metrics.kills`
+  If you have a lot of modded weapon/ammo types.
 
 ### Recommended TSDB
 
@@ -55,8 +110,6 @@ For DayZ metrics, we strongly recommend using
   handles high cardinality and high churn efficiently with low RAM usage.
 * **Grafana Mimir**
   is also a robust option for scalability.
-* **Thanos** or **Cortex**
-  work well but may be overly complex for game server hosting.
 
 ### Metric Behavior
 
@@ -71,94 +124,171 @@ For DayZ metrics, we strongly recommend using
   Use the `increase()` or `rate()` functions in PromQL/MetricsQL
   to handle this automatically.
 
-## Notes
+---
 
-* CLI flags override configuration file values.
-* Boolean options accept:
-  * `true` / `1` — enable feature
-  * `false` / `0` — disable feature
-* Time values are specified in **seconds** in both config and CLI.
-* If a minimum is defined, lower values will be clamped.
-* String parameters can only be passed in CLI flags.
+> Automatically generated list of configuration options from the source code.
 
-## Options [Utils/Config.c](./scripts/3_Game/MetricZ/Utils/Config.c)
+## Options [Config/DTO.c](./scripts/3_Game/MetricZ/Config/DTO.c)
 
-* **`MetricZ_InitDelay`**
-  `-metricz-init-delay` —
-  Delay before the first metric collection in seconds
-  (default: `60`);
-* **`MetricZ_ScrapeInterval`**
-  `-metricz-scrape-interval` —
-  Interval between metric updates in seconds
-  (default: `15`);
-* **`MetricZ_DisablePlayerMetrics`**
-  `-metricz-disable-player` —
-  Disable player-related metrics collection `dayz_metricz_player_*`;
-* **`MetricZ_DisableZombieMetrics`**
-  `-metricz-disable-zombie` —
-  Disable zombie per-type and mind states metrics collection
-  `dayz_metricz_animals_by_type`;
-* **`MetricZ_DisableAnimalMetrics`**
-  `-metricz-disable-animal` —
-  Disable animal per-type metrics collection `dayz_metricz_infected_by_type`
-  and `dayz_metricz_infected_mind_state`;
-* **`MetricZ_DisableTransportMetrics`**
-  `-metricz-disable-transport` —
-  Disable vehicle and transport metrics collection
-  `dayz_metricz_transport_*`;
-* **`MetricZ_DisableWeaponMetrics`**
-  `-metricz-disable-weapon` —
-  Disable weapon per-type (count, shoot, kills and hits) metrics collection
-  `dayz_metricz_weapon_shots_total`, `dayz_metricz_weapons_by_type_total`,
+### Config
+
+* **`version`** (`string`) = MetricZ_Constants.VERSION -
+  Internal configuration version. **Do not modify**.
+* **`settings`** (`ref MetricZ_ConfigDTO_BaseSettings`) -
+  Base settings for metric collection.
+* **`file`** (`ref MetricZ_ConfigDTO_FileExport`) -
+  Settings for exporting metrics to a local file.
+* **`http`** (`ref MetricZ_ConfigDTO_HttpExport`) -
+  Settings for publishing metrics via HTTP.
+* **`disabled_metrics`** (`ref MetricZ_ConfigDTO_DisabledMetrics`) -
+  Switches to disable specific metric series.
+* **`thresholds`** (`ref MetricZ_ConfigDTO_Thresholds`) -
+  Metric collection thresholds.
+* **`geo`** (`ref MetricZ_ConfigDTO_Geo`) -
+  Geographic coordinate settings.
+
+### BaseSettings
+
+* **`settings.instance_id`** (`string`) -
+  Overrides the Instance ID. By default, this is detected automatically from
+  serverDZ.cfg instanceID, or uses gamePort/steamQueryPort if instanceID is
+  undefined or zero. This ID must be unique across all game servers on all
+  hosts. You can override it here to prevent storage and profile path
+  changes on existing servers.
+* **`settings.init_delay_sec`** (`int`) = 30 -
+  Delay in seconds before the first metric collection begins.
+* **`settings.collect_interval_sec`** (`int`) = 15 -
+  Interval in seconds between metric updates.
+
+### FileExport
+
+* **`file.enabled`** (`bool`) = true -
+  Enables saving metrics to a local file (`metricz.prom`) for collection by
+  node-exporter or windows-exporter textfile collector.
+* **`file.buffer`** (`int`) = 32 -
+  Buffer size (in lines) for file writing. 0 - Disable buffer, write each
+  line to the file separately. Positive value - Write to file buffered by
+  line count (recommended). Negative value - Use unlimited buffer size,
+  write the whole buffer at the end (not recommended). Recommended range:
+  16-64 for optimal performance. This ensures low I/O but maintains a
+  reasonable buffer. Values of 2048 or larger cause huge memory allocations
+  and can drop performance.
+* **`file.atomic`** (`bool`) = true -
+  Enables atomic export. Metrics are written to a temporary file and
+  copied/renamed to the .prom file upon completion, removing the temp file.
+  This adds extra I/O overhead and takes nearly x2-3 as long to write, but
+  it is crucial to prevent the collector from reading incomplete files.
+  Disabling this is not recommended.
+* **`file.file_name`** (`string`) -
+  File name override (without extension) Default file path
+  `$profile:metricz/export/metricz_${instance_id}.prom`. File path with
+  override `$profile:metricz/export/${file_name}.prom`.
+* **`file.delete_on_shutdown`** (`bool`) -
+  Delete the PROM file when shutting down the server. This is not
+  recommended to be enabled by default, since upon completion of work, a
+  single metric `dayz_metricz_status=0` is written to the file to indicate
+  that the server is shut down.
+
+### HttpExport
+
+* **`http.enabled`** (`bool`) -
+  Enables publishing metrics via HTTP POST to the metricz-exporter service.
+* **`http.buffer`** (`int`) = 128 -
+  Buffer size (in lines) per HTTP POST request. <= 0 - Disable buffer, send
+  all metrics in one request. > 0 - Send metrics chunked by the set line
+  count. Recommended range: 64-512 for optimal performance. HTTP POST is not
+  disk-dependent, but building one huge request body requires more CPU time.
+  If you experience high latency or network issues, try disabling the
+  buffer.
+* **`http.url`** (`string`) = "http://127.0.0.1:8098" -
+  Remote URL of the metricz-exporter instance.
+* **`http.user`** (`string`) = "metricz" -
+  Username for Basic Auth protected publishing in metricz-exporter.
+* **`http.password`** (`string`) -
+  Password for Basic Auth protected publishing in metricz-exporter.
+* **`http.max_retries`** (`int`) = 2 -
+  Maximum number of retries if the request fails.
+* **`http.retry_delay_ms`** (`int`) = 500 -
+  Base delay (in milliseconds) between retry attempts. The delay will
+  increase with each subsequent attempt and is also randomized within the
+  range of 0.75x and 1.25x.
+* **`http.retry_max_backoff_ms`** (`int`) = 5000 -
+  Maximum allowed calculated delay (in milliseconds) for retries.
+* **`http.read_timeout_sec`** (`int`) = 5 -
+  Timeout in seconds for read operations.
+* **`http.connect_timeout_sec`** (`int`) = 5 -
+  Timeout in seconds for connection operations.
+
+### DisabledMetrics
+
+* **`disabled_metrics.rpc_input`** (`bool`) -
+  Disables RPC metrics collection. `dayz_metricz_rpc_input_total`
+* **`disabled_metrics.events`** (`bool`) -
+  Disables event handler metrics collection. `dayz_metricz_events_total`
+* **`disabled_metrics.http`** (`bool`) -
+  Disables http metrics collection. This will not apply if remote mertic
+  export is disabled. `dayz_metricz_http_*`
+* **`disabled_metrics.players`** (`bool`) -
+  Disables player-related metrics collection. `dayz_metricz_player_*`
+* **`disabled_metrics.zombies`** (`bool`) -
+  Disables zombie per-type and mind state metrics collection.
+  `dayz_metricz_animals_by_type` and `dayz_metricz_infected_mind_state`
+* **`disabled_metrics.animals`** (`bool`) -
+  Disables animal per-type metrics collection.
+  `dayz_metricz_infected_by_type`
+* **`disabled_metrics.transports`** (`bool`) -
+  Disables vehicle and transport metrics collection.
+  `dayz_metricz_transport_*`
+* **`disabled_metrics.weapons`** (`bool`) -
+  Disables weapon per-type metrics collection (count, shots, kills, and
+  hits). `dayz_metricz_weapon_shots_total`,
+  `dayz_metricz_weapons_by_type_total`,
   `dayz_metricz_player_killed_by_total` and
-  `dayz_metricz_creature_killed_by_total`;
-* **`MetricZ_DisableEntityHitsMetrics`**
-  `-metricz-disable-entity-hits` —
-  Disable player and zombie/animal hit by ammo type metrics
-  `dayz_metricz_player_killed_by_total` and
-  `dayz_metricz_creature_killed_by_total`;
-* **`MetricZ_EntityHitDamageThreshold`**
-  `-metricz-entity-hit-damage-threshold` —
-  Minimum damage to log in `EEHitBy()`; -1 and less disables threshold.
-  (default: `3`);
-* **`MetricZ_EntityVehicleHitDamageThreshold`**
-  `-metricz-entity-vehicle-hit-damage-threshold` —
-  Minimum vehicle-hit damage to log in `EEHitBy()`; -1 and less disables
-  threshold.
-  (default: `15`);
-* **`MetricZ_DisableTerritoryMetrics`**
-  `-metricz-disable-territory` —
-  Disable territory flag metrics collection
-  `dayz_metricz_territory_lifetime`;
-* **`MetricZ_DisableEffectAreaMetrics`**
-  `-metricz-disable-effect-area` —
-  Disable EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.)
-  metrics;
-* **`MetricZ_EnableLocalEffectAreaMetrics`**
-  `-metricz-enable-local-effect-area` —
-  Enable Local EffectArea metrics like ContaminatedArea_Local created from
-  Grenade_ChemGas This is disabled by default because metrics for such local
-  zones will always have unique positions, thereby creating new metric
-  series in the TSDB each time. Use with caution, as this may bloat your
-  metrics database!;
-* **`MetricZ_DisableCoordinatesMetrics`**
-  `-metricz-disable-coordinates` —
-  Disable player and transport coordinate metrics;
-* **`MetricZ_DisableGeoCoordinatesFormat`**
-  `-metricz-disable-geo-coordinates-format` —
-  Disable conversion of coordinates metrics to geo `EPSG:4326` (WGS84)
-  format. By default convert position to lon/lat in `-180/180` and `-90/90`
-  range. If disable, all exported coordinates hold vanilla zero relative
-  meters;
-* **`MetricZ_DisableRPCMetrics`**
-  `-metricz-disable-rpc` —
-  Disable RPC metrics collection `dayz_metricz_rpc_input_total`;
-* **`MetricZ_DisableEventMetrics`**
-  `-metricz-disable-event` —
-  Disable event handler metrics collection `dayz_metricz_events_total`;
-* **`MetricZ_MapEffectiveSize`**
-  `-metricz-map-effective-size` —
-  Override effective map tiles size in world units. Useful if the web map
-  size is larger than the game world size (for example, the izurvive tiles
-  for Chernarus have a size of `15926`, although the world size is `15360`)
-  (default: `0`);
+  `dayz_metricz_creature_killed_by_total`
+* **`disabled_metrics.hits`** (`bool`) -
+  Disables metrics for players and zombies/animals hit by specific ammo
+  types. `dayz_metricz_player_killed_by_total` and
+  `dayz_metricz_creature_killed_by_total`
+* **`disabled_metrics.kills`** (`bool`) -
+  Disables metrics for players and zombies/animals killed by specific
+  objects.
+* **`disabled_metrics.territories`** (`bool`) -
+  Disables territory flag metrics collection.
+* **`disabled_metrics.areas`** (`bool`) -
+  Disables EffectArea (Contaminated, Geyser, HotSpring, Volcanic, etc.)
+  metrics.
+* **`disabled_metrics.local_areas`** (`bool`) = true -
+  Disables Local EffectArea metrics (e.g., ContaminatedArea_Local created
+  from Grenade_ChemGas). This is disabled by default because metrics for
+  such local zones will always have unique positions, thereby creating new
+  metric series in the TSDB each time. Use with caution, as this may bloat
+  your metrics database!
+* **`disabled_metrics.positions`** (`bool`) -
+  Disables player and transport coordinate metrics.
+* **`disabled_metrics.positions_height`** (`bool`) = true -
+  Disables player and transport height coordinate (Y) metrics. If
+  `positions` is disabled, this will also be disabled forcibly.
+* **`disabled_metrics.positions_yaw`** (`bool`) = true -
+  Disables player and transport orientation metrics. If `positions` is
+  disabled, this will also be disabled forcibly.
+
+### Thresholds
+
+* **`thresholds.hit_damage`** (`float`) = 3 -
+  Minimum damage required to collect hit metrics in `EEHitBy()`. Values of
+  -1 or less disable this threshold.
+* **`thresholds.hit_damage_vehicle`** (`float`) = 15 -
+  Minimum damage from vehicles required to collect hit metrics in
+  `EEHitBy()`. Values of -1 or less disable this threshold.
+
+### Geo
+
+* **`geo.disable_world_coordinates`** (`bool`) -
+  Disables conversion of coordinate metrics to the `EPSG:4326` (WGS84)
+  format. By default, positions are converted to Longitude/Latitude in the
+  -180/180 and -90/90 range. If disabled, all exported coordinates retain
+  vanilla zero-relative meters.
+* **`geo.world_effective_size`** (`float`) -
+  Overrides the effective map tile size in world units. Useful if the web
+  map size is larger than the game world size. (For example, iZurvive tiles
+  for Chernarus have a size of `15926`, although the world size is `15360`).

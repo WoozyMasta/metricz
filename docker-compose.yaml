@@ -1,6 +1,9 @@
 services:
   grafana:
-    image: docker.io/woozymasta/grafana:114371
+    # Container image with features
+    # https://github.com/grafana/grafana/pull/114371
+    # https://github.com/grafana/grafana/pull/114947
+    image: docker.io/woozymasta/grafana:geomap-features
     container_name: grafana
     restart: unless-stopped
     ports:

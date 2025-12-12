@@ -30,10 +30,6 @@ class MetricZ_Storage
 	    "status",
 	    "Exporter status",
 	    MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_UpdateDurationSec = new MetricZ_MetricFloat(
-	    "update_duration_seconds",
-	    "Duration of last MetricZ update, seconds",
-	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_ScrapeInterval = new MetricZ_MetricInt(
 	    "scrape_interval_seconds",
 	    "Configured scrape interval in seconds",
@@ -359,18 +355,25 @@ class MetricZ_Storage
 #endif
 
 	/**
+	    \brief Check storage is initialized
+	*/
+	static bool IsInitialized()
+	{
+		return s_Initialized;
+	}
+
+	/**
 	    \brief One-time initialization and label build.
 	    \details Populates registry and sets status=1.
 	*/
 	static void Init()
 	{
-		if (s_Initialized)
+		if (s_Initialized || !MetricZ_Config.IsLoaded())
 			return;
 
 		// Core
 		s_Registry.Insert(s_Status);
 		s_Registry.Insert(s_ScrapeInterval);
-		s_Registry.Insert(s_UpdateDurationSec);
 		s_Registry.Insert(s_ScrapeSkippedTotal);
 
 		// FPS
@@ -470,10 +473,14 @@ class MetricZ_Storage
 		SetLabels();
 
 		s_Status.Set(1);
-		s_ScrapeInterval.Set(MetricZ_Config.s_ScrapeIntervalMs / 1000);
+		s_ScrapeInterval.Set(MetricZ_Config.Get().settings.collect_interval_sec);
 		s_ScrapeSkippedTotal.Set(0);
-		s_FPSLimit.Set(MetricZ_Config.s_LimitFPS);
-		s_MaxPlayers.Set(MetricZ_Config.s_MaxPlayers);
+		s_FPSLimit.Set(MetricZ_Config.Get().fps_limit);
+		s_MaxPlayers.Set(MetricZ_Config.Get().max_players);
+
+		// Load Cache
+		MetricZ_WeaponStats.LoadCache();
+		MetricZ_HitStats.LoadCache();
 
 		s_Initialized = true;
 	}
@@ -595,20 +602,20 @@ class MetricZ_Storage
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param fh Open file handle
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_SinkBase sink)
 	{
-		if (!s_Initialized || s_Registry.Count() < 1)
+		if (!sink || !s_Initialized || s_Registry.Count() < 1)
 			return;
 
 		foreach (MetricZ_MetricBase metric : s_Registry) {
 			if (metric == s_Status)
-				metric.FlushWithHead(fh, s_LabelsExtra);
+				metric.FlushWithHead(sink, s_LabelsExtra);
 			else if (metric.HasLabels())
-				metric.Flush(fh);
+				metric.Flush(sink);
 			else
-				metric.FlushWithHead(fh, s_Labels);
+				metric.FlushWithHead(sink, s_Labels);
 		}
 	}
 

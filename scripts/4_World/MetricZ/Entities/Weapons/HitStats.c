@@ -35,7 +35,7 @@ class MetricZ_HitStats
 	*/
 	static void LoadCache()
 	{
-		if (s_CacheLoaded || MetricZ_Config.s_DisableEntityHitsMetrics)
+		if (s_CacheLoaded || !MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disabled_metrics.hits)
 			return;
 
 		s_CacheLoaded = true;
@@ -83,36 +83,30 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Emit metrics to file.
+	    \param MetricZ_SinkBase sink instance
 	*/
-	static void Flush(FileHandle fh)
+	static void Flush(MetricZ_SinkBase sink)
 	{
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-		if (!fh)
+		if (!sink)
 			return;
 
 		if (s_PlayerHit.Count() > 0) {
-			s_MetricPlayerHit.WriteHeaders(fh);
+			s_MetricPlayerHit.WriteHeaders(sink);
 
 			foreach (string aKey, int aVal : s_PlayerHit) {
 				s_MetricPlayerHit.Set(aVal);
-				s_MetricPlayerHit.Flush(fh, s_LabelsAmmo.Get(aKey));
+				s_MetricPlayerHit.Flush(sink, s_LabelsAmmo.Get(aKey));
 			}
 		}
 
 		if (s_CreatureHit.Count() > 0) {
-			s_MetricCreatureHit.WriteHeaders(fh);
+			s_MetricCreatureHit.WriteHeaders(sink);
 
 			foreach (string caKey, int caVal : s_CreatureHit) {
 				s_MetricCreatureHit.Set(caVal);
-				s_MetricCreatureHit.Flush(fh, s_LabelsAmmo.Get(caKey));
+				s_MetricCreatureHit.Flush(sink, s_LabelsAmmo.Get(caKey));
 			}
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ damage_stats scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
