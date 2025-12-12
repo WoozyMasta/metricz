@@ -36,32 +36,52 @@ performance-constrained hardware to highlight the relative
 impact of configuration changes.
 
 > [!NOTE]  
-> On typical production hardware, execution times are significantly lower
-> (e.g., File I/O often takes < 2ms).
+> On typical production hardware, execution times are significantly lower  
+> (e.g., File I/O often takes ~1ms, HTTP Serialized export ~0ms).
 
 ### File Export Strategy
 
-* Buffering (`buffer`):
-  * Recommended: `16` - `64` lines; 32 by default.
-    This is the sweet spot for performance
-  * Values of `0` (No buffer) significantly increase execution time
-    (approx. +50% overhead) due to frequent system I/O calls.
-  * Large values (`2048+`) are _slower_ than small buffers because huge
-    string allocations cause memory management spikes.
-* Atomicity (`atomic`):
-  * Recommended: `true`.
-  * Enabling atomic writes adds overhead (writes to a `.tmp` file + rename),
-    taking roughly 2x longer than direct writes.
-    However, disabling it allows collectors to read incomplete files,
-    causing data errors. The integrity benefit outweighs the slight delay.
+**Buffering** (`buffer`):
+
+* Recommended: `16` - `64` lines; 32 by default.
+  This is the sweet spot for performance
+* Values of `0` (No buffer) significantly increase execution time
+  (approx. +50% overhead) due to frequent system I/O calls.
+* Large values (`2048+`) are _slower_ than small buffers because huge
+  string allocations cause memory management spikes.
+
+**Atomicity** (`atomic`):
+
+* Recommended: `true`.
+* Enabling atomic writes adds overhead (writes to a `.tmp` file + rename),
+  taking roughly 2x longer than direct writes.
+  However, disabling it allows collectors to read incomplete files,
+  causing data errors. The integrity benefit outweighs the slight delay.
 
 ### HTTP Export Strategy
 
-* Buffering (`buffer`):
-  * Recommended: `64` - `512` lines; 128 by default.
-  * Sending metrics in chunks reduces network overhead.
-  * Value of `0` is the slowest option (approx. 2.5x slower than buffered),
-    as it creates a separate HTTP request for every single metric line.
+**Serialization** (`serialized`):
+
+* Recommended: `true` (Default).
+* Switches the payload format to a JSON array of strings.
+* Performance: This uses the game engine's native C++ JSON serializer,
+  bypassing the slow string concatenation of the scripting language.
+  * Serialized (JSON): ~4ms (Fastest).
+  * Text Buffered: ~9ms (~2x slower).
+  * Text Unbuffered: ~30ms (~6x slower).
+
+**Buffering** (`buffer`):
+
+* With Serialization (`true`):
+  * Recommended: `-1` (Unlimited).
+  * Since serialization is handled natively, creating one large request
+    is extremely efficient.
+    Chunking is only necessary if you hit network payload size limits.
+* Without Serialization (`false`):
+  * Recommended: `64` - `512` lines.
+  * Necessary to avoid freezing the server.
+    Sending all metrics in one text blob causes massive CPU spikes
+    due to string manipulation overhead.
 
 Use [MetricZ Exporter](https://github.com/WoozyMasta/metricz-exporter)
 to retrieve metrics by publishing via HTTP request.
