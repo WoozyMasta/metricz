@@ -5,6 +5,11 @@
 */
 
 #ifdef SERVER
+/**
+    \brief Composite Sink pattern.
+    \details Forwards metric lines to multiple registered sinks (e.g., File and REST simultaneously).
+             Note: Not recommended for production due to double overhead.
+*/
 class MetricZ_CompositeSink : MetricZ_SinkBase
 {
 	private ref array<ref MetricZ_SinkBase> m_Sinks;
@@ -14,6 +19,9 @@ class MetricZ_CompositeSink : MetricZ_SinkBase
 		m_Sinks = new array<ref MetricZ_SinkBase>();
 	}
 
+	/**
+	    \brief Adds a sink to the composite list.
+	*/
 	void AddSink(MetricZ_SinkBase sink, int bufferLimit)
 	{
 		if (sink) {

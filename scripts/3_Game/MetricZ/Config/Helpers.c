@@ -69,7 +69,7 @@ class MetricZ_Helpers
 
 		// fallback to 0
 		ErrorEx(
-		    "MetricZ instanceId is 0. Set unique 'instanceId' in serverDZ.cfg or override in 'instance_id' in metricz.json",
+		    "MetricZ instanceId is 0. Set unique 'instanceId' in serverDZ.cfg or override 'instance_id' in metricz.json",
 		    ErrorExSeverity.WARNING);
 
 		return "0";

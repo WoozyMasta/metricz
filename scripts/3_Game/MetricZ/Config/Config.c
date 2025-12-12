@@ -6,18 +6,21 @@
 
 #ifdef SERVER
 /**
-    \brief Runtime and CLI configuration for MetricZ.
-    \details Reads overrides from serverDZ.cfg via ServerConfigGetInt and from CLI via GetCLIParam.
+    \brief Configuration Manager for MetricZ.
+    \details Handles the lifecycle of the configuration: loading from JSON, version migration,
+             creating default files, and initializing export paths.
+             Implements the Singleton pattern.
 */
 class MetricZ_Config
 {
-	// singleton
-	protected static ref MetricZ_Config s_Instance;
-	protected static ref MetricZ_ConfigDTO s_Config;
+	protected static ref MetricZ_Config s_Instance; // singleton instance
+	protected static ref MetricZ_ConfigDTO s_Config; // singleton state
 	protected static bool s_Loaded;
 
 	/**
-	    \brief Get singleton instance (lazy-loads file once).
+	    \brief Retrieves the singleton configuration instance.
+	    \details Lazy-loads the configuration file on the first call.
+	    \return Global MetricZ_ConfigDTO instance.
 	*/
 	static MetricZ_ConfigDTO Get()
 	{
@@ -45,7 +48,7 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Check config loaded
+	    \brief Checks if the configuration is successfully loaded.
 	*/
 	static bool IsLoaded()
 	{
@@ -53,16 +56,14 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Load and apply configuration overrides.
-	    \details Reads options from serverDZ.cfg (keys prefixed with "MetricZ_")
-	            and CLI flags (prefixed with "metricz-"). CLI overrides config.
-	            Converts seconds to milliseconds and enforces minimums.
+	    \brief Orchestrates the loading process.
 	*/
 	protected void Load()
 	{
 		// Read or create/update JSON config
 		LoadConfigFile();
 
+		// Setup export paths
 		InitFileExport();
 
 		// Init geo cache
@@ -73,7 +74,10 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Load, create or update JSON configuration file
+	    \brief Handles JSON file operations (Load/Save/Upgrade).
+	    \details If the file exists, it attempts to load and validate it.
+	             If the version mismatches, it performs an upgrade and saves the file.
+	             If the file is missing, it creates a new default configuration.
 	*/
 	protected void LoadConfigFile()
 	{
@@ -118,7 +122,7 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Initialize path for file export with legacy file path support
+	    \brief Determines the file paths for metric export.
 	*/
 	protected void InitFileExport()
 	{
@@ -149,7 +153,7 @@ class MetricZ_Config
 	}
 
 	/**
-	    \brief Mark config as loaded (for logging and control flow).
+	    \brief Finalizes the loading process.
 	*/
 	protected void SetLoaded()
 	{
@@ -171,6 +175,9 @@ class MetricZ_Config
 		ErrorEx("MetricZ: loaded " + ver, ErrorExSeverity.INFO);
 	}
 
+	/**
+	    \brief Dumps the current configuration to the script log
+	*/
 	protected void DebugConfig()
 	{
 		string json;

@@ -7,14 +7,15 @@
 #ifdef SERVER
 /**
     \brief Static manager for REST transaction state.
-    \details Decouples upload state from the transient RestSink object.
-             Handles "zombie" callbacks from previous retries.
+    \details Acts as the "Source of Truth" for the current metric collection cycle.
+             Decouples upload state from the transient `RestSink` object and handles
+             synchronization between asynchronous chunk uploads and the final commit.
 */
 class MetricZ_RestTransactionManager
 {
-	protected static string s_CurrentTxn;
-	protected static bool s_Sealed;
-	protected static ref array<bool> s_Chunks;
+	protected static string s_CurrentTxn; //!< The currently active transaction ID
+	protected static bool s_Sealed; //!< True if Sink has finished generating all chunks
+	protected static ref array<bool> s_Chunks; //!< Status of each chunk (true = uploaded)
 
 	/**
 	    \brief Start a new transaction.

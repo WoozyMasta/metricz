@@ -5,16 +5,20 @@
 */
 
 #ifdef SERVER
+/**
+    \brief Sink implementation for HTTP REST export.
+    \details Buffers metrics and sends them in chunks to `MetricZ_RestClient`.
+             Delegates transaction state management to `MetricZ_RestTransactionManager`.
+*/
 class MetricZ_RestSink : MetricZ_SinkBase
 {
 	private string m_TxnId;
 	private ref MetricZ_RestClient m_Client;
 
-	string GetTransactionID()
-	{
-		return m_TxnId;
-	}
-
+	/**
+	    \brief Begins a new transaction.
+	    \details Generates a UUID and initializes the static `TransactionManager`.
+	*/
 	override bool Begin()
 	{
 		if (!MetricZ_Config.IsLoaded())
@@ -46,6 +50,10 @@ class MetricZ_RestSink : MetricZ_SinkBase
 			super.Line(line);
 	}
 
+	/**
+	    \brief Ends the transaction.
+	    \details Flushes remaining buffer and tells `TransactionManager` to Seal the transaction.
+	*/
 	override bool End()
 	{
 		if (!m_Client)
@@ -61,6 +69,10 @@ class MetricZ_RestSink : MetricZ_SinkBase
 		return super.End();
 	}
 
+	/**
+	    \brief Flushes buffer as a single HTTP request chunk.
+	    \details Registers the chunk with `TransactionManager` to get a sequence ID.
+	*/
 	override protected void BufferFlush()
 	{
 		if (m_Client && GetBufferCount() > 0) {
