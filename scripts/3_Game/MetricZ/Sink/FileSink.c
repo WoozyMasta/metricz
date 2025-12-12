@@ -5,10 +5,19 @@
 */
 
 #ifdef SERVER
+/**
+    \brief Sink implementation for local file export.
+    \details Writes metrics to a .prom file (compatible with node-exporter textfile collector).
+             Supports atomic writes (write to .tmp -> copy to .prom) to prevent partial reads.
+*/
 class MetricZ_FileSink : MetricZ_SinkBase
 {
-	private FileHandle m_Fh;
+	private FileHandle m_Fh; //!< Native file handle for the active write operation
 
+	/**
+	    \brief Opens the target file for writing.
+	    \details Selects temporary path if atomic mode is enabled, otherwise uses direct path.
+	*/
 	override bool Begin()
 	{
 		if (!MetricZ_Config.IsLoaded())
@@ -32,6 +41,10 @@ class MetricZ_FileSink : MetricZ_SinkBase
 		return true;
 	}
 
+	/**
+	    \brief Writes a metric line.
+	    \details Delegates to buffer if buffering is enabled, otherwise writes directly to disk.
+	*/
 	override void Line(string line)
 	{
 		if (!IsBusy() || !m_Fh)
@@ -43,6 +56,10 @@ class MetricZ_FileSink : MetricZ_SinkBase
 			FPrintln(m_Fh, line);
 	}
 
+	/**
+	    \brief Closes the file and finalizes the export.
+	    \details If atomic mode is enabled, handles the swap (delete old -> copy tmp to final -> delete tmp).
+	*/
 	override bool End()
 	{
 		if (!MetricZ_Config.IsLoaded())
@@ -75,6 +92,9 @@ class MetricZ_FileSink : MetricZ_SinkBase
 		return true;
 	}
 
+	/**
+	    \brief Flushes the internal string buffer to the file handle.
+	*/
 	override protected void BufferFlush()
 	{
 		if (m_Fh && GetBufferCount() > 0)

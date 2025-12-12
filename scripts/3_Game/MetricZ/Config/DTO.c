@@ -220,11 +220,11 @@ class MetricZ_ConfigDTO_DisabledMetrics
 	bool players;
 
 	// Disables zombie per-type and mind state metrics collection.
-	// `dayz_metricz_animals_by_type`
+	// `dayz_metricz_animals_by_type` and `dayz_metricz_infected_mind_state`
 	bool zombies;
 
 	// Disables animal per-type metrics collection.
-	// `dayz_metricz_infected_by_type` and `dayz_metricz_infected_mind_state`
+	// `dayz_metricz_infected_by_type`
 	bool animals;
 
 	// Disables vehicle and transport metrics collection.
