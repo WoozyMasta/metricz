@@ -113,7 +113,7 @@ class MetricZ_HitStats
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ damage_stats scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: damage_stats scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 

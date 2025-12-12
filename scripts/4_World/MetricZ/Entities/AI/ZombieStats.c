@@ -213,7 +213,7 @@ class MetricZ_ZombieStats
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ infected_mind_state / infected_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: infected_mind_state / infected_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 }

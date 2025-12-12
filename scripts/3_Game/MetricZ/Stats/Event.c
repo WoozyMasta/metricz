@@ -62,7 +62,7 @@ class MetricZ_EventStats
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ events_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: events_total scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
 #endif
 	}
 

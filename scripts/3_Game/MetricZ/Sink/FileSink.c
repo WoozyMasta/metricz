@@ -19,9 +19,9 @@ class MetricZ_FileSink : MetricZ_SinkBase
 
 		string file;
 		if (MetricZ_Config.Get().file.atomic)
-			file = MetricZ_Constants.TEMP_FILE;
+			file = MetricZ_Config.Get().file.temp_file_path;
 		else
-			file = MetricZ_Constants.PROM_FILE;
+			file = MetricZ_Config.Get().file.prom_file_path;
 
 		m_Fh = OpenFile(file, FileMode.WRITE);
 		if (!m_Fh) {
@@ -57,16 +57,19 @@ class MetricZ_FileSink : MetricZ_SinkBase
 		}
 
 		if (MetricZ_Config.Get().file.atomic) {
-			DeleteFile(MetricZ_Constants.PROM_FILE);
+			string promFile = MetricZ_Config.Get().file.prom_file_path;
+			string tempFile = MetricZ_Config.Get().file.temp_file_path;
 
-			if (!CopyFile(MetricZ_Constants.TEMP_FILE, MetricZ_Constants.PROM_FILE)) {
+			DeleteFile(promFile);
+
+			if (!CopyFile(tempFile, promFile)) {
 				ErrorEx(
-				    "MetricZ: atomic publish failed '" + MetricZ_Constants.TEMP_FILE + "' -> '" + MetricZ_Constants.PROM_FILE + "'",
+				    "MetricZ: atomic publish failed '" + tempFile + "' -> '" + promFile + "'",
 				    ErrorExSeverity.ERROR);
 				return false;
 			}
 
-			DeleteFile(MetricZ_Constants.TEMP_FILE);
+			DeleteFile(tempFile);
 		}
 
 		return true;

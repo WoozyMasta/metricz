@@ -164,7 +164,7 @@ class MetricZ_MetricBase
 			return "counter";
 		}
 
-		ErrorEx("Invalid metric type " + m_EType.ToString() + " for " + m_Name);
+		ErrorEx("MetricZ: invalid metric type " + m_EType.ToString() + " for " + m_Name);
 		return "gauge";
 	}
 

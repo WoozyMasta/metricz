@@ -359,6 +359,14 @@ class MetricZ_Storage
 #endif
 
 	/**
+	    \brief Check storage is initialized
+	*/
+	static bool IsInitialized()
+	{
+		return s_Initialized;
+	}
+
+	/**
 	    \brief One-time initialization and label build.
 	    \details Populates registry and sets status=1.
 	*/

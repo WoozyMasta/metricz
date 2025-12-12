@@ -15,13 +15,13 @@ class MetricZ_ConfigDTO
 		settings = new MetricZ_ConfigDTO_BaseSettings();
 		file = new MetricZ_ConfigDTO_FileExport();
 		http = new MetricZ_ConfigDTO_HttpExport();
-		disable = new MetricZ_ConfigDTO_DisabledMetrics();
+		disabled_metrics = new MetricZ_ConfigDTO_DisabledMetrics();
 		thresholds = new MetricZ_ConfigDTO_Thresholds();
 		geo = new MetricZ_ConfigDTO_Geo();
 	}
 
 	// Internal configuration version. Do not modify.
-	int version = MetricZ_Constants.VERSION;
+	string version = MetricZ_Constants.VERSION;
 
 	// Base settings for metric collection.
 	ref MetricZ_ConfigDTO_BaseSettings settings;
@@ -112,6 +112,22 @@ class MetricZ_ConfigDTO_FileExport
 	// Disabling this is not recommended.
 	bool atomic = true;
 
+	// File name override (without extension)
+	// Default file path `$profile:metricz/export/metricz_${instance_id}.prom`.
+	// File path with override `$profile:metricz/export/${file_name}.prom`.
+	string file_name;
+
+	// Delete the PROM file when shutting down the server.
+	// This is not recommended to be enabled by default,
+	// since upon completion of work, a single metric `dayz_metricz_status=0` is
+	// written to the file to indicate that the server is shut down.
+	bool delete_on_shutdown;
+
+	[NonSerialized()]
+	string prom_file_path;
+	[NonSerialized()]
+	string temp_file_path;
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
@@ -193,6 +209,11 @@ class MetricZ_ConfigDTO_DisabledMetrics
 	// Disables event handler metrics collection.
 	// `dayz_metricz_events_total`
 	bool events;
+
+	// Disables http metrics collection.
+	// This will not apply if remote mertic export is disabled.
+	// `dayz_metricz_http_*`
+	bool http;
 
 	// Disables player-related metrics collection.
 	// `dayz_metricz_player_*`

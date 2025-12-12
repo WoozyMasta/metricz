@@ -48,7 +48,7 @@ class MetricZ_ObjectName
 		"tropic", "tropical",
 		"khaki",
 		"navy",
-		"metal", "wood", "wooden", "plastic"
+		"metal", "wood", "wooden", "plastic",
 		"desert", "sand",
 		"flat",
 		"chernarus", "livonia",

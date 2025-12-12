@@ -32,12 +32,13 @@ class MetricZ_PersistentCache {
 		if (!s_Cache)
 			s_Cache = new MetricZ_Cache();
 
-		if (!FileExist(MetricZ_Constants.CACHE_FILE))
+		string cacheFile = MetricZ_Constants.CACHE_FILE;
+		if (!FileExist(cacheFile))
 			return false;
 
-		FileHandle fh = OpenFile(MetricZ_Constants.CACHE_FILE, FileMode.READ);
+		FileHandle fh = OpenFile(cacheFile, FileMode.READ);
 		if (fh == 0) {
-			ErrorEx("MetricZ fail open labels cache file: " + MetricZ_Constants.CACHE_FILE, ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: fail open labels cache file: " + cacheFile, ErrorExSeverity.ERROR);
 			return false;
 		}
 
@@ -51,12 +52,12 @@ class MetricZ_PersistentCache {
 
 		string error;
 		if (!m_Serializer.ReadFromString(s_Cache, data, error)) {
-			ErrorEx("MetricZ fail load labels cache with error: " + error, ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: fail load labels cache with error: " + error, ErrorExSeverity.ERROR);
 			return false;
 		}
 
 #ifdef DIAG
-		ErrorEx("MetricZ labels cache loaded from file: " + MetricZ_Constants.CACHE_FILE, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: labels cache loaded from file: " + cacheFile, ErrorExSeverity.INFO);
 #endif
 
 		return true;
@@ -74,15 +75,16 @@ class MetricZ_PersistentCache {
 		if (!m_Serializer)
 			m_Serializer = new JsonSerializer();
 
+		string cacheFile = MetricZ_Constants.CACHE_FILE;
 		string data;
 		if (!m_Serializer.WriteToString(s_Cache, false, data)) {
-			ErrorEx("MetricZ fail save labels cache in file: serialization error", ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: fail save labels cache in file: serialization error", ErrorExSeverity.ERROR);
 			return false;
 		}
 
-		FileHandle fh = OpenFile(MetricZ_Constants.CACHE_FILE, FileMode.WRITE);
+		FileHandle fh = OpenFile(cacheFile, FileMode.WRITE);
 		if (fh == 0) {
-			ErrorEx("MetricZ fail save labels cache in file: " + MetricZ_Constants.CACHE_FILE, ErrorExSeverity.ERROR);
+			ErrorEx("MetricZ: fail save labels cache in file: " + cacheFile, ErrorExSeverity.ERROR);
 			return false;
 		}
 
@@ -92,7 +94,7 @@ class MetricZ_PersistentCache {
 		s_HasChanges = false;
 
 #ifdef DIAG
-		ErrorEx("MetricZ labels cache saved in file: " + MetricZ_Constants.CACHE_FILE, ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: labels cache saved in file: " + cacheFile, ErrorExSeverity.INFO);
 #endif
 
 		return true;

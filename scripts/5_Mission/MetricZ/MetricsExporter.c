@@ -38,7 +38,7 @@ class MetricZ_Exporter
 		          MetricZ_Config.Get().settings.init_delay_sec * 1000,
 		          false);
 
-		ErrorEx("MetricZ loaded", ErrorExSeverity.INFO);
+		ErrorEx("MetricZ: loaded", ErrorExSeverity.INFO);
 	}
 
 	/**
@@ -59,17 +59,27 @@ class MetricZ_Exporter
 	*/
 	void Shutdown()
 	{
-		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().http.enabled)
+		if (!MetricZ_Config.IsLoaded())
 			return;
 
-		// stop future scrapes
-		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
-		DeleteFile(MetricZ_Constants.TEMP_FILE);
+		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
+		if (cfg.http.enabled)
+			return;
 
+		ErrorEx("MetricZ: scrape shutting down", ErrorExSeverity.INFO);
+
+		// unlock
 		s_Instance = null;
 		s_Busy = false;
 
-		ErrorEx("MetricZ scrape shutting down", ErrorExSeverity.INFO);
+		// stop future scrapes
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Update);
+		DeleteFile(cfg.file.temp_file_path);
+
+		if (cfg.file.delete_on_shutdown) {
+			DeleteFile(cfg.file.prom_file_path);
+			return;
+		}
 
 		MetricZ_FileSink sink = new MetricZ_FileSink();
 		if (!sink)
@@ -86,50 +96,74 @@ class MetricZ_Exporter
 	}
 
 	/**
-	    \brief Flush all enabled collectors into an open file.
+	    \brief Periodic scrape task. Writes temp file and atomically publishes it.
 	    \details
-	        - Writes world-level metrics from MetricZ_Storage.
-	        - Appends per-player, per-entity and event metrics depending on config.
-	        - Does not close the file handle.
-	    \return true on success, false if fh is invalid.
+	        - Reschedules itself each call using fixed interval (minimizes drift).
+	        - Skips execution if a previous scrape is still running (s_Busy).
+	        - Calls MetricZ_Storage.Update() to refresh gauges.
+	        - Flushes all collectors into METRICS_TEMP and atomically replaces METRICS_FILE.
 	*/
-	bool Flush()
+	protected void Update()
 	{
-		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
-		if (!cfg)
-			return false;
+		// Schedule next tick for minimize drift
+		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
+		          Update,
+		          MetricZ_Config.Get().settings.collect_interval_sec * 1000,
+		          false);
 
-		MetricZ_SinkBase sink;
+		if (!MetricZ_Config.IsLoaded())
+			return;
 
-		if (cfg.file.enabled && cfg.http.enabled) {
-			MetricZ_CompositeSink composite = new MetricZ_CompositeSink();
-			if (!composite)
-				return false;
-			composite.AddSink(new MetricZ_RestSink(), cfg.http.buffer);
-			composite.AddSink(new MetricZ_FileSink(), cfg.file.buffer);
-			sink = composite;
+		if (s_Busy) {
+			MetricZ_Storage.s_ScrapeSkippedTotal.Inc();
+			ErrorEx(
+			    "MetricZ another scrape already works. You might want to set the scrape interval to twice as much.",
+			    ErrorExSeverity.WARNING);
 
-			ErrorEx("MetricZ: Do not use both exports in production (file.enabled=1, http.enabled=1)", ErrorExSeverity.WARNING);
-
-		} else if (cfg.http.enabled) {
-			sink = new MetricZ_RestSink();
-			if (!sink)
-				return false;
-			sink.SetBuffer(cfg.http.buffer)
-
-		} else if (cfg.file.enabled) {
-			sink = new MetricZ_FileSink();
-			if (!sink)
-				return false;
-			sink.SetBuffer(cfg.file.buffer)
-
-		} else {
-			ErrorEx("MetricZ: No exports enabled in config (file.enabled=0, http.enabled=0)", ErrorExSeverity.WARNING);
-			return false;
+			return;
 		}
 
-		if (!sink.Begin())
+		s_Busy = true;
+		float t0 = g_Game.GetTickTime();
+
+#ifdef DIAG
+		ErrorEx("MetricZ: start update on " + t0 + "s server tick", ErrorExSeverity.INFO);
+#endif
+
+		// refresh world gauges before flush
+		MetricZ_Storage.Update();
+
+		// write full snapshot
+		if (!Flush()) {
+			s_Busy = false;
+			return;
+		}
+
+		// update labels cache if needed
+		MetricZ_PersistentCache.Save();
+
+		float t1 = g_Game.GetTickTime();
+		MetricZ_Storage.s_UpdateDurationSec.Set(t1 - t0);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: stored in " + MetricZ_Storage.s_UpdateDurationSec.Get().ToString() + "s", ErrorExSeverity.INFO);
+#endif
+
+		s_Busy = false;
+	}
+
+
+	/**
+	    \brief Flush all enabled collectors into an open file.
+	    \return true on success, false if fh is invalid.
+	*/
+	protected bool Flush()
+	{
+		MetricZ_SinkBase sink = MetricZ_Sink.New();
+		if (!sink || !sink.Begin())
 			return false;
+
+		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
 
 		// world metrics
 		MetricZ_Storage.Flush(sink);
@@ -174,61 +208,11 @@ class MetricZ_Exporter
 		if (!cfg.disabled_metrics.events)
 			MetricZ_EventStats.Flush(sink);
 
+		// http stats
+		if (!cfg.disabled_metrics.http && cfg.http.enabled)
+			MetricZ_HttpStats.Flush(sink);
+
 		return sink.End();
-	}
-
-	/**
-	    \brief Periodic scrape task. Writes temp file and atomically publishes it.
-	    \details
-	        - Reschedules itself each call using fixed interval (minimizes drift).
-	        - Skips execution if a previous scrape is still running (s_Busy).
-	        - Calls MetricZ_Storage.Update() to refresh gauges.
-	        - Flushes all collectors into METRICS_TEMP and atomically replaces METRICS_FILE.
-	*/
-	protected void Update()
-	{
-		// Schedule next tick for minimize drift
-		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(
-		          Update,
-		          MetricZ_Config.Get().settings.collect_interval_sec * 1000,
-		          false);
-
-		if (s_Busy) {
-			MetricZ_Storage.s_ScrapeSkippedTotal.Inc();
-			ErrorEx(
-			    "MetricZ another scrape already works. You might want to set the scrape interval to twice as much.",
-			    ErrorExSeverity.WARNING);
-
-			return;
-		}
-
-		s_Busy = true;
-		float t0 = g_Game.GetTickTime();
-
-#ifdef DIAG
-		ErrorEx("MetricZ start update on " + t0 + "s server tick", ErrorExSeverity.INFO);
-#endif
-
-		// refresh world gauges before flush
-		MetricZ_Storage.Update();
-
-		// write full snapshot
-		if (!Flush()) {
-			s_Busy = false;
-			return;
-		}
-
-		// update labels cache if needed
-		MetricZ_PersistentCache.Save();
-
-		float t1 = g_Game.GetTickTime();
-		MetricZ_Storage.s_UpdateDurationSec.Set(t1 - t0);
-
-#ifdef DIAG
-		ErrorEx("MetricZ stored in " + MetricZ_Storage.s_UpdateDurationSec.Get().ToString() + "s", ErrorExSeverity.INFO);
-#endif
-
-		s_Busy = false;
 	}
 }
 #endif

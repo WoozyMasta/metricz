@@ -67,15 +67,17 @@ class MetricZ_WeaponStats
 		}
 
 		array<string> knownKillers = MetricZ_PersistentCache.GetKeys(MetricZ_CacheKey.KILLER_OBJECT);
-		foreach (string killer : knownKillers) {
-			if (!s_PlayerKills.Contains(killer)) {
-				s_PlayerKills.Insert(killer, 0);
-				LabelsFor(killer);
-			}
+		if (knownKillers) {
+			foreach (string killer : knownKillers) {
+				if (!s_PlayerKills.Contains(killer)) {
+					s_PlayerKills.Insert(killer, 0);
+					LabelsFor(killer);
+				}
 
-			if (!s_CreatureKills.Contains(killer)) {
-				s_CreatureKills.Insert(killer, 0);
-				LabelsFor(killer);
+				if (!s_CreatureKills.Contains(killer)) {
+					s_CreatureKills.Insert(killer, 0);
+					LabelsFor(killer);
+				}
 			}
 		}
 	}
