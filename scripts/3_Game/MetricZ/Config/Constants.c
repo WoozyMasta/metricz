@@ -11,9 +11,9 @@
 class MetricZ_Constants
 {
 	// Build information
-	static const string VERSION = "0.3.0";
-	static const string COMMIT_SHA = "fd8bfa6";
-	static const string BUILD_DATE = "2025-12-12T10:13:25+00:00";
+	static const string VERSION = "dev";
+	static const string COMMIT_SHA = "fffffff";
+	static const string BUILD_DATE = "1970-01-01T00:00:00+00:00";
 
 	// Default buffer size limit
 	static const int MAX_BUFFER_SIZE = 65536;

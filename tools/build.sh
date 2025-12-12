@@ -8,7 +8,7 @@ url() {
 cd /p/metricz
 
 ./tools/validate.sh "$PWD"
-./tools/update-contstants.sh "$PWD"
+./tools/update-contstants.sh "$PWD" true
 ./tools/config.sh "$PWD"
 ./tools/metrics.sh "$PWD"
 ./tools/astyle.sh "$PWD"
@@ -24,3 +24,5 @@ cp README.md CONFIG.md METRICS.md /p/\@metricz/
 
 url 'https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002' workshop
 url 'https://github.com/WoozyMasta/metricz' github
+
+./tools/update-contstants.sh "$PWD" false
