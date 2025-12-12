@@ -163,10 +163,6 @@ class MetricZ_ZombieStats
 		if (!sink)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		bool hasStates = (s_StareStorage.Count() > 0);
 		bool hasTypes = (s_TypeStorage.Count() > 0);
 
@@ -211,10 +207,6 @@ class MetricZ_ZombieStats
 				s_MetricCountByType.Flush(sink, typeLabels);
 			}
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: infected_mind_state / infected_by_type scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

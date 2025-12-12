@@ -6,6 +6,15 @@ This document lists all metrics exposed by the **MetricZ** mod for
 DayZ server. Each metric includes its identifier, type
 (`GAUGE` or `COUNTER`), and description as defined in the source code.
 
+## [REST/HttpStats.c](./scripts/3_Game/MetricZ/REST/HttpStats.c)
+
+* **`dayz_metricz_http_requests_total`** (`COUNTER`) —
+  Total HTTP requests by type and status
+* **`dayz_metricz_http_retries_total`** (`COUNTER`) —
+  Total HTTP callback retries
+* **`dayz_metricz_http_sent_bytes_total`** (`COUNTER`) —
+  Total bytes sent via HTTP body
+
 ## [Stats/Event.c](./scripts/3_Game/MetricZ/Stats/Event.c)
 
 * **`dayz_metricz_events_total`** (`COUNTER`) —
@@ -143,8 +152,6 @@ DayZ server. Each metric includes its identifier, type
 
 * **`dayz_metricz_status`** (`GAUGE`) —
   Exporter status
-* **`dayz_metricz_update_duration_seconds`** (`GAUGE`) —
-  Duration of last MetricZ update, seconds
 * **`dayz_metricz_scrape_interval_seconds`** (`GAUGE`) —
   Configured scrape interval in seconds
 * **`dayz_metricz_scrape_skipped_total`** (`COUNTER`) —
@@ -289,3 +296,10 @@ DayZ server. Each metric includes its identifier, type
   Total number of Expansion AI NPC deaths (optional)
 * **`dayz_metricz_food`** (`GAUGE`) —
   Total edible base items in the world with static labeled types
+
+## [MetricsExporter.c](./scripts/5_Mission/MetricZ/MetricsExporter.c)
+
+* **`dayz_metricz_update_duration_seconds`** (`GAUGE`) —
+  Duration of previous MetricZ update, seconds
+* **`dayz_metricz_scrape_duration_seconds`** (`GAUGE`) —
+  Duration of specific scrape components in seconds

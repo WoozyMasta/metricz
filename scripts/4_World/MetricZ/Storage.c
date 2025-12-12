@@ -30,10 +30,6 @@ class MetricZ_Storage
 	    "status",
 	    "Exporter status",
 	    MetricZ_MetricType.GAUGE);
-	static ref MetricZ_MetricFloat s_UpdateDurationSec = new MetricZ_MetricFloat(
-	    "update_duration_seconds",
-	    "Duration of last MetricZ update, seconds",
-	    MetricZ_MetricType.GAUGE);
 	static ref MetricZ_MetricInt s_ScrapeInterval = new MetricZ_MetricInt(
 	    "scrape_interval_seconds",
 	    "Configured scrape interval in seconds",
@@ -378,7 +374,6 @@ class MetricZ_Storage
 		// Core
 		s_Registry.Insert(s_Status);
 		s_Registry.Insert(s_ScrapeInterval);
-		s_Registry.Insert(s_UpdateDurationSec);
 		s_Registry.Insert(s_ScrapeSkippedTotal);
 
 		// FPS

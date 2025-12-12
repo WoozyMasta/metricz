@@ -20,10 +20,6 @@ class MetricZ_EntitiesWriter
 		if (!sink)
 			return;
 
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
-
 		array<ref MetricZ_PlayerMetrics> pms = new array<ref MetricZ_PlayerMetrics>();
 
 		array<Man> players = new array<Man>();
@@ -52,10 +48,6 @@ class MetricZ_EntitiesWriter
 			foreach (MetricZ_PlayerMetrics pmCurrent : pms)
 				pmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: player_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
@@ -67,10 +59,6 @@ class MetricZ_EntitiesWriter
 	{
 		if (!sink)
 			return;
-
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
 
 		array<Transport> list;
 		MetricZ_TransportRegistry.Snapshot(list);
@@ -113,10 +101,6 @@ class MetricZ_EntitiesWriter
 			foreach (MetricZ_TransportMetrics tmCurrent : tms)
 				tmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: transport_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
@@ -128,10 +112,6 @@ class MetricZ_EntitiesWriter
 	{
 		if (!sink)
 			return;
-
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
 
 		array<TerritoryFlag> list;
 		MetricZ_TerritoryRegistry.Snapshot(list);
@@ -161,10 +141,6 @@ class MetricZ_EntitiesWriter
 			foreach (MetricZ_TerritoryMetrics fmCurrent : fms)
 				fmCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: territory_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 
 	/**
@@ -188,10 +164,6 @@ class MetricZ_EntitiesWriter
 	{
 		if (!sink)
 			return;
-
-#ifdef DIAG
-		float t0 = g_Game.GetTickTime();
-#endif
 
 		array<EffectArea> list;
 		MetricZ_EffectAreaRegistry.Snapshot(list);
@@ -221,10 +193,6 @@ class MetricZ_EntitiesWriter
 			foreach (MetricZ_EffectAreaMetrics amCurrent : ams)
 				amCurrent.FlushAt(sink, i);
 		}
-
-#ifdef DIAG
-		ErrorEx("MetricZ: effect_areas_* scraped in " + (g_Game.GetTickTime() - t0).ToString() + "s", ErrorExSeverity.INFO);
-#endif
 	}
 }
 #endif

@@ -47,7 +47,7 @@ windows_exporter (Windows).
 Output file:
 
 * Example profile path: `/dayz-server-dir/profiles/profile_1/metricz.prom`.
-* Write period: `scrapeIntervalSeconds` seconds (see config).
+* Write period: `collect_interval_sec` seconds (see config).
 
 Example content:
 
@@ -79,7 +79,7 @@ can be found in the document [CONFIG.md](./CONFIG.md)
 * On busy servers keep scrape interval at 5–10 s or higher.
 * If you see a parallel scrape warning, increase the interval.
 * Align [node_exporter]/[windows_exporter] scrape interval with
-  `scrapeIntervalSeconds`. Polling an unchanged file more often has no
+  `collect_interval_sec`. Polling an unchanged file more often has no
   benefit.
 
 ## Prometheus integration: Linux

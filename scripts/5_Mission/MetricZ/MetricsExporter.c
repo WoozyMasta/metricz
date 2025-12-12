@@ -12,11 +12,20 @@
 */
 class MetricZ_Exporter
 {
-	// singleton instance
-	protected static ref MetricZ_Exporter s_Instance;
+	protected static ref MetricZ_Exporter s_Instance; // singleton instance
 
-	// Re-entrancy guard: prevents overlapping scrapes.
-	protected bool s_Busy;
+	protected bool s_Busy; // Guard prevents overlapping scrapes
+	protected ref map<string, float> m_UpdatesBuffer; // Values buffer by component -> value
+	protected ref map<string, string> m_LabelsCache; // Labels cache by component -> label
+
+	protected ref MetricZ_MetricFloat m_UpdateDuration = new MetricZ_MetricFloat(
+	    "update_duration_seconds",
+	    "Duration of previous MetricZ update, seconds",
+	    MetricZ_MetricType.GAUGE);
+	protected ref MetricZ_MetricFloat m_ScrapeDuration = new MetricZ_MetricFloat(
+	    "scrape_duration_seconds",
+	    "Duration of specific scrape components in seconds",
+	    MetricZ_MetricType.GAUGE);
 
 	/**
 	    \brief Initialize MetricZ and schedule first scrape.
@@ -27,6 +36,9 @@ class MetricZ_Exporter
 	{
 		if (s_Instance)
 			return;
+
+		m_UpdatesBuffer = new map<string, float>();
+		m_LabelsCache = new map<string, string>();
 
 		if (!MetricZ_Config.IsLoaded())
 			MetricZ_Config.Get();
@@ -122,33 +134,18 @@ class MetricZ_Exporter
 
 			return;
 		}
-
 		s_Busy = true;
-		float t0 = g_Game.GetTickTime();
-
-#ifdef DIAG
-		ErrorEx("MetricZ: start update on " + t0 + "s server tick", ErrorExSeverity.INFO);
-#endif
-
-		// refresh world gauges before flush
-		MetricZ_Storage.Update();
 
 		// write full snapshot
+		float t = g_Game.GetTickTime();
 		if (!Flush()) {
 			s_Busy = false;
 			return;
 		}
+		m_UpdateDuration.Set(g_Game.GetTickTime() - t);
 
 		// update labels cache if needed
 		MetricZ_PersistentCache.Save();
-
-		float t1 = g_Game.GetTickTime();
-		MetricZ_Storage.s_UpdateDurationSec.Set(t1 - t0);
-
-#ifdef DIAG
-		ErrorEx("MetricZ: stored in " + MetricZ_Storage.s_UpdateDurationSec.Get().ToString() + "s", ErrorExSeverity.INFO);
-#endif
-
 		s_Busy = false;
 	}
 
@@ -163,56 +160,135 @@ class MetricZ_Exporter
 		if (!sink || !sink.Begin())
 			return false;
 
+		// Reset buffer for new cycle
+		m_UpdatesBuffer.Clear();
+
 		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
 
 		// world metrics
+		float t = g_Game.GetTickTime();
+		MetricZ_Storage.Update();
 		MetricZ_Storage.Flush(sink);
+		RecordProfile("world", t);
 
 		// per-player
-		if (!cfg.disabled_metrics.players)
+		if (!cfg.disabled_metrics.players) {
+			t = g_Game.GetTickTime();
 			MetricZ_EntitiesWriter.FlushPlayers(sink);
+			RecordProfile("players", t);
+		}
 
 		// per-infected AI type and mind state
-		if (!cfg.disabled_metrics.zombies)
+		if (!cfg.disabled_metrics.zombies) {
+			t = g_Game.GetTickTime();
 			MetricZ_ZombieStats.Flush(sink);
+			RecordProfile("zombies", t);
+		}
 
 		// per-animal type
-		if (!cfg.disabled_metrics.animals)
+		if (!cfg.disabled_metrics.animals) {
+			t = g_Game.GetTickTime();
 			MetricZ_AnimalStats.Flush(sink);
+			RecordProfile("animals", t);
+		}
 
 		// per-vehicle
-		if (!cfg.disabled_metrics.transports)
+		if (!cfg.disabled_metrics.transports) {
+			t = g_Game.GetTickTime();
 			MetricZ_EntitiesWriter.FlushTransport(sink);
+			RecordProfile("transports", t);
+		}
 
 		// weapon shots
-		if (!cfg.disabled_metrics.weapons)
+		if (!cfg.disabled_metrics.weapons) {
+			t = g_Game.GetTickTime();
 			MetricZ_WeaponStats.Flush(sink);
+			RecordProfile("weapons", t);
+		}
 
 		// entity hits
-		if (!cfg.disabled_metrics.hits)
+		if (!cfg.disabled_metrics.hits) {
+			t = g_Game.GetTickTime();
 			MetricZ_HitStats.Flush(sink);
+			RecordProfile("hits", t);
+		}
 
 		// per-territory
-		if (!cfg.disabled_metrics.territories)
+		if (!cfg.disabled_metrics.territories) {
+			t = g_Game.GetTickTime();
 			MetricZ_EntitiesWriter.FlushTerritory(sink);
+			RecordProfile("territories", t);
+		}
 
 		// per-effect-area
-		if (!cfg.disabled_metrics.areas)
+		if (!cfg.disabled_metrics.areas) {
+			t = g_Game.GetTickTime();
 			MetricZ_EntitiesWriter.FlushEffectAreas(sink);
+			RecordProfile("areas", t);
+		}
 
 		// dayz game RPC inputs
-		if (!cfg.disabled_metrics.rpc_input)
+		if (!cfg.disabled_metrics.rpc_input) {
+			t = g_Game.GetTickTime();
 			MetricZ_RpcStats.Flush(sink);
+			RecordProfile("rpc", t);
+		}
 
 		// dayz game events
-		if (!cfg.disabled_metrics.events)
+		if (!cfg.disabled_metrics.events) {
+			t = g_Game.GetTickTime();
 			MetricZ_EventStats.Flush(sink);
+			RecordProfile("events", t);
+		}
 
 		// http stats
-		if (!cfg.disabled_metrics.http && cfg.http.enabled)
+		if (!cfg.disabled_metrics.http && cfg.http.enabled) {
+			t = g_Game.GetTickTime();
 			MetricZ_HttpStats.Flush(sink);
+			RecordProfile("http", t);
+		}
+
+		// Write all profiling metrics at the end as a single block
+		FlushProfiles(sink);
+
+		// Flush previous update duration
+		m_UpdateDuration.FlushWithHead(sink);
 
 		return sink.End();
+	}
+
+	/**
+	    \brief Records duration into map buffer.
+	    \param component Name of the component.
+	    \param startTime Tick time when the operation started.
+	*/
+	protected void RecordProfile(string component, float startTime)
+	{
+		m_UpdatesBuffer.Set(component, g_Game.GetTickTime() - startTime);
+	}
+
+	/**
+	    \brief Writes buffered profiling metrics to the sink.
+	*/
+	protected void FlushProfiles(MetricZ_SinkBase sink)
+	{
+		if (m_UpdatesBuffer.Count() == 0)
+			return;
+
+		m_ScrapeDuration.WriteHeaders(sink);
+		foreach (string key, int value : m_UpdatesBuffer) {
+			string label;
+
+			if (!m_LabelsCache.Find(key, label)) {
+				map<string, string> labelsMap = new map<string, string>();
+				labelsMap.Insert("component", key);
+				label = MetricZ_LabelUtils.MakeLabels(labelsMap);
+				m_LabelsCache.Insert(key, label);
+			}
+
+			m_ScrapeDuration.Set(value);
+			m_ScrapeDuration.Flush(sink, label);
+		}
 	}
 }
 #endif
