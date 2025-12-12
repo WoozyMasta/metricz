@@ -210,12 +210,6 @@ See [CONFIG.md](./CONFIG.md) for detailed mod configuration.
 | MetricZ Servers Overview                                    |
 | :---------------------------------------------------------: |
 | ![Overview](grafana/images/servers-overview-1.png)          |
-| ![Overview](grafana/images/servers-overview-2.png)          |
-| ![Overview](grafana/images/servers-overview-3.png)          |
-| ![Overview](grafana/images/servers-overview-4.png)          |
-| ![Overview](grafana/images/servers-overview-7.png)          |
-| ![Overview](grafana/images/servers-overview-9.png)          |
-| ![Overview](grafana/images/servers-overview-10.png)         |
 | [grafana.com](https://grafana.com/grafana/dashboards/24291) |
 | Dashboard ID: `24291`                                       |
 | [Dashboard JSON](grafana/dashboards/servers-overview.json)  |
