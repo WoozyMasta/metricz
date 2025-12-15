@@ -78,6 +78,9 @@ class MetricZ_ConfigDTO_BaseSettings
 	// Interval in seconds between metric updates.
 	int collect_interval_sec = 15;
 
+	// Disable send minimal telemetry 10-20 minutes after server startup.
+	bool disable_telemetry;
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
