@@ -65,7 +65,8 @@ class MetricZ_Config
 		LoadConfigFile();
 
 		// Setup export paths
-		InitFileExport();
+		if (s_Config.file.enabled)
+			InitFileExport();
 
 		// Init geo cache
 		MetricZ_Geo.Init();
@@ -142,7 +143,7 @@ class MetricZ_Config
 		}
 
 		string exportDir = MetricZ_Constants.EXPORT_DIR;
-		if (s_Config.file.enabled && !FileExist(exportDir))
+		if (!FileExist(exportDir))
 			MakeDirectory(exportDir);
 
 		string fileName = s_Config.file.file_name;
