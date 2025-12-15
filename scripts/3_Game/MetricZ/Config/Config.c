@@ -163,16 +163,14 @@ class MetricZ_Config
 
 		s_Loaded = true;
 
-#ifndef DIAG
-		if (!disableTelemetry && !s_TelemetrySend) {
+#ifdef DIAG
+		DebugConfig();
+#else
+		if (!s_Config.settings.disable_telemetry && !s_TelemetrySend) {
 			s_TelemetrySend = true;
 			int delay = Math.RandomInt(MetricZ_Constants.TELEMETRY_DELAY, MetricZ_Constants.TELEMETRY_DELAY * 2);
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendTelemetry, delay, false);
 		}
-#endif
-
-#ifdef DIAG
-		DebugConfig();
 #endif
 
 		string ver = string.Format(
