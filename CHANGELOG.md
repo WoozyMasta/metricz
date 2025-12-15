@@ -19,6 +19,7 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
+* prevent overriding reserved Prometheus labels
 * configuration has been completely moved to a new format in the JSON file
   `$profile:metricz/config.json` ⚠️
 * metrics are now exported to a separate directory `$profile:metricz/export/` ⚠️

@@ -10,8 +10,9 @@
 */
 class MetricZ_LabelUtils
 {
-	protected static bool s_BaseLabelReady;
-	protected static string s_BaseLabel; // raw: key="val",key2="val2"
+	protected static bool s_BaseLabelReady; //!< Indicates whether base labels are cached
+	protected static string s_BaseLabel; //!< Cached base labels: key="val",key2="val2"
+	protected static ref map<string, bool> s_DenyLabels; //!< Denylist for forbidden label keys
 
 	/**
 	    \brief Escape backslash and quote for Prometheus label values.
@@ -79,7 +80,7 @@ class MetricZ_LabelUtils
 			k.ToLower();
 			k.Replace(" ", "_");
 
-			if (k == "world" || k == "host" || k == "instance_id")
+			if (IsDenied(k))
 				continue;
 
 			result += "," + k + "=\"" + Escape(v) + "\"";
@@ -163,6 +164,49 @@ class MetricZ_LabelUtils
 		}
 
 		return count;
+	}
+
+	/**
+	    \brief Check whether a label key is forbidden.
+	    \details
+	        - Rejects all Prometheus internal labels (__*)
+	        - Rejects predefined, exporter-owned, and reserved labels
+	    \param key Normalized label key
+	    \return \p bool True if the key must not be accepted
+	*/
+	private static bool IsDenied(string key)
+	{
+		InitDenyLabels();
+
+		// __* and __name__ are reserved
+		if (key.Length() >= 2 && key.Get(0) == "_" && key.Get(1) == "_")
+			return true;
+
+		return s_DenyLabels.Contains(key);
+	}
+
+	/**
+	    \brief Initialize denylist of forbidden Prometheus label keys.
+	*/
+	private static void InitDenyLabels()
+	{
+		if (s_DenyLabels)
+			return;
+
+		s_DenyLabels = new map<string, bool>();
+
+		// Predefined labels
+		s_DenyLabels.Insert("world", true);
+		s_DenyLabels.Insert("host", true);
+		s_DenyLabels.Insert("instance_id", true);
+		// MetricZ Exporter labels
+		s_DenyLabels.Insert("exporter", true);
+		// Prometheus reserved labels
+		s_DenyLabels.Insert("job", true);
+		s_DenyLabels.Insert("instance", true);
+		// For future histogram buckets and summaries
+		s_DenyLabels.Insert("le", true);
+		s_DenyLabels.Insert("quantile", true);
 	}
 }
 #endif
