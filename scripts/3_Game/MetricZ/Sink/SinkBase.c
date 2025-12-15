@@ -39,6 +39,10 @@ class MetricZ_SinkBase
 			m_BufferLimit = bufferLimit;
 			m_IsBuffered = true;
 			m_Buffer = new array<string>();
+			if (bufferLimit > 0)
+				m_Buffer.Reserve(bufferLimit);
+			else
+				m_Buffer.Reserve(MetricZ_Constants.SINK_BUFFER_PREALLOC);
 		}
 	}
 

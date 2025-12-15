@@ -37,5 +37,9 @@ class MetricZ_Constants
 	// Telemetry
 	static const string TELEMETRY_URL = "https://zenit.woozymasta.ru";
 	static const int TELEMETRY_DELAY = 600000; // 10-20 min
+
+	// Initial memory reservation for the buffer when no specific limit is set.
+	// Should cover the average number of metrics (2000-3000) + headroom to avoid resizing.
+	static const int SINK_BUFFER_PREALLOC = 4096;
 }
 #endif
