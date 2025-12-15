@@ -11,6 +11,7 @@
 class MetricZ_Constants
 {
 	// Build information
+	static const string NAME = "MetricZ";
 	static const string VERSION = "dev";
 	static const string COMMIT_SHA = "fffffff";
 	static const string BUILD_DATE = "1970-01-01T00:00:00+00:00";
@@ -32,5 +33,9 @@ class MetricZ_Constants
 	// Legacy files support
 	static const string LEGACY_PROM_FILE = "$profile:metricz.prom";
 	static const string LEGACY_TMP_FILE = "$profile:metricz.tmp";
+
+	// Telemetry
+	static const string TELEMETRY_URL = "https://zenit.woozymasta.ru";
+	static const int TELEMETRY_DELAY = 600000; // 10-20 min
 }
 #endif

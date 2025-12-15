@@ -16,6 +16,7 @@ class MetricZ_Config
 	protected static ref MetricZ_Config s_Instance; // singleton instance
 	protected static ref MetricZ_ConfigDTO s_Config; // singleton state
 	protected static bool s_Loaded;
+	protected static bool s_TelemetrySend;
 
 	/**
 	    \brief Retrieves the singleton configuration instance.
@@ -162,6 +163,14 @@ class MetricZ_Config
 
 		s_Loaded = true;
 
+#ifndef DIAG
+		if (!disableTelemetry && !s_TelemetrySend) {
+			s_TelemetrySend = true;
+			int delay = Math.RandomInt(MetricZ_Constants.TELEMETRY_DELAY, MetricZ_Constants.TELEMETRY_DELAY * 2);
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(SendTelemetry, delay, false);
+		}
+#endif
+
 #ifdef DIAG
 		DebugConfig();
 #endif
@@ -173,6 +182,35 @@ class MetricZ_Config
 		                 MetricZ_Constants.BUILD_DATE);
 
 		ErrorEx("MetricZ: loaded " + ver, ErrorExSeverity.INFO);
+	}
+
+	/**
+	    \brief Telemetry sender
+	*/
+	protected void SendTelemetry()
+	{
+		RestApi api = GetRestApi();
+		if (!api)
+			api = CreateRestApi();
+		if (!api) {
+			s_TelemetrySend = false;
+			return;
+		}
+
+		RestContext ctx = api.GetRestContext(MetricZ_Constants.TELEMETRY_URL);
+		if (!ctx) {
+			s_TelemetrySend = false;
+			return;
+		}
+
+		string body = string.Format(
+		                  "{\"application\":\"%1\",\"version\":\"%2\",\"type\":\"steam\",\"port\":%3}",
+		                  MetricZ_Constants.NAME,
+		                  MetricZ_Constants.VERSION,
+		                  g_Game.ServerConfigGetInt("steamQueryPort"));
+
+		ctx.SetHeader("application/json");
+		ctx.POST(null, "/api/telemetry", body);
 	}
 
 	/**

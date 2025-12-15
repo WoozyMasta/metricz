@@ -27,6 +27,7 @@ Here is the updated changelog including the new changes.
   serialization for HTTP payloads, reducing execution time from x4-x5 times
 * support for sending metrics to the proxy and aggregation backend
   [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
+* basic telemetry sending
 * **`dayz_metricz_http_requests_total`** (`COUNTER`) —
   Total HTTP requests by type and status
 * **`dayz_metricz_http_retries_total`** (`COUNTER`) —

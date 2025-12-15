@@ -179,6 +179,8 @@ For DayZ metrics, we strongly recommend using
   Delay in seconds before the first metric collection begins.
 * **`settings.collect_interval_sec`** (`int`) = 15 -
   Interval in seconds between metric updates.
+* **`settings.disable_telemetry`** (`bool`) -
+  Disable send minimal telemetry 10-20 minutes after server startup.
 
 ### FileExport
 
@@ -229,7 +231,7 @@ For DayZ metrics, we strongly recommend using
   limits. With 'serialized=false' recommended range 64-512 for optimal
   performance. HTTP POST is not disk-dependent, but building one huge
   request body requires more CPU time.
-* **`http.url`** (`string`) = "<http://127.0.0.1:8098>" -
+* **`http.url`** (`string`) = "http://127.0.0.1:8098" -
   Remote URL of the metricz-exporter instance.
 * **`http.user`** (`string`) = "metricz" -
   Username for Basic Auth protected publishing in metricz-exporter.
