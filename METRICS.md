@@ -68,10 +68,10 @@ DayZ server. Each metric includes its identifier, type
   Player lifetime since spawn or load in seconds
 * **`dayz_metricz_player_position_x`** (`GAUGE`) —
   Player world X
-* **`dayz_metricz_player_position_y`** (`GAUGE`) —
-  Player world Y
 * **`dayz_metricz_player_position_z`** (`GAUGE`) —
   Player world Z
+* **`dayz_metricz_player_position_y`** (`GAUGE`) —
+  Player world Y
 * **`dayz_metricz_player_orientation`** (`GAUGE`) —
   Player yaw degrees
 * **`dayz_metricz_player_network_ping_min`** (`GAUGE`) —
@@ -122,10 +122,10 @@ DayZ server. Each metric includes its identifier, type
   Fuel fraction 0..1
 * **`dayz_metricz_transport_position_x`** (`GAUGE`) —
   Transport world X
-* **`dayz_metricz_transport_position_y`** (`GAUGE`) —
-  Transport world Y
 * **`dayz_metricz_transport_position_z`** (`GAUGE`) —
   Transport world Z
+* **`dayz_metricz_transport_position_y`** (`GAUGE`) —
+  Transport world Y
 * **`dayz_metricz_transport_orientation`** (`GAUGE`) —
   Transport yaw degrees
 
@@ -301,5 +301,11 @@ DayZ server. Each metric includes its identifier, type
 
 * **`dayz_metricz_update_duration_seconds`** (`GAUGE`) —
   Duration of previous MetricZ update, seconds
+* **`dayz_metricz_sink_begin_duration_seconds`** (`GAUGE`) —
+  Time spent initializing the metric sink in the previous cycle (e.g. file
+  open I/O or buffer allocation)
+* **`dayz_metricz_sink_end_duration_seconds`** (`GAUGE`) —
+  Time spent finalizing the export in the previous cycle (e.g. file
+  close/atomic swap or HTTP transmission)
 * **`dayz_metricz_scrape_duration_seconds`** (`GAUGE`) —
   Duration of specific scrape components in seconds

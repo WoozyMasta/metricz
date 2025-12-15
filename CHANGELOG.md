@@ -19,6 +19,8 @@ Here is the updated changelog including the new changes.
 
 ### Added
 
+* implemented Flush State Machine, which allows processing each individual
+  block of metrics in different server frames
 * prevent overriding reserved Prometheus labels
 * configuration has been completely moved to a new format in the JSON file
   `$profile:metricz/config.json` ⚠️

@@ -124,17 +124,16 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			    "player_position_x",
 			    "Player world X",
 			    MetricZ_MetricType.GAUGE);
+			m_PosZ = new MetricZ_MetricFloat(
+			    "player_position_z",
+			    "Player world Z",
+			    MetricZ_MetricType.GAUGE);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_PosY = new MetricZ_MetricFloat(
 				    "player_position_y",
 				    "Player world Y",
 				    MetricZ_MetricType.GAUGE);
-
-			m_PosZ = new MetricZ_MetricFloat(
-			    "player_position_z",
-			    "Player world Z",
-			    MetricZ_MetricType.GAUGE);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Yaw = new MetricZ_MetricFloat(
@@ -233,10 +232,10 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 
 		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_Registry.Insert(m_PosX);
+			m_Registry.Insert(m_PosZ);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_Registry.Insert(m_PosY);
-			m_Registry.Insert(m_PosZ);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Registry.Insert(m_Yaw);
@@ -291,10 +290,10 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			vector pos = MetricZ_Geo.GetPosition(m_Player);
 			m_PosX.Set(pos[0]);
+			m_PosZ.Set(pos[2]);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_PosY.Set(pos[1]);
-			m_PosZ.Set(pos[2]);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Yaw.Set(m_Player.GetOrientation()[0]);

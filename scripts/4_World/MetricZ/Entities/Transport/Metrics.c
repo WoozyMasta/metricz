@@ -57,16 +57,16 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 			    "transport_position_x",
 			    "Transport world X",
 			    MetricZ_MetricType.GAUGE);
+			m_PosZ = new MetricZ_MetricFloat(
+			    "transport_position_z",
+			    "Transport world Z",
+			    MetricZ_MetricType.GAUGE);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_PosY = new MetricZ_MetricFloat(
 				    "transport_position_y",
 				    "Transport world Y",
 				    MetricZ_MetricType.GAUGE);
-			m_PosZ = new MetricZ_MetricFloat(
-			    "transport_position_z",
-			    "Transport world Z",
-			    MetricZ_MetricType.GAUGE);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Yaw = new MetricZ_MetricFloat(
@@ -117,10 +117,10 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 
 		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			m_Registry.Insert(m_PosX);
+			m_Registry.Insert(m_PosZ);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_Registry.Insert(m_PosY);
-			m_Registry.Insert(m_PosZ);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Registry.Insert(m_Yaw);
@@ -147,18 +147,17 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		if (!MetricZ_Config.Get().disabled_metrics.positions) {
 			vector pos = MetricZ_Geo.GetPosition(m_Transport);
 			m_PosX.Set(pos[0]);
+			m_PosZ.Set(pos[2]);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_height)
 				m_PosY.Set(pos[1]);
-			m_PosZ.Set(pos[2]);
 
 			if (!MetricZ_Config.Get().disabled_metrics.positions_yaw)
 				m_Yaw.Set(m_Transport.GetOrientation()[0]);
 		}
 
 		// speed m/s via physics velocity
-		vector v = GetVelocity(m_Transport);
-		float speed = Math.Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+		float speed = GetVelocity(m_Transport).Length();
 		if (speed < 0.10)
 			speed = 0;
 		m_SpeedMS.Set(speed);
