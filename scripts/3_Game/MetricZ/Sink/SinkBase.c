@@ -16,7 +16,8 @@ class MetricZ_SinkBase
 	private bool m_IsBuffered;
 	private bool m_Busy;
 	private ref array<string> m_Buffer;
-	private static ref JsonSerializer m_Serializer;
+
+	private static ref JsonSerializer s_Serializer;
 
 	void ~MetricZ_SinkBase()
 	{
@@ -156,10 +157,10 @@ class MetricZ_SinkBase
 			return string.Empty;
 
 		string json;
-		if (!m_Serializer)
-			m_Serializer = new JsonSerializer();
+		if (!s_Serializer)
+			s_Serializer = new JsonSerializer();
 
-		if (!m_Serializer.WriteToString(m_Buffer, false, json)) {
+		if (!s_Serializer.WriteToString(m_Buffer, false, json)) {
 			ErrorEx("MetricZ: sink json serialization failed", ErrorExSeverity.ERROR);
 			return string.Empty;
 		}
