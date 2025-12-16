@@ -9,6 +9,18 @@ The mod gathers engine and world metrics and exports them for monitoring.
 Integrates seamlessly with node_exporter (Linux), windows_exporter (Windows),
 or the specialized [MetricZ Exporter].
 
+> [!IMPORTANT]  
+> **Project Status: Release Candidate**  
+> The core functionality is stable and feature-complete.
+>
+> Geospatial Features: Full map visualization (Player/Transport tracking)
+> is implemented but pending upstream updates in **Grafana**
+> ([PR #114371], [PR #114947]).  
+> Once these changes are merged and released, we will publish updated
+> dashboards utilizing [DZMap] for self-hosted tile layers.  
+>
+> Future development will focus primarily on maintenance and bug fixes.
+
 ## Why
 
 * Observe the server and game loop in DayZ.
@@ -327,5 +339,9 @@ Steam Workshop page would be greatly appreciated!
 
 [LogZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3610709966
 [MetricZ]: https://steamcommunity.com/sharedfiles/filedetails/?id=3594119002
+[DZMap]: https://github.com/WoozyMasta/dzmap
 [DayZ-Expansion-AI]: https://steamcommunity.com/sharedfiles/filedetails/?id=2792982069
 [DayZ-Expansion-Vehicles]: https://steamcommunity.com/sharedfiles/filedetails/?id=2291785437
+
+[PR #114371]: https://github.com/grafana/grafana/pull/114371
+[PR #114947]: https://github.com/grafana/grafana/pull/114947
