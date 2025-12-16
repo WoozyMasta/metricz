@@ -28,6 +28,7 @@ class MetricZ_CallbackBase : RestCallback
 		m_Attempt = 0;
 		m_StartedAt = g_Game.GetTime();
 		m_ReqType = ClassName();
+		m_ReqType.Replace("MetricZ_Callback", "");
 	}
 
 	void ~MetricZ_CallbackBase()
