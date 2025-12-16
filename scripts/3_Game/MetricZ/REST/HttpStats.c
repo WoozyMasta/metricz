@@ -38,7 +38,7 @@ class MetricZ_HttpStats
 	*/
 	static void IncRequest(string type, string status)
 	{
-		if (MetricZ_Config.Get().disabled_metrics.http)
+		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disabled_metrics.http)
 			return;
 
 		string key = type + ":" + status;

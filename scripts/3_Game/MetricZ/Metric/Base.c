@@ -40,8 +40,6 @@ class MetricZ_MetricBase
 		m_EType = type;
 		m_Help = "# HELP " + m_Name + " " + help;
 		m_Type = "# TYPE " + m_Name + " " + TypeToText();
-
-		UpdateCachedPrefix();
 	}
 
 	/**
@@ -189,7 +187,7 @@ class MetricZ_MetricBase
 		}
 
 		if (m_CachedMetric == string.Empty)
-			m_CachedMetric = m_CachedPrefix + "0";
+			m_CachedMetric = GetCachedPrefix() + "0";
 
 		sink.Line(m_CachedMetric);
 	}
@@ -234,7 +232,7 @@ class MetricZ_MetricBase
 	*/
 	protected void UpdateCachedMetric(string stringValue)
 	{
-		m_CachedMetric = m_CachedPrefix + stringValue;
+		m_CachedMetric = GetCachedPrefix() + stringValue;
 	}
 
 	/**
@@ -248,6 +246,19 @@ class MetricZ_MetricBase
 
 		m_CachedPrefix = m_Name + label + " ";
 		m_CachedMetric = string.Empty;
+	}
+
+	/**
+	    \brief Return cached metric name with labels prefix and update it if need
+	*/
+	protected string GetCachedPrefix()
+	{
+		if (m_CachedPrefix != string.Empty)
+			return m_CachedPrefix;
+
+		UpdateCachedPrefix();
+
+		return m_CachedPrefix;
 	}
 }
 #endif

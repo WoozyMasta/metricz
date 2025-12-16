@@ -38,6 +38,10 @@ class MetricZ_Helpers
 	*/
 	static string GetInstanceID(string id)
 	{
+#ifdef DIAG
+		ErrorEx("MetricZ: requested instance ID with '" + id + "' input", ErrorExSeverity.WARNING);
+#endif
+
 		// get override from input
 		if (id != string.Empty)
 			return id;
@@ -51,7 +55,7 @@ class MetricZ_Helpers
 		GetCLIParam("port", id);
 		if (id != "0") {
 			ErrorEx(
-			    "MetricZ instanceId is 0. Used game port " + id + " as instanceId.",
+			    "MetricZ: instanceId is 0. Used game port " + id + " as instanceId.",
 			    ErrorExSeverity.INFO);
 
 			return id;
@@ -61,7 +65,7 @@ class MetricZ_Helpers
 		id = g_Game.ServerConfigGetInt("steamQueryPort").ToString();
 		if (id != "0") {
 			ErrorEx(
-			    "MetricZ instanceId and game port is 0. Used steam query port " + id + " as instanceId.",
+			    "MetricZ: instanceId and game port is 0. Used steam query port " + id + " as instanceId.",
 			    ErrorExSeverity.INFO);
 
 			return id;
@@ -69,7 +73,7 @@ class MetricZ_Helpers
 
 		// fallback to 0
 		ErrorEx(
-		    "MetricZ instanceId is 0. Set unique 'instanceId' in serverDZ.cfg or override 'instance_id' in metricz.json",
+		    "MetricZ: instanceId is 0. Set unique 'instanceId' in serverDZ.cfg or override 'instance_id' in metricz.json",
 		    ErrorExSeverity.WARNING);
 
 		return "0";
