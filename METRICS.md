@@ -156,6 +156,8 @@ DayZ server. Each metric includes its identifier, type
   Configured scrape interval in seconds
 * **`dayz_metricz_scrape_skipped_total`** (`COUNTER`) —
   Total scrapes skipped because a previous scrape is still running
+* **`dayz_metricz_effective_world_size`** (`GAUGE`) —
+  Effective map size in world units
 * **`dayz_metricz_fps`** (`GAUGE`) —
   Mission updates per one second
 * **`dayz_metricz_fps_window_min`** (`GAUGE`) —

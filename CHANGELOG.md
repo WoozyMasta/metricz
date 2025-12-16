@@ -31,6 +31,23 @@ Here is the updated changelog including the new changes.
 * support for sending metrics to the proxy and aggregation backend
   [metrics-exporter](https://github.com/woozymasta/metricz-exporter)
 * basic telemetry sending
+* implemented `MetricZ_PersistentCache` to save and load unique sets of
+  tags between server restarts, which will fix Prometheus rate calculations
+* configuration options `disabled_metrics.hits`, `thresholds.hit_damage` and
+  `thresholds.hit_damage_vehicle` to control entity hit metrics
+* configuration option `disabled_metrics.kills` to disable
+  player and zombie/animal kill source metrics
+* debug logging of all configuration values when `DIAG` is defined
+* `MetricZ_Geo` helper class for converting world coordinates to `EPSG:4326`
+  (WGS84).
+* new config/CLI `geo.world_effective_size` options to override map tiles size
+* new config options `disabled_metrics.areas` and
+  `disabled_metrics.local_areas`
+* new config options `disabled_metrics.positions_height` and
+  `disabled_metrics.positions_yaw`
+
+#### New metrics
+
 * **`dayz_metricz_http_requests_total`** (`COUNTER`) —
   Total HTTP requests by type and status
 * **`dayz_metricz_http_retries_total`** (`COUNTER`) —
@@ -41,8 +58,6 @@ Here is the updated changelog including the new changes.
   Total number of Expansion AI deaths (optional)
 * **`dayz_metricz_eai_npc_deaths_total`** (`COUNTER`) —
   Total number of Expansion AI NPC deaths (optional)
-* implemented `MetricZ_PersistentCache` to save and load unique sets of
-  tags between server restarts, which will fix Prometheus rate calculations
 * **`dayz_metricz_player_hit_by_total`** (`COUNTER`) —
   Count of hits received by players from specific ammo types
 * **`dayz_metricz_creature_hit_by_total`** (`COUNTER`) —
@@ -52,26 +67,21 @@ Here is the updated changelog including the new changes.
   Count of players killed by source
 * **`dayz_metricz_creature_killed_by_total`** (`COUNTER`) —
   Count of creatures (Infected/Animals/AI) killed by source
-* configuration options `disabled_metrics.hits`, `thresholds.hit_damage` and
-  `thresholds.hit_damage_vehicle` to control entity hit metrics
-* configuration option `disabled_metrics.kills` to disable
-  player and zombie/animal kill source metrics
-* debug logging of all configuration values when `DIAG` is defined
-* `MetricZ_Geo` helper class for converting world coordinates to `EPSG:4326`
-  (WGS84).
-* new config/CLI `geo.world_effective_size` options to override map tiles size
-* **`dayz_metricz_player_orientation`**  (`GAUGE`) — player yaw in degrees
-* **`dayz_metricz_transport_orientation`** (`GAUGE`) — transport yaw in degrees
-* **`dayz_metricz_effect_areas`** (`GAUGE`) — total active effect areas
-  (static/dynamic zones)
+* **`dayz_metricz_effective_world_size`** (`GAUGE`) —
+  effective map size in world units
+* **`dayz_metricz_player_orientation`**  (`GAUGE`) —
+  player yaw in degrees
+* **`dayz_metricz_transport_orientation`** (`GAUGE`) —
+  transport yaw in degrees
+* **`dayz_metricz_effect_areas`** (`GAUGE`) —
+  total active effect areas (static/dynamic zones)
 * **`dayz_metricz_effect_area_insiders`** (`GAUGE`) —
   per-zone metrics with position and radius labels
-* new config options `disabled_metrics.areas` and `disabled_metrics.local_areas`
-* new config options `disabled_metrics.positions_height` and `disabled_metrics.positions_yaw`
-
+  
 ### Changed
 
-* caching labels strings wherever possible and squeezing out maximum performance
+* caching labels strings wherever possible and squeezing out
+  maximum performance
 * sink writers have been implemented for writing metrics to disk,
   sending them over the network, or both simultaneously
 * for file export, atomic write mode is now optional (but recommended)
@@ -98,7 +108,7 @@ Here is the updated changelog including the new changes.
   `MetricZ_DisableCoordinatesMetrics` (`-metricz-disable-coordinates`) ⚠️
 * coordinate metrics now use `MetricZ_Geo` and can export either raw world
   coordinates or WGS84 lon/lat based on
-  `geo.disable_world_coordinates` ⚠️
+  `geo.disable_transform_coordinates` ⚠️
 * labels for **`dayz_metricz_territory_lifetime`** changed: replaced
   `x`/`y`/`z` with `longitude`/`latitude` and added `refresher_radius` ⚠️
 * documentation rendering in `CONFIG.md` has been updated and improved

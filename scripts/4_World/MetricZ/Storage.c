@@ -38,6 +38,10 @@ class MetricZ_Storage
 	    "scrape_skipped",
 	    "Total scrapes skipped because a previous scrape is still running",
 	    MetricZ_MetricType.COUNTER);
+	static ref MetricZ_MetricInt s_MapEffectiveSize = new MetricZ_MetricInt(
+	    "effective_world_size",
+	    "Effective map size in world units",
+	    MetricZ_MetricType.GAUGE);
 
 	// FPS
 	static ref MetricZ_MetricFloat s_FPS = new MetricZ_MetricFloat(
@@ -375,6 +379,7 @@ class MetricZ_Storage
 		s_Registry.Insert(s_Status);
 		s_Registry.Insert(s_ScrapeInterval);
 		s_Registry.Insert(s_ScrapeSkippedTotal);
+		s_Registry.Insert(s_MapEffectiveSize);
 
 		// FPS
 		s_Registry.Insert(s_FPS);
@@ -475,6 +480,7 @@ class MetricZ_Storage
 		s_Status.Set(1);
 		s_ScrapeInterval.Set(MetricZ_Config.Get().settings.collect_interval_sec);
 		s_ScrapeSkippedTotal.Set(0);
+		s_MapEffectiveSize.Set(MetricZ_Geo.GetMapEffectiveSize());
 		s_FPSLimit.Set(MetricZ_Config.Get().fps_limit);
 		s_MaxPlayers.Set(MetricZ_Config.Get().max_players);
 

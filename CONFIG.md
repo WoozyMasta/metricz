@@ -314,7 +314,7 @@ For DayZ metrics, we strongly recommend using
 
 ### Geo
 
-* **`geo.disable_world_coordinates`** (`bool`) -
+* **`geo.disable_transform_coordinates`** (`bool`) -
   Disables conversion of coordinate metrics to the `EPSG:4326` (WGS84)
   format. By default, positions are converted to Longitude/Latitude in the
   -180/180 and -90/90 range. If disabled, all exported coordinates retain

@@ -43,7 +43,7 @@ class MetricZ_Geo
 			Init();
 
 		vector pos = obj.GetPosition();
-		if (MetricZ_Config.Get().geo.disable_world_coordinates)
+		if (MetricZ_Config.Get().geo.disable_transform_coordinates)
 			return pos;
 
 		float lon, lat;
@@ -65,7 +65,7 @@ class MetricZ_Geo
 		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.Get().geo.disable_world_coordinates) {
+		if (MetricZ_Config.Get().geo.disable_transform_coordinates) {
 			lon = pos[2];
 			lat = pos[0];
 			return;
@@ -93,7 +93,7 @@ class MetricZ_Geo
 		if (s_mapEffectiveSize <= 0)
 			Init();
 
-		if (MetricZ_Config.Get().geo.disable_world_coordinates)
+		if (MetricZ_Config.Get().geo.disable_transform_coordinates)
 			return radiusMeters;
 
 		return radiusMeters * s_LongitudeScale;

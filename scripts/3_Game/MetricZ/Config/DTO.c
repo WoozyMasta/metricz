@@ -311,7 +311,7 @@ class MetricZ_ConfigDTO_Geo
 	// Disables conversion of coordinate metrics to the `EPSG:4326` (WGS84) format.
 	// By default, positions are converted to Longitude/Latitude in the -180/180 and -90/90 range.
 	// If disabled, all exported coordinates retain vanilla zero-relative meters.
-	bool disable_world_coordinates;
+	bool disable_transform_coordinates;
 
 	// Overrides the effective map tile size in world units.
 	// Useful if the web map size is larger than the game world size.
