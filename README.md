@@ -59,6 +59,53 @@ or the specialized [MetricZ Exporter].
 > While MetricZ handles performance counters, LogZ captures non-metric
 > event data as structured NDJSON logs, enabling deeper tracing and analysis.
 
+## Performance & Impact
+
+MetricZ is designed with zero-impact philosophy in mind.
+Monitoring should never lag the server.
+
+### Time-Sliced Collection
+
+Instead of freezing the server to count 10,000+ items and entities
+in a single frame, MetricZ splits the scrape process into 12 separate steps.  
+Each step executes in a separate server frame (tick).
+
+* **Frame 1:** World data update & write.
+* **Frame 2:** Iterate Players.
+* **Frame 3:** Iterate Zombies.
+* **Frame 4:** Iterate Animals.
+* **Frame 5:** Iterate Vehicles...
+* ...and so on.
+
+This ensures that the "spikes" of CPU usage are flattened over a short period
+(approx. 1-3 ms total), keeping the Server FPS stable.
+
+### Event-Driven Counters
+
+Global counters (like `weapons_total`, `items_total`)
+do not iterate over objects.
+They use O(1) hooks (`EEInit`/`EEDelete`) to maintain a live count in memory.
+Reading these values is instant.
+
+### String Caching
+
+String manipulation in DayZ (Enforce Script) is slow.
+MetricZ caches normalized label names and metric prefixes.
+e.g., The raw label `{world="chernarus",...}` is built once and reused.
+Object names like `M4A1_Green` -> `m4a1` are resolved once per type and cached.
+
+### Smart I/O
+
+* **File Export:**
+  Uses buffered writing
+  (only flushes to disk when buffer fills, typically 4KB-64KB chunks).
+* **HTTP Export:**
+  Uses serialized JSON payloads to avoid creating massive strings in memory.
+
+> [!TIP]  
+> Use HTTP export with [MetricZ Exporter], it is often 10 times faster
+> than file export and also enriches your metrics with more information.
+
 ## Quick start
 
 By default, the mod writes to a file for use with a local exporter
