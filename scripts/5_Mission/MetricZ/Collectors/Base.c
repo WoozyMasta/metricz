@@ -23,7 +23,7 @@ class MetricZ_CollectorBase
 	*/
 	bool IsEnabled()
 	{
-		return false;
+		return MetricZ_Config.IsLoaded();
 	}
 
 	/**
