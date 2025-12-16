@@ -223,6 +223,8 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 		labels.Insert("hash", MetricZ_LabelUtils.PersistentHash(m_Transport).ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+
+		ApplyLabelsToRegistry();
 	}
 
 	/**

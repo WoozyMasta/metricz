@@ -396,8 +396,29 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			labels.Insert("type", playerType);
 
 		m_LabelsExtra = MetricZ_LabelUtils.MakeLabels(labels);
+
+		ApplyLabelsToRegistry();
 	}
 
+	/**
+	    \brief Set labels direct to metric with execute SetLabels() for each metric in registry
+	*/
+	override protected void ApplyLabelsToRegistry()
+	{
+		if (m_Registry.Count() == 0)
+			return;
+
+		foreach (MetricZ_MetricBase metric : m_Registry) {
+			if (metric == m_IsLoaded)
+				metric.SetLabels(m_LabelsExtra);
+			else
+				metric.SetLabels(m_Labels);
+		}
+	}
+
+	/**
+	    \brief Select a set of labels for a specific metric.
+	*/
 	override protected string LabelsFor(MetricZ_MetricBase metric)
 	{
 		if (metric == m_IsLoaded)

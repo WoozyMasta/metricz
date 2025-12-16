@@ -54,5 +54,14 @@ class MetricZ_TerritoryRegistry
 		for (int i = 0; i < s_Registry.Count(); i++)
 			territories.Insert(s_Registry[i]);
 	}
+
+	/**
+	    \brief Returns direct reference to the live registry
+	    \warning Do NOT modify this array (Remove/Insert) while iterating!
+	*/
+	static array<TerritoryFlag> GetList()
+	{
+		return s_Registry;
+	}
 }
 #endif

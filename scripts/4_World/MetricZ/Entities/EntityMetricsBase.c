@@ -29,6 +29,22 @@ class MetricZ_EntityMetricsBase
 	void Update() {} // redefined in children
 
 	/**
+	    \brief Get metric object directly by index (Unsafe/Fast).
+	*/
+	MetricZ_MetricBase GetMetricDirect(int idx)
+	{
+		return m_Registry.Get(idx);
+	}
+
+	/**
+	    \brief Get cached labels string directly (Unsafe/Fast).
+	*/
+	string GetLabelsDirect()
+	{
+		return m_Labels;
+	}
+
+	/**
 	    \brief Flush all registered metrics.
 	    \param MetricZ_SinkBase sink instance
 	*/
@@ -86,10 +102,22 @@ class MetricZ_EntityMetricsBase
 	*/
 	protected void SetLabels()
 	{
-		if (m_Labels != string.Empty)
+		if (m_Labels == string.Empty)
+			m_Labels = MetricZ_LabelUtils.MakeLabels(null);
+
+		ApplyLabelsToRegistry();
+	}
+
+	/**
+	    \brief Set labels direct to metric with execute SetLabels() for each metric in registry
+	*/
+	protected void ApplyLabelsToRegistry()
+	{
+		if (m_Registry.Count() == 0)
 			return;
 
-		m_Labels = MetricZ_LabelUtils.MakeLabels(null);
+		foreach (MetricZ_MetricBase metric : m_Registry)
+			metric.SetLabels(m_Labels);
 	}
 
 	/**

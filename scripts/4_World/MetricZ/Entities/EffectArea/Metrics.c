@@ -78,6 +78,8 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 		labels.Insert("radius", m_Area.MetricZ_GetRadius().ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+
+		ApplyLabelsToRegistry();
 	}
 }
 #endif

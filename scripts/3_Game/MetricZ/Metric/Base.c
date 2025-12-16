@@ -21,6 +21,8 @@ class MetricZ_MetricBase
 	protected string m_Help;
 	protected string m_Type;
 	protected string m_Labels;
+	protected string m_CachedPrefix;
+	protected string m_CachedMetric;
 	protected MetricZ_MetricType m_EType;
 
 	/**
@@ -38,6 +40,8 @@ class MetricZ_MetricBase
 		m_EType = type;
 		m_Help = "# HELP " + m_Name + " " + help;
 		m_Type = "# TYPE " + m_Name + " " + TypeToText();
+
+		UpdateCachedPrefix();
 	}
 
 	/**
@@ -50,6 +54,8 @@ class MetricZ_MetricBase
 	void SetLabels(string raw)
 	{
 		m_Labels = raw;
+
+		UpdateCachedPrefix();
 	}
 
 	/**
@@ -64,6 +70,8 @@ class MetricZ_MetricBase
 	void MakeLabels(map<string, string> labels)
 	{
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+
+		UpdateCachedPrefix();
 	}
 
 	/**
@@ -79,6 +87,8 @@ class MetricZ_MetricBase
 		map<string, string> labels = new map<string, string>();
 		labels.Insert(key, value);
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+
+		UpdateCachedPrefix();
 	}
 
 	/**
@@ -151,24 +161,6 @@ class MetricZ_MetricBase
 	}
 
 	/**
-	    \brief Convert enum type to Prometheus text.
-	    \return "gauge" or "counter"; falls back to "gauge" on error
-	*/
-	private string TypeToText()
-	{
-		switch (m_EType) {
-		case MetricZ_MetricType.GAUGE:
-			return "gauge";
-
-		case MetricZ_MetricType.COUNTER:
-			return "counter";
-		}
-
-		ErrorEx("MetricZ: invalid metric type " + m_EType.ToString() + " for " + m_Name);
-		return "gauge";
-	}
-
-	/**
 	    \brief Write HELP and TYPE headers.
 	    \param MetricZ_SinkBase sink instance
 	*/
@@ -191,10 +183,15 @@ class MetricZ_MetricBase
 		if (!sink)
 			return;
 
-		if (labels == string.Empty)
-			labels = GetLabels();
+		if (labels != string.Empty) {
+			sink.Line(m_Name + labels + " 0");
+			return;
+		}
 
-		sink.Line(m_Name + labels + " 0");
+		if (m_CachedMetric == string.Empty)
+			m_CachedMetric = m_CachedPrefix + "0";
+
+		sink.Line(m_CachedMetric);
 	}
 
 	/**
@@ -212,6 +209,45 @@ class MetricZ_MetricBase
 
 		WriteHeaders(sink);
 		Flush(sink, labels);
+	}
+
+	/**
+	    \brief Convert enum type to Prometheus text.
+	    \return "gauge" or "counter"; falls back to "gauge" on error
+	*/
+	protected string TypeToText()
+	{
+		switch (m_EType) {
+		case MetricZ_MetricType.GAUGE:
+			return "gauge";
+
+		case MetricZ_MetricType.COUNTER:
+			return "counter";
+		}
+
+		ErrorEx("MetricZ: invalid metric type " + m_EType.ToString() + " for " + m_Name);
+		return "gauge";
+	}
+
+	/**
+	    \brief Updates cached metric name with labels and value for reduce allocations in Flush time
+	*/
+	protected void UpdateCachedMetric(string stringValue)
+	{
+		m_CachedMetric = m_CachedPrefix + stringValue;
+	}
+
+	/**
+	    \brief Updates cached metric name with labels prefix for reduce allocations
+	*/
+	protected void UpdateCachedPrefix()
+	{
+		string label = m_Labels;
+		if (label == string.Empty)
+			label = MetricZ_LabelUtils.MakeLabels();
+
+		m_CachedPrefix = m_Name + label + " ";
+		m_CachedMetric = string.Empty;
 	}
 }
 #endif

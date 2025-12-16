@@ -183,11 +183,7 @@ class MetricZ_SinkBase
 
 		m_Buffer.Insert(line);
 
-		int cnt = m_Buffer.Count();
-		if (m_BufferLimit < 0)
-			return;
-
-		if (cnt >= m_BufferLimit)
+		if (m_Buffer.Count() >= m_BufferLimit && m_BufferLimit > 0)
 			BufferFlush();
 	}
 

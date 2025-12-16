@@ -71,6 +71,7 @@ Here is the updated changelog including the new changes.
 
 ### Changed
 
+* caching labels strings wherever possible and squeezing out maximum performance
 * sink writers have been implemented for writing metrics to disk,
   sending them over the network, or both simultaneously
 * for file export, atomic write mode is now optional (but recommended)

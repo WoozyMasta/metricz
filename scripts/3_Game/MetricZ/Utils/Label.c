@@ -12,6 +12,7 @@ class MetricZ_LabelUtils
 {
 	protected static bool s_BaseLabelReady; //!< Indicates whether base labels are cached
 	protected static string s_BaseLabel; //!< Cached base labels: key="val",key2="val2"
+	protected static string s_BaseLabelBraced; //!< Cached braced base labels: {key="val",key2="val2"}
 	protected static ref map<string, bool> s_DenyLabels; //!< Denylist for forbidden label keys
 
 	/**
@@ -66,8 +67,13 @@ class MetricZ_LabelUtils
 	*/
 	static string MakeLabels(map<string, string> labels = null)
 	{
-		if (!labels || labels.Count() == 0)
-			return "{" + BaseLabels() + "}";
+		if (!labels || labels.Count() == 0) {
+			if (s_BaseLabelReady)
+				return s_BaseLabelBraced;
+			else
+				return "{" + BaseLabels() + "}";
+		}
+
 
 		string result = "{" + BaseLabels();
 		foreach (string k, string v : labels) {
@@ -98,7 +104,8 @@ class MetricZ_LabelUtils
 	static void InvalidateBaseLabels()
 	{
 		s_BaseLabelReady = false;
-		s_BaseLabel = "";
+		s_BaseLabel = string.Empty;
+		s_BaseLabelBraced = string.Empty;
 	}
 
 	/**
@@ -109,7 +116,7 @@ class MetricZ_LabelUtils
 	*/
 	static string BaseLabels()
 	{
-		if (s_BaseLabelReady)
+		if (!g_Game || s_BaseLabelReady)
 			return s_BaseLabel;
 
 		s_BaseLabel = "";
@@ -131,6 +138,7 @@ class MetricZ_LabelUtils
 
 		// base: instance id (allowed to be "0")
 		s_BaseLabel += "instance_id=\"" + MetricZ_Config.Get().settings.instance_id + "\"";
+		s_BaseLabelBraced = "{" + s_BaseLabel + "}";
 		s_BaseLabelReady = true;
 
 		return s_BaseLabel;

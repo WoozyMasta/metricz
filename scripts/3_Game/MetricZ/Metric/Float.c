@@ -28,7 +28,11 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 	*/
 	void Set(float x)
 	{
+		if (m_Value == x && m_CachedMetric != string.Empty)
+			return;
+
 		m_Value = x;
+		UpdateCachedMetric(m_Value.ToString());
 	}
 
 	/**
@@ -38,6 +42,7 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 	void Add(float x)
 	{
 		m_Value += x;
+		UpdateCachedMetric(m_Value.ToString());
 	}
 
 	/**
@@ -50,10 +55,15 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 		if (!sink)
 			return;
 
-		if (labels == string.Empty)
-			labels = GetLabels();
+		if (labels != string.Empty) {
+			sink.Line(m_Name + labels + " " + m_Value.ToString());
+			return;
+		}
 
-		sink.Line(m_Name + labels + " " + m_Value.ToString());
+		if (m_CachedMetric == string.Empty)
+			UpdateCachedMetric(m_Value.ToString());
+
+		sink.Line(m_CachedMetric);
 	}
 
 	/**

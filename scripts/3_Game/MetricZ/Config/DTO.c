@@ -323,6 +323,9 @@ class MetricZ_ConfigDTO_Geo
 	*/
 	void Normalize()
 	{
+		if (!g_Game)
+			return;
+
 		world_effective_size = Math.Clamp(world_effective_size, g_Game.GetWorld().GetWorldSize(), 81920);
 	}
 }

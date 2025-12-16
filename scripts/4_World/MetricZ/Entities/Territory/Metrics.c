@@ -70,6 +70,8 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 		labels.Insert("latitude", pos[2].ToString());
 
 		m_Labels = MetricZ_LabelUtils.MakeLabels(labels);
+
+		ApplyLabelsToRegistry();
 	}
 }
 #endif

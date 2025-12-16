@@ -10,6 +10,13 @@
 */
 class MetricZ_EntitiesWriter
 {
+	// Static buffers for Object Pooling
+	static ref array<Man> s_PlayersListBuffer = new array<Man>();
+	static ref array<ref MetricZ_PlayerMetrics> s_PlayerMetricsBuffer = new array<ref MetricZ_PlayerMetrics>();
+	static ref array<ref MetricZ_TransportMetrics> s_TransportMetricsBuffer = new array<ref MetricZ_TransportMetrics>();
+	static ref array<ref MetricZ_TerritoryMetrics> s_TerritoryMetricsBuffer = new array<ref MetricZ_TerritoryMetrics>();
+	static ref array<ref MetricZ_EffectAreaMetrics> s_AreaMetricsBuffer = new array<ref MetricZ_EffectAreaMetrics>();
+
 	/**
 	    \brief Flush all player metrics in interleaved order.
 	    \details For each metric index: write HELP/TYPE once, then values for all players.
@@ -20,12 +27,11 @@ class MetricZ_EntitiesWriter
 		if (!sink)
 			return;
 
-		array<ref MetricZ_PlayerMetrics> pms = new array<ref MetricZ_PlayerMetrics>();
+		s_PlayerMetricsBuffer.Clear();
+		s_PlayersListBuffer.Clear();
+		g_Game.GetPlayers(s_PlayersListBuffer);
 
-		array<Man> players = new array<Man>();
-		g_Game.GetPlayers(players);
-
-		foreach (Man man : players) {
+		foreach (Man man : s_PlayersListBuffer) {
 			PlayerBase player;
 			if (!Class.CastTo(player, man))
 				continue;
@@ -35,18 +41,18 @@ class MetricZ_EntitiesWriter
 				continue;
 
 			pm.Update();
-			pms.Insert(pm);
+			s_PlayerMetricsBuffer.Insert(pm);
 		}
 
-		if (pms.Count() == 0)
+		if (s_PlayerMetricsBuffer.Count() == 0)
 			return;
 
-		int metricsCount = pms[0].Count();
+		int metricsCount = s_PlayerMetricsBuffer[0].Count();
 		for (int i = 0; i < metricsCount; i++) {
-			pms[0].WriteHeaderAt(sink, i);
+			s_PlayerMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_PlayerMetrics pmCurrent : pms)
-				pmCurrent.FlushAt(sink, i);
+			foreach (MetricZ_PlayerMetrics pmCurrent : s_PlayerMetricsBuffer)
+				pmCurrent.GetMetricDirect(i).Flush(sink);
 		}
 	}
 
@@ -60,46 +66,54 @@ class MetricZ_EntitiesWriter
 		if (!sink)
 			return;
 
-		array<Transport> list;
-		MetricZ_TransportRegistry.Snapshot(list);
+		array<Transport> list = MetricZ_TransportRegistry.GetList();
 		if (!list || list.Count() == 0)
 			return;
 
-		array<ref MetricZ_TransportMetrics> tms = new array<ref MetricZ_TransportMetrics>();
+		s_TransportMetricsBuffer.Clear();
 		foreach (Transport transport : list) {
 			if (!transport)
 				continue;
 
 			MetricZ_TransportMetrics tm;
 
-			CarScript car;
-			if (Class.CastTo(car, transport))
+			CarScript car = CarScript.Cast(transport);
+			if (car)
 				tm = car.MetricZ_GetMetrics();
-
-			BoatScript boat;
-			if (!tm && Class.CastTo(boat, transport))
-				tm = boat.MetricZ_GetMetrics();
-
-			HelicopterScript heli;
-			if (!tm && Class.CastTo(heli, transport))
-				tm = heli.MetricZ_GetMetrics();
+			else {
+				BoatScript boat = BoatScript.Cast(transport);
+				if (boat)
+					tm = boat.MetricZ_GetMetrics();
+				else {
+					HelicopterScript heli = HelicopterScript.Cast(transport);
+					if (heli)
+						tm = heli.MetricZ_GetMetrics();
+#ifdef EXPANSIONMODVEHICLE
+					else {
+						ExpansionVehicleBase expansionVeh = ExpansionVehicleBase.Cast(transport);
+						if (expansionVeh)
+							tm = expansionVeh.MetricZ_GetMetrics();
+					}
+#endif
+				}
+			}
 
 			if (!tm)
 				continue;
 
 			tm.Update();
-			tms.Insert(tm);
+			s_TransportMetricsBuffer.Insert(tm);
 		}
 
-		if (tms.Count() == 0)
+		if (s_TransportMetricsBuffer.Count() == 0)
 			return;
 
-		int metricsCount = tms[0].Count();
+		int metricsCount = s_TransportMetricsBuffer[0].Count();
 		for (int i = 0; i < metricsCount; i++) {
-			tms[0].WriteHeaderAt(sink, i);
+			s_TransportMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_TransportMetrics tmCurrent : tms)
-				tmCurrent.FlushAt(sink, i);
+			foreach (MetricZ_TransportMetrics tmCurrent : s_TransportMetricsBuffer)
+				tmCurrent.GetMetricDirect(i).Flush(sink);
 		}
 	}
 
@@ -113,12 +127,11 @@ class MetricZ_EntitiesWriter
 		if (!sink)
 			return;
 
-		array<TerritoryFlag> list;
-		MetricZ_TerritoryRegistry.Snapshot(list);
+		array<TerritoryFlag> list = MetricZ_TerritoryRegistry.GetList();
 		if (!list || list.Count() == 0)
 			return;
 
-		array<ref MetricZ_TerritoryMetrics> fms = new array<ref MetricZ_TerritoryMetrics>();
+		s_TerritoryMetricsBuffer.Clear();
 		foreach (TerritoryFlag territory : list) {
 			if (!territory)
 				continue;
@@ -128,18 +141,18 @@ class MetricZ_EntitiesWriter
 				continue;
 
 			fm.Update();
-			fms.Insert(fm);
+			s_TerritoryMetricsBuffer.Insert(fm);
 		}
 
-		if (fms.Count() == 0)
+		if (s_TerritoryMetricsBuffer.Count() == 0)
 			return;
 
-		int n = fms[0].Count();
+		int n = s_TerritoryMetricsBuffer[0].Count();
 		for (int i = 0; i < n; i++) {
-			fms[0].WriteHeaderAt(sink, i);
+			s_TerritoryMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_TerritoryMetrics fmCurrent : fms)
-				fmCurrent.FlushAt(sink, i);
+			foreach (MetricZ_TerritoryMetrics fmCurrent : s_TerritoryMetricsBuffer)
+				fmCurrent.GetMetricDirect(i).Flush(sink);
 		}
 	}
 
@@ -165,12 +178,11 @@ class MetricZ_EntitiesWriter
 		if (!sink)
 			return;
 
-		array<EffectArea> list;
-		MetricZ_EffectAreaRegistry.Snapshot(list);
+		array<EffectArea> list = MetricZ_EffectAreaRegistry.GetList();
 		if (!list || list.Count() == 0)
 			return;
 
-		array<ref MetricZ_EffectAreaMetrics> ams = new array<ref MetricZ_EffectAreaMetrics>();
+		s_AreaMetricsBuffer.Clear();
 		foreach (EffectArea area : list) {
 			if (!area)
 				continue;
@@ -180,18 +192,18 @@ class MetricZ_EntitiesWriter
 				continue;
 
 			am.Update();
-			ams.Insert(am);
+			s_AreaMetricsBuffer.Insert(am);
 		}
 
-		if (ams.Count() == 0)
+		if (s_AreaMetricsBuffer.Count() == 0)
 			return;
 
-		int n = ams[0].Count();
+		int n = s_AreaMetricsBuffer[0].Count();
 		for (int i = 0; i < n; i++) {
-			ams[0].WriteHeaderAt(sink, i);
+			s_AreaMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_EffectAreaMetrics amCurrent : ams)
-				amCurrent.FlushAt(sink, i);
+			foreach (MetricZ_EffectAreaMetrics amCurrent : s_AreaMetricsBuffer)
+				amCurrent.GetMetricDirect(i).Flush(sink);
 		}
 	}
 }
