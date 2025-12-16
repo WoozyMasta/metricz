@@ -101,6 +101,66 @@ Result:
 dayz_metricz_player_jumps_total{world="chernarusplus",host="dz01",instance_id="1"} 42
 ```
 
+## Advanced: Custom Collector Modules
+
+If your mod collects complex data, requires high performance,
+or you want to keep your logic isolated from the global storage,
+use the **Collector API**.
+
+This approach runs your metric collection in its own separate
+server frame (tick), preventing lag spikes during the export cycle.
+
+### Create a Collector Class
+
+Inherit from `MetricZ_CollectorBase` and override the `Flush` method.
+
+```cpp
+// 5_Mission/MyMod/MetricZ_MyCollector.c
+
+#ifdef METRICZ
+class MetricZ_Collector_MyMod : MetricZ_CollectorBase
+{
+    // Unique name for logging and internal profiling
+    override string GetName() {
+        return "my_super_mod";
+    }
+
+    // Logic to write metrics to the sink
+    override void Flush(MetricZ_SinkBase sink)
+    {
+        // Example: Iterate over internal data
+        // metric.Set(10);
+        // metric.Flush(sink);
+    }
+}
+#endif
+```
+
+### Register in MissionServer
+
+Register your collector inside `MissionServer::OnInit`.
+
+> [!WARNING]  
+> Always call `Register` **after** `super.OnInit()`.
+> Calling it earlier will fail because MetricZ is not initialized yet.
+
+```cpp
+// 5_Mission/MyMod/MissionServer.c
+
+modded class MissionServer
+{
+    override void OnInit()
+    {
+        super.OnInit();
+
+#ifdef METRICZ
+        if (m_MetricZ)
+            m_MetricZ.Register(new MetricZ_Collector_MyMod());
+#endif
+    }
+}
+```
+
 ## Labels
 
 Labels allow you to add dimensions to your metrics.

@@ -21,6 +21,7 @@ class MetricZ_Exporter
 	protected ref MetricZ_SinkBase m_ActiveSink; //!< Active sink used in Flush
 	protected ref map<string, float> m_UpdatesBuffer; //!< Values buffer by component -> value
 	protected ref map<string, string> m_LabelsCache; //!< Labels cache by component -> label
+	protected ref array<ref MetricZ_CollectorBase> m_Collectors; //!< Registry of all metric collectors
 
 	protected ref MetricZ_MetricFloat m_UpdateDuration = new MetricZ_MetricFloat(
 	    "update_duration_seconds",
@@ -51,6 +52,7 @@ class MetricZ_Exporter
 
 		m_UpdatesBuffer = new map<string, float>();
 		m_LabelsCache = new map<string, string>();
+		m_Collectors = new array<ref MetricZ_CollectorBase>();
 
 		if (!MetricZ_Config.IsLoaded())
 			MetricZ_Config.Get();
@@ -62,7 +64,21 @@ class MetricZ_Exporter
 		          MetricZ_Config.Get().settings.init_delay_sec * 1000,
 		          false);
 
-		ErrorEx("MetricZ: loaded", ErrorExSeverity.INFO);
+		// Register internal collectors
+		RegisterCollector(new MetricZ_CollectorWorld());
+		RegisterCollector(new MetricZ_CollectorPlayers());
+		RegisterCollector(new MetricZ_CollectorZombies());
+		RegisterCollector(new MetricZ_CollectorAnimals());
+		RegisterCollector(new MetricZ_CollectorTransports());
+		RegisterCollector(new MetricZ_CollectorWeapons());
+		RegisterCollector(new MetricZ_CollectorHits());
+		RegisterCollector(new MetricZ_CollectorTerritories());
+		RegisterCollector(new MetricZ_CollectorAreas());
+		RegisterCollector(new MetricZ_CollectorRPC());
+		RegisterCollector(new MetricZ_CollectorEvents());
+		RegisterCollector(new MetricZ_CollectorHTTP());
+
+		ErrorEx("MetricZ: loaded with " + m_Collectors.Count() + " collectors", ErrorExSeverity.INFO);
 	}
 
 	/**
@@ -74,6 +90,20 @@ class MetricZ_Exporter
 			s_Instance = new MetricZ_Exporter();
 
 		return s_Instance;
+	}
+
+	/**
+	    \brief API for third party mods.
+	    \details Safe static accessor. Mods MUST call this in MissionServer::OnInit (after super.OnInit) or later.
+	*/
+	static void Register(MetricZ_CollectorBase collector)
+	{
+		if (!s_Instance) {
+			ErrorEx("MetricZ: Attempt to register collector '" + collector.GetName() + "' too early! Register in MissionServer::OnInit after super.OnInit()", ErrorExSeverity.WARNING);
+			return;
+		}
+
+		s_Instance.RegisterCollector(collector);
 	}
 
 	/**
@@ -120,6 +150,28 @@ class MetricZ_Exporter
 		MetricZ_Storage.s_Status.FlushWithHead(sink, MetricZ_Storage.GetExtraLabels());
 
 		sink.End();
+	}
+
+	/**
+	    \brief Internal collector registration logic
+	*/
+	protected void RegisterCollector(MetricZ_CollectorBase collector)
+	{
+		if (!collector)
+			return;
+
+		if (!collector.IsEnabled()) {
+#ifdef DIAG
+			ErrorEx("MetricZ: Skip disabled collector: " + collector.GetName(), ErrorExSeverity.INFO);
+#endif
+			return;
+		}
+
+		m_Collectors.Insert(collector);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: Registered collector: " + collector.GetName(), ErrorExSeverity.INFO);
+#endif
 	}
 
 	/**
@@ -178,97 +230,17 @@ class MetricZ_Exporter
 			return;
 		}
 
-		float t = g_Game.GetTickTime();
-		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
-
-		// Flush State Machine
-		switch (m_FlushStep) {
-		case 0: // world metrics
-			MetricZ_Storage.Update();
-			MetricZ_Storage.Flush(m_ActiveSink);
-			RecordProfile("world", t);
-			break;
-
-		case 1: // per-player
-			if (!cfg.disabled_metrics.players) {
-				MetricZ_EntitiesWriter.FlushPlayers(m_ActiveSink);
-				RecordProfile("players", t);
-			}
-			break;
-
-		case 2: // per-infected AI type and mind state
-			if (!cfg.disabled_metrics.zombies) {
-				MetricZ_ZombieStats.Flush(m_ActiveSink);
-				RecordProfile("zombies", t);
-			}
-			break;
-
-		case 3: // per-animal type
-			if (!cfg.disabled_metrics.animals) {
-				MetricZ_AnimalStats.Flush(m_ActiveSink);
-				RecordProfile("animals", t);
-			}
-			break;
-
-		case 4: // per-vehicle
-			if (!cfg.disabled_metrics.transports) {
-				MetricZ_EntitiesWriter.FlushTransport(m_ActiveSink);
-				RecordProfile("transports", t);
-			}
-			break;
-
-		case 5: // weapon shots
-			if (!cfg.disabled_metrics.weapons) {
-				MetricZ_WeaponStats.Flush(m_ActiveSink);
-				RecordProfile("weapons", t);
-			}
-			break;
-
-		case 6: // entity hits
-			if (!cfg.disabled_metrics.hits) {
-				MetricZ_HitStats.Flush(m_ActiveSink);
-				RecordProfile("hits", t);
-			}
-			break;
-
-		case 7: // per-territory
-			if (!cfg.disabled_metrics.territories) {
-				MetricZ_EntitiesWriter.FlushTerritory(m_ActiveSink);
-				RecordProfile("territories", t);
-			}
-			break;
-
-		case 8: // per-effect-area
-			if (!cfg.disabled_metrics.areas) {
-				MetricZ_EntitiesWriter.FlushEffectAreas(m_ActiveSink);
-				RecordProfile("areas", t);
-			}
-			break;
-
-		case 9: // dayz game RPC inputs
-			if (!cfg.disabled_metrics.rpc_input) {
-				MetricZ_RpcStats.Flush(m_ActiveSink);
-				RecordProfile("rpc", t);
-			}
-			break;
-
-		case 10: // dayz game events
-			if (!cfg.disabled_metrics.events) {
-				MetricZ_EventStats.Flush(m_ActiveSink);
-				RecordProfile("events", t);
-			}
-			break;
-
-		case 11: // http stats
-			if (!cfg.disabled_metrics.http && cfg.http.enabled) {
-				MetricZ_HttpStats.Flush(m_ActiveSink);
-				RecordProfile("http", t);
-			}
-			break;
-
-		case 12: // commit and close
+		if (m_FlushStep >= m_Collectors.Count()) {
 			FinishFlush();
 			return;
+		}
+
+		// flush current collector
+		MetricZ_CollectorBase currentModule = m_Collectors.Get(m_FlushStep);
+		if (currentModule && currentModule.IsEnabled()) {
+			float t = g_Game.GetTickTime();
+			currentModule.Flush(m_ActiveSink);
+			RecordProfile(currentModule.GetName(), t);
 		}
 
 		// schedule next step for the next server frame
@@ -298,6 +270,15 @@ class MetricZ_Exporter
 		m_SinkBeginDuration.Set(m_BeginDuration);
 		m_SinkEndDuration.Set(g_Game.GetTickTime() - t);
 		m_UpdateDuration.Set(g_Game.GetTickTime() - m_FlushStartTime);
+
+#ifdef DIAG
+		string time = "total " + (m_UpdateDuration.Get() * 1000).ToString() + "ms";
+		time += " / sink begin " + (m_SinkBeginDuration.Get() * 1000).ToString() + "ms";
+		time += " / sink end " + (m_SinkEndDuration.Get() * 1000).ToString() + "ms";
+		ErrorEx(
+		    "MetricZ: FinishFlush in frame " + m_FlushStep.ToString() + " took: " + time,
+		    ErrorExSeverity.INFO);
+#endif
 
 		// update labels cache if needed
 		MetricZ_PersistentCache.Save();
