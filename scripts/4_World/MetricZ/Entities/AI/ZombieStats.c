@@ -17,7 +17,7 @@ class MetricZ_ZombieStats
 	static const int MINDSTATE_DEAD = 1000;
 
 	// mind-state -> count
-	protected static ref map<int, int> s_StareStorage = new map<int, int>(); //!< State -> current infected count.
+	protected static ref map<int, int> s_CountByType = new map<int, int>(); //!< State -> current infected count.
 	protected static ref map<int, string> s_MindStates; //!< State -> human-readable name. Built lazily.
 
 	// zombie type -> count
@@ -65,10 +65,10 @@ class MetricZ_ZombieStats
 			return;
 
 		int v;
-		if (s_StareStorage.Find(state, v))
-			s_StareStorage.Set(state, Math.Max(v + delta, 0));
+		if (s_CountByType.Find(state, v))
+			s_CountByType.Set(state, Math.Max(v + delta, 0));
 		else if (delta > 0)
-			s_StareStorage.Insert(state, delta);
+			s_CountByType.Insert(state, delta);
 	}
 
 	/**
@@ -163,7 +163,7 @@ class MetricZ_ZombieStats
 		if (!sink)
 			return;
 
-		bool hasStates = (s_StareStorage.Count() > 0);
+		bool hasStates = (s_CountByType.Count() > 0);
 		bool hasTypes = (s_TypeStorage.Count() > 0);
 
 		if (!hasStates && !hasTypes)
@@ -174,7 +174,7 @@ class MetricZ_ZombieStats
 			EnsureNames();
 			s_MetricMindState.WriteHeaders(sink);
 
-			foreach (int id, int val : s_StareStorage) {
+			foreach (int id, int val : s_CountByType) {
 				s_MetricMindState.Set(val);
 
 				string name = "unknown";
