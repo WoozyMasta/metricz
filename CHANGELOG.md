@@ -46,6 +46,8 @@ Here is the updated changelog including the new changes.
   `disabled_metrics.local_areas`
 * new config options `disabled_metrics.positions_height` and
   `disabled_metrics.positions_yaw`
+* new options `settings.instance_id` and `settings.host_name` for overriding
+  autodetected values
 
 #### New metrics
 

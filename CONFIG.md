@@ -175,6 +175,11 @@ For DayZ metrics, we strongly recommend using
   undefined or zero. This ID must be unique across all game servers on all
   hosts. You can override it here to prevent storage and profile path
   changes on existing servers.
+* **`settings.host_name`** (`string`) -
+  Overrides the Host Name. By default, attempts to obtain it automatically.
+  In some environments, reading the host name may be limited and
+  unavailable. You can use this if you want to explicitly override the host
+  name used in metric labels.
 * **`settings.init_delay_sec`** (`int`) = 30 -
   Delay in seconds before the first metric collection begins.
 * **`settings.collect_interval_sec`** (`int`) = 15 -

@@ -72,6 +72,11 @@ class MetricZ_ConfigDTO_BaseSettings
 	// You can override it here to prevent storage and profile path changes on existing servers.
 	string instance_id;
 
+	// Overrides the Host Name. By default, attempts to obtain it automatically.
+	// In some environments, reading the host name may be limited and unavailable.
+	// You can use this if you want to explicitly override the host name used in metric labels.
+	string host_name;
+
 	// Delay in seconds before the first metric collection begins.
 	int init_delay_sec = 30;
 
@@ -81,12 +86,28 @@ class MetricZ_ConfigDTO_BaseSettings
 	// Disable send minimal telemetry 10-20 minutes after server startup.
 	bool disable_telemetry;
 
+	[NonSerialized()]
+	string instance_id_resolved;
+
+	[NonSerialized()]
+	string host_name_resolved;
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
 	void Normalize()
 	{
-		instance_id = MetricZ_Helpers.GetInstanceID(instance_id);
+		instance_id_resolved = MetricZ_Helpers.GetInstanceID(instance_id);
+
+		if (host_name != string.Empty)
+			host_name_resolved = host_name;
+		else {
+			string host = GetMachineName();
+			host.TrimInPlace();
+			host.ToLower();
+			host_name_resolved = host;
+		}
+
 		init_delay_sec = Math.Clamp(init_delay_sec, 0, 300);
 		collect_interval_sec = Math.Clamp(collect_interval_sec, 0, 900);
 	}
@@ -318,6 +339,12 @@ class MetricZ_ConfigDTO_Geo
 	// (For example, iZurvive tiles for Chernarus have a size of `15926`, although the world size is `15360`).
 	float world_effective_size;
 
+	[NonSerialized()]
+	float world_effective_size_resolved;
+
+	[NonSerialized()]
+	string world_name;
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
@@ -326,7 +353,16 @@ class MetricZ_ConfigDTO_Geo
 		if (!g_Game)
 			return;
 
-		world_effective_size = Math.Clamp(world_effective_size, g_Game.GetWorld().GetWorldSize(), 81920);
+		if (world_effective_size != 0) {
+			world_effective_size = Math.Clamp(world_effective_size, 1000, 81920);
+			world_effective_size_resolved = world_effective_size;
+		} else {
+			world_effective_size_resolved = g_Game.GetWorld().GetWorldSize();
+
+			g_Game.GetWorldName(world_name);
+			world_name.TrimInPlace();
+			world_name.ToLower();
+		}
 	}
 }
 #endif

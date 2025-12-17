@@ -90,7 +90,7 @@ class MetricZ_RestClient : Managed
 
 		// Construct URL: /api/v1/ingest/<instance_id>/<txn_id>/<seq_id>
 		// The backend uses <seq_id> to reassemble chunks in the correct order.
-		string url = "/api/v1/ingest/" + MetricZ_Config.Get().settings.instance_id;
+		string url = "/api/v1/ingest/" + MetricZ_Config.Get().settings.instance_id_resolved;
 		if (txn != string.Empty)
 			url += "/" + txn + "/" + chunk.ToString();
 
@@ -121,7 +121,7 @@ class MetricZ_RestClient : Managed
 
 		Init();
 
-		string url = "/api/v1/commit/" + MetricZ_Config.Get().settings.instance_id + "/" + txn;
+		string url = "/api/v1/commit/" + MetricZ_Config.Get().settings.instance_id_resolved + "/" + txn;
 
 		cb.SetTxn(txn);
 		m_Ctx.POST(cb, url, string.Empty);

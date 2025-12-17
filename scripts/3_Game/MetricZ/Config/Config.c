@@ -150,7 +150,7 @@ class MetricZ_Config
 
 		string fileName = s_Config.file.file_name;
 		if (fileName == string.Empty)
-			fileName = "metricz_" + s_Config.settings.instance_id;
+			fileName = "metricz_" + s_Config.settings.instance_id_resolved;
 
 		s_Config.file.prom_file_path = exportDir + fileName + ".prom";
 		s_Config.file.temp_file_path = exportDir + fileName + ".tmp";
@@ -177,10 +177,11 @@ class MetricZ_Config
 #endif
 
 		string ver = string.Format(
-		                 "%1 (%2) build %3",
+		                 "%1 (%2) build %3, instance_id=%4",
 		                 MetricZ_Constants.VERSION,
 		                 MetricZ_Constants.COMMIT_SHA,
-		                 MetricZ_Constants.BUILD_DATE);
+		                 MetricZ_Constants.BUILD_DATE,
+		                 s_Config.settings.instance_id_resolved);
 
 		ErrorEx("MetricZ: loaded " + ver, ErrorExSeverity.INFO);
 	}

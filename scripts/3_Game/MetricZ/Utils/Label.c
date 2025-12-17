@@ -122,22 +122,17 @@ class MetricZ_LabelUtils
 		s_BaseLabel = "";
 
 		// base: world
-		string worldName;
-		g_Game.GetWorldName(worldName);
-		worldName.TrimInPlace();
-		worldName.ToLower();
+		string worldName = MetricZ_Config.Get().geo.world_name;
 		if (worldName != string.Empty)
 			s_BaseLabel += "world=\"" + Escape(worldName) + "\",";
 
 		// base: host
-		string host = GetMachineName();
-		host.TrimInPlace();
-		host.ToLower();
+		string host = MetricZ_Config.Get().settings.host_name_resolved;
 		if (host != string.Empty)
 			s_BaseLabel += "host=\"" + Escape(host) + "\",";
 
 		// base: instance id (allowed to be "0")
-		s_BaseLabel += "instance_id=\"" + MetricZ_Config.Get().settings.instance_id + "\"";
+		s_BaseLabel += "instance_id=\"" + MetricZ_Config.Get().settings.instance_id_resolved + "\"";
 		s_BaseLabelBraced = "{" + s_BaseLabel + "}";
 		s_BaseLabelReady = true;
 
