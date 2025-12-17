@@ -133,12 +133,12 @@ class MetricZ_Config
 			s_Config.file.temp_file_path = MetricZ_Constants.LEGACY_TMP_FILE;
 
 			string msg = "MetricZ: Legacy export path detected!\n\n";
-			msg += "================================== LEGACY WARNING ==================================\n";
-			msg += "FILE:      '" + MetricZ_Constants.LEGACY_PROM_FILE + "'\n";
-			msg += "REQUIRED:  Please delete this file to enable the new 'export/' directory structure.\n";
-			msg += "NOTE:      You must also update your external metrics collector path.\n";
-			msg += "WARNING:   Support for legacy paths will be removed in future releases.\n";
-			msg += "====================================================================================\n\n";
+			msg += "========================================= LEGACY WARNING =========================================\n";
+			msg += "| FILE:      '" + MetricZ_Constants.LEGACY_PROM_FILE + "'\n";
+			msg += "| REQUIRED:  Please delete this file to enable the new 'export/' directory structure.\n";
+			msg += "| NOTE:      You also need to update the path in the exporter file collector to the new destination.\n";
+			msg += "| WARNING:   Support for legacy paths will be removed in future releases.\n";
+			msg += "==================================================================================================\n\n";
 			ErrorEx(msg, ErrorExSeverity.INFO);
 
 			return;
