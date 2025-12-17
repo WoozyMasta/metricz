@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning][].
 
 Here is the updated changelog including the new changes.
 
-## Unreleased
+## [0.4.0][] - 2025-12-17
 
 ### Added
 
@@ -119,6 +119,8 @@ Here is the updated changelog including the new changes.
 * frame monitor moved to `DayZGame::OnPostUpdate()` for more stable
   calculations (if frame skipping is used by mods like GaneZ)
 * spelling in panel names have been corrected
+
+[0.4.0]: https://github.com/WoozyMasta/metricz/compare/0.3.0...0.4.0
 
 ## [0.3.0][] - 2025-11-23
 
