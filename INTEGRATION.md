@@ -121,7 +121,8 @@ Inherit from `MetricZ_CollectorBase` and override the `Flush` method.
 class MetricZ_Collector_MyMod : MetricZ_CollectorBase
 {
     // Unique name for logging and internal profiling
-    override string GetName() {
+    override string GetName()
+    {
         return "my_super_mod";
     }
 
@@ -154,8 +155,7 @@ modded class MissionServer
         super.OnInit();
 
 #ifdef METRICZ
-        if (m_MetricZ)
-            m_MetricZ.Register(new MetricZ_Collector_MyMod());
+        MetricZ_Exporter.Register(new MetricZ_Collector_MyMod());
 #endif
     }
 }
