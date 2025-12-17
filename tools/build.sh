@@ -7,6 +7,8 @@ url() {
 
 cd /p/metricz
 
+[ -d ./grafana-data ] && find ./grafana-data/ -name LICENSE -delete
+
 ./tools/validate.sh "$PWD"
 ./tools/update-contstants.sh "$PWD" true
 ./tools/config.sh "$PWD"
