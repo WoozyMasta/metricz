@@ -104,7 +104,9 @@ class MetricZ_Config
 					return;
 				}
 
-				ErrorEx("MetricZ: saved upgraded config file: " + cfgFile, ErrorExSeverity.INFO);
+				ErrorEx(
+				    string.Format("MetricZ: saved upgraded config file: %1", cfgFile),
+				    ErrorExSeverity.INFO);
 			}
 
 			SetLoaded();
@@ -119,7 +121,9 @@ class MetricZ_Config
 			return;
 		}
 
-		ErrorEx("MetricZ: saved new config file: " + cfgFile, ErrorExSeverity.INFO);
+		ErrorEx(
+		    string.Format("MetricZ: saved new config file: %1", cfgFile),
+		    ErrorExSeverity.INFO);
 		SetLoaded();
 	}
 
@@ -150,10 +154,10 @@ class MetricZ_Config
 
 		string fileName = s_Config.file.file_name;
 		if (fileName == string.Empty)
-			fileName = "metricz_" + s_Config.settings.instance_id_resolved;
+			fileName = string.Format("metricz_%1", s_Config.settings.instance_id_resolved);
 
-		s_Config.file.prom_file_path = exportDir + fileName + ".prom";
-		s_Config.file.temp_file_path = exportDir + fileName + ".tmp";
+		s_Config.file.prom_file_path = string.Format("%1%2.prom", exportDir, fileName);
+		s_Config.file.temp_file_path = string.Format("%1%2.tmp", exportDir, fileName);
 	}
 
 	/**
@@ -176,14 +180,14 @@ class MetricZ_Config
 		}
 #endif
 
-		string ver = string.Format(
-		                 "%1 (%2) build %3, instance_id=%4",
+		string msg = string.Format(
+		                 "MetricZ: loaded %1 (%2) build %3, instance_id=%4",
 		                 MetricZ_Constants.VERSION,
 		                 MetricZ_Constants.COMMIT_SHA,
 		                 MetricZ_Constants.BUILD_DATE,
 		                 s_Config.settings.instance_id_resolved);
 
-		ErrorEx("MetricZ: loaded " + ver, ErrorExSeverity.INFO);
+		ErrorEx(msg, ErrorExSeverity.INFO);
 	}
 
 	/**

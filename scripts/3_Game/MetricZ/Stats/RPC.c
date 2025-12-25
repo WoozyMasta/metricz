@@ -44,7 +44,7 @@ class MetricZ_RpcStats
 		s_RpcTotal.WriteHeaders(sink);
 
 		// emit per id
-		for (int i = 0; i < s_InputRPCsRegistry.Count(); i++) {
+		for (int i = 0; i < s_InputRPCsRegistry.Count(); ++i) {
 			int id = s_InputRPCsRegistry.GetKey(i);
 			int val = s_InputRPCsRegistry.GetElement(i);
 

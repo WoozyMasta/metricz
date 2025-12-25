@@ -272,11 +272,13 @@ class MetricZ_Exporter
 		m_UpdateDuration.Set(g_Game.GetTickTime() - m_FlushStartTime);
 
 #ifdef DIAG
-		string time = "total " + (m_UpdateDuration.Get() * 1000).ToString() + "ms";
-		time += " / sink begin " + (m_SinkBeginDuration.Get() * 1000).ToString() + "ms";
-		time += " / sink end " + (m_SinkEndDuration.Get() * 1000).ToString() + "ms";
 		ErrorEx(
-		    "MetricZ: FinishFlush in frame " + m_FlushStep.ToString() + " took: " + time,
+		    string.Format(
+		        "MetricZ: FinishFlush in frame %1 took: total %2ms / sink begin %3ms / sink end %4ms",
+		        m_FlushStep,
+		        m_UpdateDuration.Get() * 1000,
+		        m_SinkBeginDuration.Get() * 1000,
+		        m_SinkEndDuration.Get() * 1000),
 		    ErrorExSeverity.INFO);
 #endif
 
@@ -298,7 +300,9 @@ class MetricZ_Exporter
 
 #ifdef DIAG
 		ErrorEx(
-		    "MetricZ: Flush." + component + " in frame " + m_FlushStep.ToString() + " took: " + (t * 1000).ToString() + "ms",
+		    string.Format(
+		        "MetricZ: Flush %1 in frame %2 took: %3ms",
+		        component, m_FlushStep, t * 1000),
 		    ErrorExSeverity.INFO);
 #endif
 	}

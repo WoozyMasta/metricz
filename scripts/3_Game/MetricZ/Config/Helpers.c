@@ -104,7 +104,7 @@ class MetricZ_Helpers
 
 		if (user != string.Empty && password != string.Empty) {
 			if (path.IndexOf("@") == -1)
-				path = user + ":" + password + "@" + path;
+				path = string.Format("%1:%2@%3", user, password, path);
 		}
 
 		int len = path.Length();

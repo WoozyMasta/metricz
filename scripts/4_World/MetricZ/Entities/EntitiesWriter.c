@@ -48,7 +48,7 @@ class MetricZ_EntitiesWriter
 			return;
 
 		int metricsCount = s_PlayerMetricsBuffer[0].Count();
-		for (int i = 0; i < metricsCount; i++) {
+		for (int i = 0; i < metricsCount; ++i) {
 			s_PlayerMetricsBuffer[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_PlayerMetrics pmCurrent : s_PlayerMetricsBuffer)
@@ -109,7 +109,7 @@ class MetricZ_EntitiesWriter
 			return;
 
 		int metricsCount = s_TransportMetricsBuffer[0].Count();
-		for (int i = 0; i < metricsCount; i++) {
+		for (int i = 0; i < metricsCount; ++i) {
 			s_TransportMetricsBuffer[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_TransportMetrics tmCurrent : s_TransportMetricsBuffer)
@@ -148,7 +148,7 @@ class MetricZ_EntitiesWriter
 			return;
 
 		int n = s_TerritoryMetricsBuffer[0].Count();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; ++i) {
 			s_TerritoryMetricsBuffer[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_TerritoryMetrics fmCurrent : s_TerritoryMetricsBuffer)
@@ -199,7 +199,7 @@ class MetricZ_EntitiesWriter
 			return;
 
 		int n = s_AreaMetricsBuffer[0].Count();
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < n; ++i) {
 			s_AreaMetricsBuffer[0].WriteHeaderAt(sink, i);
 
 			foreach (MetricZ_EffectAreaMetrics amCurrent : s_AreaMetricsBuffer)

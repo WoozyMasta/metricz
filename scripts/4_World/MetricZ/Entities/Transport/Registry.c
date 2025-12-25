@@ -51,7 +51,7 @@ class MetricZ_TransportRegistry
 	static void Snapshot(out array<Transport> transport)
 	{
 		transport = new array<Transport>();
-		for (int i = 0; i < s_Registry.Count(); i++)
+		for (int i = 0; i < s_Registry.Count(); ++i)
 			transport.Insert(s_Registry[i]);
 	}
 

@@ -146,7 +146,7 @@ class MetricZ_SinkBase
 
 		string chunk;
 		foreach (string line : m_Buffer)
-			chunk += line + "\n";
+			chunk += string.Format("%1\n", line);
 
 		return chunk;
 	}

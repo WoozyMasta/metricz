@@ -164,7 +164,7 @@ modded class ZombieBase
 		string result;
 
 		// read aiAgentTemplate from config
-		string cfgPath = CFG_VEHICLESPATH + " " + type + " aiAgentTemplate";
+		string cfgPath = string.Format("%1 %2 aiAgentTemplate", CFG_VEHICLESPATH, type);
 		string tpl;
 
 		if (g_Game.ConfigIsExisting(cfgPath)) {

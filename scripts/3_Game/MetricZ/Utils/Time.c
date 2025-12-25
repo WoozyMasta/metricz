@@ -94,7 +94,7 @@ class MetricZ_Time
 		int days_years = years * 365 + leaps;
 
 		int days_months = 0;
-		for (int i = 1; i < m; i++)
+		for (int i = 1; i < m; ++i)
 			days_months += MDAYS[i - 1];
 
 		bool isLeap = ((y % 4 == 0) && (y % 100 != 0)) || (y % 400 == 0);

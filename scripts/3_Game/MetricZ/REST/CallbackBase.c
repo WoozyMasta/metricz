@@ -43,7 +43,7 @@ class MetricZ_CallbackBase : RestCallback
 	*/
 	protected string GetDuration()
 	{
-		return ", time: " + (g_Game.GetTime() - m_StartedAt).ToString() + "ms";
+		return string.Format(", time: %1 ms", (g_Game.GetTime() - m_StartedAt));
 	}
 
 	/**
@@ -71,8 +71,9 @@ class MetricZ_CallbackBase : RestCallback
 		// add random jitter (+/- 25%) to prevent thundering herd
 		int delay = Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
-		string attempt = m_Attempt.ToString() + "/" + MetricZ_Config.Get().http.max_retries.ToString();
-		ErrorEx("MetricZ: callback REST retry " + attempt + " after " + delay.ToString() + "ms", ErrorExSeverity.WARNING);
+		ErrorEx(
+		    string.Format("MetricZ: callback REST retry %1/%2 after %3ms", m_Attempt, MetricZ_Config.Get().http.max_retries, delay),
+		    ErrorExSeverity.WARNING);
 
 		if (!g_Game) {
 			OnDone();
@@ -111,8 +112,12 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnError(int errorCode)
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "error");
-		string msg = "MetricZ: callback REST error: " + EnumTools.EnumToString(ERestResultState, errorCode) + GetDuration();
-		ErrorEx(msg, ErrorExSeverity.WARNING);
+		ErrorEx(
+		    string.Format(
+		        "MetricZ: callback REST error %1 %2",
+		        EnumTools.EnumToString(ERestResultState, errorCode),
+		        GetDuration()),
+		    ErrorExSeverity.WARNING);
 		Retry();
 	}
 
@@ -122,8 +127,9 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnTimeout()
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "timeout");
-		string msg = "MetricZ: callback REST timeout" + GetDuration();
-		ErrorEx(msg, ErrorExSeverity.WARNING);
+		ErrorEx(
+		    string.Format("MetricZ: callback REST timeout %1", GetDuration()),
+		    ErrorExSeverity.WARNING);
 		Retry();
 	}
 

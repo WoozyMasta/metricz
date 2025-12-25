@@ -51,7 +51,7 @@ class MetricZ_TerritoryRegistry
 	static void Snapshot(out array<TerritoryFlag> territories)
 	{
 		territories = new array<TerritoryFlag>();
-		for (int i = 0; i < s_Registry.Count(); i++)
+		for (int i = 0; i < s_Registry.Count(); ++i)
 			territories.Insert(s_Registry[i]);
 	}
 

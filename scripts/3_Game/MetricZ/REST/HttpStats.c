@@ -41,7 +41,7 @@ class MetricZ_HttpStats
 		if (!MetricZ_Config.IsLoaded() || MetricZ_Config.Get().disabled_metrics.http)
 			return;
 
-		string key = type + ":" + status;
+		string key = string.Format("%1:%2", type, status);
 		int idx;
 
 		if (s_Lookup.Find(key, idx)) {
@@ -99,7 +99,7 @@ class MetricZ_HttpStats
 		if (count > 0) {
 			s_MetricRequests.WriteHeaders(sink);
 
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < count; ++i) {
 				s_MetricRequests.Set(s_Counts.Get(i));
 				s_MetricRequests.Flush(sink, s_CacheLabels.Get(i));
 			}

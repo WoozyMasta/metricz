@@ -51,7 +51,7 @@ class MetricZ_EffectAreaRegistry
 	static void Snapshot(out array<EffectArea> areas)
 	{
 		areas = new array<EffectArea>();
-		for (int i = 0; i < s_Registry.Count(); i++)
+		for (int i = 0; i < s_Registry.Count(); ++i)
 			areas.Insert(s_Registry[i]);
 	}
 

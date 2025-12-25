@@ -276,17 +276,17 @@ class MetricZ_WeaponStats
 		if (rootMan) {
 			string type;
 			if (eai.IsHeavyBehaviour())
-				type = "_heavy";
+				type = "heavy";
 			else if (eai.IsTwoHandedBehaviour())
-				type = "_two_hands";
+				type = "two_hands";
 			else if (eai.IsOneHandedBehaviour())
-				type = "_one_hand";
+				type = "one_hand";
 
 #ifdef EXPANSIONMODAI
 			if (rootMan.IsInherited(eAIBase))
-				return "eai_melee_item" + type;
+				return string.Format("eai_melee_item_%1", type);
 #endif
-			return "player_melee_item" + type;
+			return string.Format("player_melee_item_%1", type);
 		}
 
 		return "unknown";

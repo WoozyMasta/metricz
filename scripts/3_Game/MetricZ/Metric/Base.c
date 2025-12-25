@@ -33,13 +33,13 @@ class MetricZ_MetricBase
 	*/
 	void MetricZ_MetricBase(string name, string help, MetricZ_MetricType type = 0)
 	{
-		m_Name = MetricZ_Constants.NAMESPACE + name;
+		m_Name = string.Format("%1%2", MetricZ_Constants.NAMESPACE, name);
 		if (type == MetricZ_MetricType.COUNTER)
 			m_Name += "_total";
 
 		m_EType = type;
-		m_Help = "# HELP " + m_Name + " " + help;
-		m_Type = "# TYPE " + m_Name + " " + TypeToText();
+		m_Help = string.Format("# HELP %1 %2", m_Name, help);
+		m_Type = string.Format("# TYPE %1 %2", m_Name, TypeToText());
 	}
 
 	/**
@@ -182,12 +182,12 @@ class MetricZ_MetricBase
 			return;
 
 		if (labels != string.Empty) {
-			sink.Line(m_Name + labels + " 0");
+			sink.Line(string.Format("%1%2 0", m_Name, labels));
 			return;
 		}
 
 		if (m_CachedMetric == string.Empty)
-			m_CachedMetric = GetCachedPrefix() + "0";
+			m_CachedMetric = string.Format("%1 0", GetCachedPrefix());
 
 		sink.Line(m_CachedMetric);
 	}
@@ -232,7 +232,7 @@ class MetricZ_MetricBase
 	*/
 	protected void UpdateCachedMetric(string stringValue)
 	{
-		m_CachedMetric = GetCachedPrefix() + stringValue;
+		m_CachedMetric = string.Format("%1 %2", GetCachedPrefix(), stringValue);
 	}
 
 	/**
@@ -244,7 +244,7 @@ class MetricZ_MetricBase
 		if (label == string.Empty)
 			label = MetricZ_LabelUtils.MakeLabels();
 
-		m_CachedPrefix = m_Name + label + " ";
+		m_CachedPrefix = string.Format("%1%2", m_Name, label);
 		m_CachedMetric = string.Empty;
 	}
 

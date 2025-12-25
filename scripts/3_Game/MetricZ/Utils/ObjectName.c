@@ -179,7 +179,7 @@ class MetricZ_ObjectName
 		if (s == string.Empty)
 			return false;
 
-		for (int i = 0; i < s.Length(); i++) {
+		for (int i = 0; i < s.Length(); ++i) {
 			int code = s.Substring(i, 1).ToAscii();
 			if (code < 48 || code > 57) // '0'..'9'
 				return false;

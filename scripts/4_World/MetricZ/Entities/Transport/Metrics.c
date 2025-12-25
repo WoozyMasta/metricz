@@ -237,7 +237,7 @@ class MetricZ_TransportMetrics : MetricZ_EntityMetricsBase
 
 		int size = m_Transport.CrewSize();
 		int passengers = 0;
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size; ++i) {
 			if (m_Transport.CrewMember(i))
 				passengers++;
 		}

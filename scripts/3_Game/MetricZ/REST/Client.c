@@ -90,12 +90,20 @@ class MetricZ_RestClient : Managed
 
 		// Construct URL: /api/v1/ingest/<instance_id>/<txn_id>/<seq_id>
 		// The backend uses <seq_id> to reassemble chunks in the correct order.
-		string url = "/api/v1/ingest/" + MetricZ_Config.Get().settings.instance_id_resolved;
-		if (txn != string.Empty)
-			url += "/" + txn + "/" + chunk.ToString();
+		string url;
+		string instanceID = MetricZ_Config.Get().settings.instance_id_resolved;
 
-		if (MetricZ_Config.Get().http.serialized)
-			url += "?format=json";
+		if (txn == string.Empty) {
+			if (MetricZ_Config.Get().http.serialized)
+				url = string.Format("/api/v1/ingest/%1?format=json", instanceID);
+			else
+				url = string.Format("/api/v1/ingest/%1", instanceID);
+		} else {
+			if (MetricZ_Config.Get().http.serialized)
+				url = string.Format("/api/v1/ingest/%1/%2/%3", instanceID, txn, chunk);
+			else
+				url = string.Format("/api/v1/ingest/%1/%2/%3?format=json", instanceID, txn, chunk);
+		}
 
 		// If callback is fresh (not a retry), configure it with current data
 		if (!cb.IsReady())
@@ -121,7 +129,10 @@ class MetricZ_RestClient : Managed
 
 		Init();
 
-		string url = "/api/v1/commit/" + MetricZ_Config.Get().settings.instance_id_resolved + "/" + txn;
+		string url = string.Format(
+		                 "/api/v1/commit/%1/%2",
+		                 MetricZ_Config.Get().settings.instance_id_resolved,
+		                 txn);
 
 		cb.SetTxn(txn);
 		m_Ctx.POST(cb, url, string.Empty);

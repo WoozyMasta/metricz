@@ -56,7 +56,7 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 			return;
 
 		if (labels != string.Empty) {
-			sink.Line(m_Name + labels + " " + m_Value.ToString());
+			sink.Line(string.Format("%1%2 %3", m_Name, labels, m_Value));
 			return;
 		}
 

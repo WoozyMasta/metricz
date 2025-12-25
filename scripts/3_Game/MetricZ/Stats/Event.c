@@ -43,7 +43,7 @@ class MetricZ_EventStats
 		MakeNameMap();
 		s_EventTotal.WriteHeaders(sink);
 
-		for (int i = 0; i < s_EventsRegistry.Count(); i++) {
+		for (int i = 0; i < s_EventsRegistry.Count(); ++i) {
 			int id = s_EventsRegistry.GetKey(i);
 			int val = s_EventsRegistry.GetElement(i);
 

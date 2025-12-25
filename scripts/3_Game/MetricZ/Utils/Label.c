@@ -42,19 +42,15 @@ class MetricZ_LabelUtils
 		if (!entity)
 			return 0;
 
-		string seed;
 		int p1, p2, p3, p4;
 		entity.GetPersistentID(p1, p2, p3, p4);
 
 		// Non-persistent objects get a random hash;
 		// stability is guaranteed only if called once per instance for labels.
-		if (p1 == 0 && p2 == 0 && p3 == 0 && p4 == 0) {
-			seed = entity.GetType() + "_" + Math.RandomInt(1, int.MAX).ToString();
-			return seed.Hash();
-		}
+		if (p1 == 0 && p2 == 0 && p3 == 0 && p4 == 0)
+			return string.Format("%1_%2", entity.GetType(), Math.RandomInt(1, int.MAX)).Hash();
 
-		seed = p1.ToString() + "_" + p2.ToString() + "_" + p3.ToString() + "_" + p4.ToString();
-		return seed.Hash();
+		return string.Format("%1_%2_%3_%4", p1, p2, p3, p4).Hash();
 	}
 
 	/**
@@ -71,11 +67,10 @@ class MetricZ_LabelUtils
 			if (s_BaseLabelReady)
 				return s_BaseLabelBraced;
 			else
-				return "{" + BaseLabels() + "}";
+				return string.Format("{%1}", BaseLabels());
 		}
 
-
-		string result = "{" + BaseLabels();
+		string result = string.Format("{%1", BaseLabels());
 		foreach (string k, string v : labels) {
 			k.TrimInPlace();
 			v.TrimInPlace();
@@ -89,7 +84,7 @@ class MetricZ_LabelUtils
 			if (IsDenied(k))
 				continue;
 
-			result += "," + k + "=\"" + Escape(v) + "\"";
+			result += string.Format(",%1=\"%2\"", k, Escape(v))
 		}
 		result += "}";
 
@@ -124,16 +119,16 @@ class MetricZ_LabelUtils
 		// base: world
 		string worldName = MetricZ_Config.Get().geo.world_name;
 		if (worldName != string.Empty)
-			s_BaseLabel += "world=\"" + Escape(worldName) + "\",";
+			s_BaseLabel += string.Format("world=\"%1\",", Escape(worldName));
 
 		// base: host
 		string host = MetricZ_Config.Get().settings.host_name_resolved;
 		if (host != string.Empty)
-			s_BaseLabel += "host=\"" + Escape(host) + "\",";
+			s_BaseLabel += string.Format("host=\"%1\",", Escape(host));
 
 		// base: instance id (allowed to be "0")
-		s_BaseLabel += "instance_id=\"" + MetricZ_Config.Get().settings.instance_id_resolved + "\"";
-		s_BaseLabelBraced = "{" + s_BaseLabel + "}";
+		s_BaseLabel += string.Format("instance_id=\"%1\"", Escape(MetricZ_Config.Get().settings.instance_id_resolved));
+		s_BaseLabelBraced = string.Format("{%1}", s_BaseLabel);
 		s_BaseLabelReady = true;
 
 		return s_BaseLabel;

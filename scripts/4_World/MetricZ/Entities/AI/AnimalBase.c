@@ -125,13 +125,14 @@ modded class AnimalBase
 		if (s_MetricZ_LabelNames && s_MetricZ_LabelNames.Find(type, cached))
 			return cached;
 
-		string cfgBase = CFG_VEHICLESPATH + " " + type + " Skinning ";
+		string cfgSteaks = string.Format("%1 %2 Skinning ObtainedSteaks item", CFG_VEHICLESPATH, type);
+		string cfgPelts = string.Format("%1 %2 Skinning ObtainedPelt item", CFG_VEHICLESPATH, type);
 		string result;
 
 		// 1) Steaks
-		if (g_Game.ConfigIsExisting(cfgBase + "ObtainedSteaks item")) {
+		if (g_Game.ConfigIsExisting(cfgSteaks)) {
 			string steakItem;
-			g_Game.ConfigGetText(cfgBase + "ObtainedSteaks item", steakItem);
+			g_Game.ConfigGetText(cfgSteaks, steakItem);
 			steakItem.TrimInPlace();
 
 			if (steakItem != string.Empty) {
@@ -150,9 +151,9 @@ modded class AnimalBase
 		}
 
 		// 2) Pelt fallback
-		if (result == string.Empty && g_Game.ConfigIsExisting(cfgBase + "ObtainedPelt item")) {
+		if (result == string.Empty && g_Game.ConfigIsExisting(cfgPelts)) {
 			string peltItem;
-			g_Game.ConfigGetText(cfgBase + "ObtainedPelt item", peltItem);
+			g_Game.ConfigGetText(cfgPelts, peltItem);
 			peltItem.TrimInPlace();
 
 			if (peltItem != string.Empty) {
