@@ -74,9 +74,8 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Build and set labels from a single key/value pair.
-	    \details
-	      Equivalent to MakeLabels(...) with a one-element map:
-	        { key = value } plus base labels {world,host,instance_id}.
+	    \details Equivalent to MakeLabels(...) with a one-element map:
+	             `{ key = value }` plus base labels `{world,host,instance_id}`.
 	    \param key   Label key (e.g. "weapon")
 	    \param value Label value (will be escaped inside MakeLabels)
 	*/
@@ -100,7 +99,7 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Build HELP header.
-	    \return \p string "# HELP ..."
+	    \return \p string `# HELP ...`
 	*/
 	string GetHelp()
 	{
@@ -109,7 +108,7 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Build TYPE header.
-	    \return \p string "# TYPE ..."
+	    \return \p string `# TYPE ...`
 	*/
 	string GetType()
 	{
@@ -130,7 +129,8 @@ class MetricZ_MetricBase
 	    \details If labels were set via SetLabels/MakeLabels, returns them as-is.
 	             Otherwise returns MetricZ_LabelUtils::MakeLabels() (base labels only).
 	             The result always includes surrounding braces and is never empty.
-	    \return string Prometheus label block, e.g. "{world=\"...\",host=\"...\",instance_id=\"...\"}".
+	    \return string Prometheus label block,
+	            e.g. `{world="...",host="...",instance_id="..."}`.
 	*/
 	string GetLabels()
 	{
@@ -142,7 +142,7 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Get raw labels for this metric, unchanged and without presetting default values.
-	        \return string Prometheus label block, e.g. "{world=\"...\",...}" or empty string.
+	    \return string Prometheus label block, e.g. `{world="...",...}` or empty string.
 	*/
 	string GetLabelsRaw()
 	{
@@ -151,7 +151,7 @@ class MetricZ_MetricBase
 
 	/**
 	    \brief Checks whether there is an explicitly defined label for the given metric.
-	        \return bool true if there is a label.
+	    \return bool true if there is a label.
 	*/
 	bool HasLabels()
 	{
@@ -174,7 +174,7 @@ class MetricZ_MetricBase
 	/**
 	    \brief Write metric value.
 	    \param MetricZ_SinkBase sink instance
-	    \param labels Optional preformatted label set "{k=\"v\"}"
+	    \param labels Optional preformatted label set `{k="v"}`
 	*/
 	void Flush(MetricZ_SinkBase sink, string labels = "")
 	{
@@ -195,7 +195,7 @@ class MetricZ_MetricBase
 	/**
 	    \brief Write headers then value.
 	    \param MetricZ_SinkBase sink instance
-	    \param labels Optional preformatted label set
+	    \param labels Optional preformatted label set `{k="v"}`
 	*/
 	void FlushWithHead(MetricZ_SinkBase sink, string labels = "")
 	{

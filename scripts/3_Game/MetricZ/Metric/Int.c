@@ -7,6 +7,9 @@
 #ifdef SERVER
 /**
     \brief Integer metric for gauges and counters.
+        \param name Metric name
+        \param help HELP text
+        \param type Metric type (GAUGE/COUNTER)
 */
 class MetricZ_MetricInt : MetricZ_MetricBase
 {
@@ -45,7 +48,7 @@ class MetricZ_MetricInt : MetricZ_MetricBase
 
 	/**
 	    \brief Add signed delta.
-	    \param d Delta
+	    \param d Value to add
 	*/
 	void Add(int d)
 	{

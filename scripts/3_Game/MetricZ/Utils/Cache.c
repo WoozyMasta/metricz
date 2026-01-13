@@ -20,9 +20,9 @@ enum MetricZ_CacheKey {
              counters with 0 on server restart, fixing Prometheus rate calculations.
 */
 class MetricZ_PersistentCache {
-	protected static bool s_HasChanges;
-	protected static ref MetricZ_Cache s_Cache;
-	protected static ref JsonSerializer m_Serializer;
+	protected static bool s_HasChanges; //!< True if the cache has changes
+	protected static ref MetricZ_Cache s_Cache; //!< Map of MetricZ_CacheKey to array of strings
+	protected static ref JsonSerializer m_Serializer; //!< JSON serializer
 
 	/**
 	    \brief Load cache from disk.
@@ -102,6 +102,8 @@ class MetricZ_PersistentCache {
 
 	/**
 	    \brief Register a seen key.
+	    \param category MetricZ_CacheKey category
+	    \param key Key to register
 	    \return true if key was new (added), false if already known.
 	*/
 	static bool Register(MetricZ_CacheKey category, string key)
@@ -127,6 +129,8 @@ class MetricZ_PersistentCache {
 
 	/**
 	    \brief Get all known keys for a category to initialize counters.
+	    \param category MetricZ_CacheKey category
+	    \return array of strings
 	*/
 	static array<string> GetKeys(MetricZ_CacheKey category)
 	{

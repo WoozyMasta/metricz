@@ -20,6 +20,7 @@ class MetricZ_RestTransactionManager
 	/**
 	    \brief Start a new transaction.
 	    \details Resets state. Any old callbacks will be ignored after this.
+	    \param txn Transaction ID to start
 	*/
 	static void Start(string txn)
 	{
@@ -38,6 +39,8 @@ class MetricZ_RestTransactionManager
 
 	/**
 	    \brief Register a new chunk being sent.
+	    \param txn Transaction ID to add chunk to
+	    \return int Sequence number of the chunk
 	*/
 	static int AddChunk(string txn)
 	{
@@ -50,6 +53,7 @@ class MetricZ_RestTransactionManager
 
 	/**
 	    \brief Mark transaction as fully sent by Sink
+	    \param txn Transaction ID to seal
 	*/
 	static void Seal(string txn)
 	{
@@ -62,6 +66,8 @@ class MetricZ_RestTransactionManager
 
 	/**
 	    \brief Callback when a chunk is successfully uploaded
+	    \param txn Transaction ID to check
+	    \param idx Sequence number of the chunk
 	*/
 	static void OnChunkSuccess(string txn, int idx)
 	{
@@ -80,6 +86,8 @@ class MetricZ_RestTransactionManager
 
 	/**
 	    \brief Check if txn is active (for retries)
+	    \param txn Transaction ID to check
+	    \return bool true if the transaction is active.
 	*/
 	static bool IsActive(string txn)
 	{
@@ -88,6 +96,7 @@ class MetricZ_RestTransactionManager
 
 	/**
 	    \brief Internal check to trigger Commit
+	    \details Triggers the commit if all chunks have been successfully uploaded.
 	*/
 	protected static void CheckCommit()
 	{

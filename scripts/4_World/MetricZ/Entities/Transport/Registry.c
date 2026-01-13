@@ -12,6 +12,7 @@
 */
 class MetricZ_TransportRegistry
 {
+	// Registry of active Transport entities.
 	protected static ref array<Transport> s_Registry = new array<Transport>();
 
 	/**

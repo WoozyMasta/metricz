@@ -11,12 +11,9 @@
 */
 class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 {
-	// parent EffectArea
-	protected EffectArea m_Area;
-
-	// generic
-	ref MetricZ_MetricFloat m_Radius;
-	ref MetricZ_MetricInt m_Insiders;
+	protected EffectArea m_Area; //!< Parent EffectArea instance.
+	ref MetricZ_MetricFloat m_Radius; //!< Metric: Radius of the area.
+	ref MetricZ_MetricInt m_Insiders; //!< Metric: Count of players inside the area.
 
 	/**
 	    \brief Constructor. Initializes metric instances and spawn tick.
@@ -31,6 +28,7 @@ class MetricZ_EffectAreaMetrics : MetricZ_EntityMetricsBase
 
 	/**
 	    \brief One-time registry fill.
+	    \param area EffectArea instance to initialize metrics for.
 	*/
 	void Init(EffectArea area)
 	{

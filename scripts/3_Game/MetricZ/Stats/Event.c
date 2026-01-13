@@ -10,8 +10,10 @@
 */
 class MetricZ_EventStats
 {
-	protected static ref map<EventType, string> s_EventNames;
-	protected static ref map<EventType, int> s_EventsRegistry = new map<EventType, int>(); // eventTypeId -> count
+	protected static ref map<EventType, string> s_EventNames; //!< Map of EventType to name
+	protected static ref map<EventType, int> s_EventsRegistry = new map<EventType, int>(); //!< Map of EventType to count
+
+	// Metric: Total events by EventType
 	protected static ref MetricZ_MetricInt s_EventTotal = new MetricZ_MetricInt(
 	    "events",
 	    "Total events by EventType",
@@ -32,8 +34,9 @@ class MetricZ_EventStats
 
 	/**
 	    \brief Emit HELP/TYPE and per-event samples.
-	    \details Builds the EventType->name map lazily. Writes one sample per EventType with labels {id, event}.
-	    \param MetricZ_SinkBase sink instance
+	    \details Builds the EventType->name map lazily.
+	             Writes one sample per EventType with labels `{id, event}`.
+	    \param sink MetricZ_SinkBase metric sink instance
 	*/
 	static void Flush(MetricZ_SinkBase sink)
 	{

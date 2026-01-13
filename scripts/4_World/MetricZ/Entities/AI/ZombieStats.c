@@ -13,23 +13,18 @@
 */
 class MetricZ_ZombieStats
 {
-	// synthetic mind-state id for dead infected
-	static const int MINDSTATE_DEAD = 1000;
-
-	// mind-state -> count
+	static const int MINDSTATE_DEAD = 1000; //!< Synthetic mind-state id for dead infected
 	protected static ref map<int, int> s_CountByType = new map<int, int>(); //!< State -> current infected count.
 	protected static ref map<int, string> s_MindStates; //!< State -> human-readable name. Built lazily.
-
-	// zombie type -> count
 	protected static ref map<string, int> s_TypeStorage = new map<string, int>(); //!< Type -> current infected count.
-	// zombie type -> cached labels
-	protected static ref map<string, string> s_TypeLabels = new map<string, string>();
+	protected static ref map<string, string> s_TypeLabels = new map<string, string>(); //!< Type -> cached labels.
 
-	// metrics
+	// Metric: Infected count by mind state.
 	protected static ref MetricZ_MetricInt s_MetricMindState = new MetricZ_MetricInt(
 	    "infected_mind_state",
 	    "Infected count by mind state",
 	    MetricZ_MetricType.GAUGE);
+	// Metric: Infected count by zombie type.
 	protected static ref MetricZ_MetricInt s_MetricCountByType = new MetricZ_MetricInt(
 	    "infected_by_type",
 	    "Infected count by zombie type",
@@ -131,7 +126,9 @@ class MetricZ_ZombieStats
 
 	/**
 	    \brief Move one unit from old to new mind state.
-	    \details No-op if unchanged.
+	    \details Ignores unchanged states. Never goes below zero.
+	    \param oldState Old mind state id
+	    \param newState New mind state id
 	*/
 	static void OnStateChange(int oldState, int newState)
 	{
@@ -156,7 +153,7 @@ class MetricZ_ZombieStats
 
 	/**
 	    \brief Emit HELP/TYPE and all state/type samples.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase metric sink instance
 	*/
 	static void Flush(MetricZ_SinkBase sink)
 	{

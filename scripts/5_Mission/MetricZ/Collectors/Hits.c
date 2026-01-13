@@ -6,7 +6,7 @@
 
 #ifdef SERVER
 /**
-    \brief Base class for MetricZ collectors.
+    \brief Collector for Hit stats.
 */
 class MetricZ_CollectorHits : MetricZ_CollectorBase
 {

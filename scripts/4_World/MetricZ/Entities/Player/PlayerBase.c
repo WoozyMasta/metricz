@@ -10,10 +10,8 @@
 */
 modded class PlayerBase
 {
-	// prevent counting kills on already killed body
-	protected bool m_MetricZ_IsKilled;
-	// prevent counting hits on death bodies except last hit
-	protected bool m_MetricZ_IsLastHit;
+	protected bool m_MetricZ_IsKilled; //!< Prevent counting kills on already killed body.
+	protected bool m_MetricZ_IsLastHit; //!< Prevent counting hits on death bodies except last hit.
 
 	protected ref MetricZ_PlayerMetrics m_MetricZ;
 

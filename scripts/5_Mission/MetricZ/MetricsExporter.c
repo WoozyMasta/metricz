@@ -93,8 +93,9 @@ class MetricZ_Exporter
 	}
 
 	/**
-	    \brief API for third party mods.
-	    \details Safe static accessor. Mods MUST call this in MissionServer::OnInit (after super.OnInit) or later.
+	    \brief API for third party mods to register collectors.
+	    \param collector MetricZ_CollectorBase collector instance.
+	    \details Mods MUST call this in `MissionServer::OnInit` (after `super.OnInit()`) or later.
 	*/
 	static void Register(MetricZ_CollectorBase collector)
 	{
@@ -154,6 +155,7 @@ class MetricZ_Exporter
 
 	/**
 	    \brief Internal collector registration logic
+	    \param collector MetricZ_CollectorBase collector instance.
 	*/
 	protected void RegisterCollector(MetricZ_CollectorBase collector)
 	{
@@ -309,6 +311,7 @@ class MetricZ_Exporter
 
 	/**
 	    \brief Writes buffered profiling metrics to the sink.
+	    \param sink MetricZ_SinkBase sink instance
 	*/
 	protected void FlushProfiles(MetricZ_SinkBase sink)
 	{

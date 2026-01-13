@@ -11,11 +11,8 @@
 */
 class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 {
-	// parent TerritoryFlag
-	protected TerritoryFlag m_TerritoryFlag;
-
-	// generic
-	ref MetricZ_MetricFloat m_Lifetime;
+	protected TerritoryFlag m_TerritoryFlag; //!< Parent TerritoryFlag instance.
+	ref MetricZ_MetricFloat m_Lifetime; //!< Metric: Lifetime of the territory flag.
 
 	/**
 	    \brief Constructor. Initializes metric instances and spawn tick.
@@ -30,6 +27,7 @@ class MetricZ_TerritoryMetrics : MetricZ_EntityMetricsBase
 
 	/**
 	    \brief One-time registry fill.
+	    \param territory TerritoryFlag instance to initialize metrics for.
 	*/
 	void Init(TerritoryFlag territory)
 	{

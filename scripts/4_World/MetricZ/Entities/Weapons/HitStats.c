@@ -14,11 +14,11 @@ class MetricZ_HitStats
 	protected static bool s_CacheLoaded;
 
 	// Registries
-	protected static ref map<string, int> s_PlayerHit = new map<string, int>();
-	protected static ref map<string, int> s_CreatureHit = new map<string, int>();
+	protected static ref map<string, int> s_PlayerHit = new map<string, int>(); //!< Player hits by ammo type.
+	protected static ref map<string, int> s_CreatureHit = new map<string, int>(); //!< Creature hits by ammo type.
 
 	// Shared caches for Ammo labels
-	protected static ref map<string, string> s_LabelsAmmo = new map<string, string>();
+	protected static ref map<string, string> s_LabelsAmmo = new map<string, string>(); //!< Cached labels for ammo types.
 
 	// Metrics
 	protected static ref MetricZ_MetricInt s_MetricPlayerHit = new MetricZ_MetricInt(
@@ -59,6 +59,7 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Register a hit on a Player.
+	    \param ammo Ammo type.
 	*/
 	static void OnPlayerHit(string ammo)
 	{
@@ -71,6 +72,7 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Register a hit on a Creature.
+	    \param ammo Ammo type.
 	*/
 	static void OnCreatureHit(string ammo)
 	{
@@ -83,7 +85,7 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Emit metrics to file.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	*/
 	static void Flush(MetricZ_SinkBase sink)
 	{
@@ -112,7 +114,7 @@ class MetricZ_HitStats
 	/**
 	    \brief Helper to increment value in a specific map and pre-cache labels.
 	    \param metricsStore The registry map to update.
-	    \param key The normalized source key.
+	    \param key Normalized source key.
 	*/
 	protected static void IncMap(map<string, int> metricsStore, string key)
 	{
@@ -128,6 +130,7 @@ class MetricZ_HitStats
 
 	/**
 	    \brief Get or build cached labels for a ammo type.
+	    \param type Ammo type.
 	*/
 	protected static string LabelsFor(string type)
 	{

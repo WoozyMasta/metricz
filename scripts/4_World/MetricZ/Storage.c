@@ -11,12 +11,9 @@
 */
 class MetricZ_Storage
 {
-	// init flag
-	protected static bool s_Initialized;
-
-	// metrics cached labels
-	protected static string s_Labels;
-	protected static string s_LabelsExtra;
+	protected static bool s_Initialized; //!< Initialization flag.
+	protected static string s_Labels; //!< Common labels.
+	protected static string s_LabelsExtra; //!< Extra labels.
 
 	// Metrics storage registry
 	protected static ref array<ref MetricZ_MetricBase> s_Registry = new array<ref MetricZ_MetricBase>();
@@ -24,7 +21,6 @@ class MetricZ_Storage
 	// Food metrics map: enum -> metric
 	protected static ref map<MetricZ_FoodTypes, ref MetricZ_MetricInt> s_FoodMetricByType;
 
-	// --- Gauges
 	// Core
 	static ref MetricZ_MetricInt s_Status = new MetricZ_MetricInt(
 	    "status",
@@ -309,7 +305,11 @@ class MetricZ_Storage
 	    "Clouds 0..1",
 	    MetricZ_MetricType.GAUGE);
 
-	// --- Counters
+	// Counters
+	static ref MetricZ_MetricInt s_ChatMessages = new MetricZ_MetricInt(
+	    "chat_messages",
+	    "Total messages sent by players in the world",
+	    MetricZ_MetricType.COUNTER);
 	static ref MetricZ_MetricInt s_PlayersSpawns = new MetricZ_MetricInt(
 	    "players_spawns",
 	    "Total new players spawns in the world",
@@ -340,6 +340,7 @@ class MetricZ_Storage
 	    MetricZ_MetricType.COUNTER);
 
 #ifdef EXPANSIONMODAI
+	// Expansion AI
 	static ref MetricZ_MetricInt s_ExpansionAI = new MetricZ_MetricInt(
 	    "eai",
 	    "Total Expansion AI in the world (optional)",
@@ -460,6 +461,7 @@ class MetricZ_Storage
 		s_Registry.Insert(m_Clouds);
 
 		// Counters
+		s_Registry.Insert(s_ChatMessages);
 		s_Registry.Insert(s_PlayersSpawns);
 		s_Registry.Insert(s_PlayersDeaths);
 		s_Registry.Insert(s_InfectedDeaths);
@@ -480,11 +482,11 @@ class MetricZ_Storage
 		s_Status.Set(1);
 		s_ScrapeInterval.Set(MetricZ_Config.Get().settings.collect_interval_sec);
 		s_ScrapeSkippedTotal.Set(0);
-		s_MapEffectiveSize.Set(MetricZ_Geo.GetMapEffectiveSize());
+		s_MapEffectiveSize.Set((int)MetricZ_Geo.GetMapEffectiveSize());
 		s_FPSLimit.Set(MetricZ_Config.Get().fps_limit);
 		s_MaxPlayers.Set(MetricZ_Config.Get().max_players);
 
-		// Load Cache
+		// Load labels cache
 		MetricZ_WeaponStats.LoadCache();
 		MetricZ_HitStats.LoadCache();
 
@@ -588,7 +590,7 @@ class MetricZ_Storage
 
 	/**
 	    \brief Get common label set for most world metrics.
-	    \return \p string Prebuilt label like "{world=\"...\",host=\"...\",instance_id=\"...\"}"
+	    \return \p string Prebuilt label like `{world="...",host="...",instance_id="..."}`
 	*/
 	static string GetLabels()
 	{
@@ -599,7 +601,7 @@ class MetricZ_Storage
 	    \brief Get extended label set for status-like metrics.
 	    \details Includes base labels plus version fields.
 	    \return \p string Prebuilt label like
-	            "{world=\"...\",host=\"...\",instance_id=\"...\",game_version=\"...\",save_version=\"...\"}"
+	            `{world="...",host="...",instance_id="...",game_version="...",save_version="..."}`
 	*/
 	static string GetExtraLabels()
 	{
@@ -686,11 +688,10 @@ class MetricZ_Storage
 
 	/**
 	    \brief Initialize typed food metrics registry once.
-	    \details
+	    \details Safe to call multiple times.
 	      - Registers global s_Food metric.
 	      - Registers each typed food metric in s_Registry.
 	      - Fills s_FoodMetricByType map: MetricZ_FoodTypes -> MetricZ_MetricInt.
-	      Safe to call multiple times.
 	*/
 	protected static void InitFoodMetric()
 	{

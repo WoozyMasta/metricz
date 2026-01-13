@@ -46,7 +46,7 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Flush all registered metrics.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	*/
 	void Flush(MetricZ_SinkBase sink)
 	{
@@ -59,7 +59,7 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Flush single metric by index.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	    \param idx Metric index in registry
 	*/
 	void FlushAt(MetricZ_SinkBase sink, int idx)
@@ -72,7 +72,7 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Write HELP/TYPE for all metrics.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	*/
 	void WriteHeaders(MetricZ_SinkBase sink)
 	{
@@ -85,7 +85,7 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Write HELP/TYPE for one metric by index.
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	    \param idx Metric index in registry
 	*/
 	void WriteHeaderAt(MetricZ_SinkBase sink, int idx)
@@ -122,6 +122,7 @@ class MetricZ_EntityMetricsBase
 
 	/**
 	    \brief Select a set of labels for a specific metric.
+	    \param metric MetricZ_MetricBase instance.
 	    \details Defaults to the generic m_Labels. Override in descendants as needed.
 	*/
 	protected string LabelsFor(MetricZ_MetricBase metric)

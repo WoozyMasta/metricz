@@ -8,6 +8,9 @@
 /**
     \brief Floating-point gauge metric.
     \details For continuous values like FPS or temperature.
+        \param name Metric name
+        \param help HELP text
+        \param type Metric type (GAUGE/COUNTER)
 */
 class MetricZ_MetricFloat : MetricZ_MetricBase
 {
@@ -37,7 +40,7 @@ class MetricZ_MetricFloat : MetricZ_MetricBase
 
 	/**
 	    \brief Add value.
-	    \param x New value
+	    \param x Value to add
 	*/
 	void Add(float x)
 	{

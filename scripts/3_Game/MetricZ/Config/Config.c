@@ -13,15 +13,15 @@
 */
 class MetricZ_Config
 {
-	protected static ref MetricZ_Config s_Instance; // singleton instance
-	protected static ref MetricZ_ConfigDTO s_Config; // singleton state
-	protected static bool s_Loaded;
-	protected static bool s_TelemetrySend;
+	protected static ref MetricZ_Config s_Instance; //!< singleton instance
+	protected static ref MetricZ_ConfigDTO s_Config; //!< singleton state
+	protected static bool s_Loaded; //!< configuration loaded flag
+	protected static bool s_TelemetrySend; //!< telemetry send flag
 
 	/**
 	    \brief Retrieves the singleton configuration instance.
 	    \details Lazy-loads the configuration file on the first call.
-	    \return Global MetricZ_ConfigDTO instance.
+	    \return Global `MetricZ_ConfigDTO` instance.
 	*/
 	static MetricZ_ConfigDTO Get()
 	{
@@ -77,9 +77,9 @@ class MetricZ_Config
 
 	/**
 	    \brief Handles JSON file operations (Load/Save/Upgrade).
-	    \details If the file exists, it attempts to load and validate it.
-	             If the version mismatches, it performs an upgrade and saves the file.
-	             If the file is missing, it creates a new default configuration.
+	    \details - If the file exists, it attempts to load and validate it.
+	             - If the version mismatches, it performs an upgrade and saves the file.
+	             - If the file is missing, it creates a new default configuration.
 	*/
 	protected void LoadConfigFile()
 	{

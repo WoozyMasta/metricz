@@ -10,10 +10,8 @@
 */
 modded class HelicopterScript
 {
-	// prevent counting kills on destroyed vehicles
-	protected bool m_MetricZ_IsKilled;
-
-	protected ref MetricZ_TransportMetrics m_MetricZ;
+	protected bool m_MetricZ_IsKilled; //!< Prevent counting kills on destroyed vehicles.
+	protected ref MetricZ_TransportMetrics m_MetricZ; //!< Metrics for this helicopter.
 
 	/**
 	    \brief Initialize transport metrics for helicopter loaded from persistence.
@@ -38,6 +36,7 @@ modded class HelicopterScript
 
 	/**
 	    \brief Register helicopter in transport registry and create metrics.
+	    \details No-op if transport metrics disabled.
 	*/
 	override void EEInit()
 	{

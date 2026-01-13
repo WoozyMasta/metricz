@@ -17,11 +17,11 @@ class MetricZ_FrameMonitor
 	static int s_AccFrames; //!< Accumulated frames within the current window
 
 	// window stats between scrapes
-	static float s_WindowMin;
-	static float s_WindowMax;
-	static float s_WindowSum;
-	static int s_WindowCount;
-	static bool s_WindowHasSample;
+	static float s_WindowMin; //!< Min FPS in window
+	static float s_WindowMax; //!< Max FPS in window
+	static float s_WindowSum; //!< Sum of FPS in window
+	static int s_WindowCount; //!< Number of FPS samples in window
+	static bool s_WindowHasSample; //!< True if the window has a sample
 
 	/**
 	    \brief Feed per-frame timing and update the rolling 1s FPS.
@@ -49,6 +49,7 @@ class MetricZ_FrameMonitor
 
 	/**
 	    \brief Record 1-second FPS sample into window stats.
+	    \param fps FPS to record
 	*/
 	protected static void RecordWindowSample(float fps)
 	{

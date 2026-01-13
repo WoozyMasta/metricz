@@ -6,11 +6,11 @@
 
 #ifdef SERVER
 /**
-    \brief Updates MetricZ counters on spawn/cleanup.
+    \brief Updates MetricZ counters on spawn/cleanup and weapon shots.
 */
 modded class Weapon_Base
 {
-	// cache for weapon label names: original type -> canonical name
+	// cache for weapon label names: original type -> canonical name.
 	protected static ref map<string, string> s_MetricZ_LabelNames = new map<string, string>();
 
 	/**
@@ -71,9 +71,9 @@ modded class Weapon_Base
 	/**
 	    \brief Compute canonical weapon name from type and cache the result.
 	    \details
-	      - remove any "sawedoff" token (case-insensitive, anywhere)
-	      - collapse "__" -> "_", then trim leading/trailing "_"
-	      - cut suffix after last "_"
+	      - remove any `sawedoff` token (case-insensitive, anywhere)
+	      - collapse `__` -> `_`, then trim leading/trailing `_`
+	      - cut suffix after last `_`
 	      - lowercase; fallback to original lowercase if empty
 	*/
 	protected string MetricZ_GetWeaponNameByType()

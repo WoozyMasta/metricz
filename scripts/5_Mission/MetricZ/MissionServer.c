@@ -57,5 +57,16 @@ modded class MissionServer : MissionBase
 
 		MetricZ_Storage.s_Corpses.Set(m_DeadPlayersArray.Count());
 	}
+
+	/**
+	    \brief Count player chat messages.
+	*/
+	override void OnEvent(EventType eventTypeId, Param params)
+	{
+		if (eventTypeId == ChatMessageEventTypeID)
+			MetricZ_Storage.s_ChatMessages.Inc();
+
+		super.OnEvent(eventTypeId, params);
+	}
 }
 #endif

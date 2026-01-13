@@ -18,7 +18,7 @@ class MetricZ_RestClient : Managed
 
 	/**
 	    \brief Singleton accessor.
-	    \return Global instance of MetricZ_RestClient or null if config is not loaded.
+	    \return Global instance of `MetricZ_RestClient` or null if config is not loaded.
 	*/
 	static MetricZ_RestClient Get()
 	{
@@ -88,7 +88,7 @@ class MetricZ_RestClient : Managed
 
 		Init();
 
-		// Construct URL: /api/v1/ingest/<instance_id>/<txn_id>/<seq_id>
+		// Construct URL: `/api/v1/ingest/<instance_id>/<txn_id>/<seq_id>`
 		// The backend uses <seq_id> to reassemble chunks in the correct order.
 		string url;
 		string instanceID = MetricZ_Config.Get().settings.instance_id_resolved;

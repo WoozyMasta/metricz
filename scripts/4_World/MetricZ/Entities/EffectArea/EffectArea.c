@@ -10,9 +10,9 @@
 */
 modded class EffectArea
 {
-	protected bool m_MetricZ_AreaInit;
-	protected int m_MetricZ_InsidersCount;
-	protected ref MetricZ_EffectAreaMetrics m_MetricZ;
+	protected bool m_MetricZ_AreaInit; //!< True if the area has been initialized.
+	protected int m_MetricZ_InsidersCount; //!< Count of players currently inside the zone.
+	protected ref MetricZ_EffectAreaMetrics m_MetricZ; //!< Metrics for this area.
 
 	/**
 	    \brief Standard entity initialization.
@@ -29,10 +29,6 @@ modded class EffectArea
 
 	/**
 	    \brief Finalizes zone setup and registers metrics collector.
-	    \details This is the safe point to initialize metrics:
-	      - For Dynamic Zones: Called only after the shell has landed and the zone is physically created.
-	      - For Static Zones: Called immediately.
-	      Guarantees that metrics are not exported before the zone actually exists.
 	*/
 	override void InitZone()
 	{

@@ -16,16 +16,12 @@ class MetricZ_WeaponStats
 {
 	protected static bool s_CacheLoaded;
 
-	// weapon -> total shots
-	protected static ref map<string, int> s_ShotsByWeapon = new map<string, int>();
-	// weapon -> live count in world
-	protected static ref map<string, int> s_CountByType = new map<string, int>();
-	// players kills by source (source name -> count)
-	protected static ref map<string, int> s_PlayerKills = new map<string, int>();
-	// creatures kills by source (source name -> count)
-	protected static ref map<string, int> s_CreatureKills = new map<string, int>();
+	protected static ref map<string, int> s_ShotsByWeapon = new map<string, int>(); //!< Total shots by weapon.
+	protected static ref map<string, int> s_CountByType = new map<string, int>(); //!< Live count by weapon type.
+	protected static ref map<string, int> s_PlayerKills = new map<string, int>(); //!< Player kills by source.
+	protected static ref map<string, int> s_CreatureKills = new map<string, int>(); //!< Creature kills by source.
 
-	// weapon -> cached labels "{world=...,host=...,instance_id=...,weapon=...}"
+	// weapon -> cached labels `{world=...,host=...,instance_id=...,weapon=...}`
 	protected static ref map<string, string> s_LabelsByWeapon = new map<string, string>();
 
 	// metrics
@@ -84,6 +80,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Increment counters for a fired weapon.
+	    \param weapon Weapon_Base instance.
 	*/
 	static void OnFire(Weapon_Base weapon)
 	{
@@ -97,6 +94,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Increment per-type live count for spawned weapon.
+	    \param weapon Weapon_Base instance.
 	*/
 	static void OnSpawn(Weapon_Base weapon)
 	{
@@ -110,6 +108,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Called when a Player is killed.
+	    \param source Object killer instance.
 	*/
 	static void OnPlayerKilled(Object source)
 	{
@@ -123,6 +122,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Called when a Creature (Zombie/Animal/eAI) is killed.
+	    \param source Object killer instance.
 	*/
 	static void OnCreatureKilled(Object source)
 	{
@@ -136,6 +136,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Decrement per-type live count for deleted weapon.
+	    \param weapon Weapon_Base instance.
 	*/
 	static void OnDelete(Weapon_Base weapon)
 	{
@@ -157,7 +158,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Flush all weapon metrics (shots, live counts, kills).
-	    \param MetricZ_SinkBase sink instance
+	    \param sink MetricZ_SinkBase sink instance
 	*/
 	static void Flush(MetricZ_SinkBase sink)
 	{
@@ -207,7 +208,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Get or build cached labels for a weapon type.
-	    \param type The normalized weapon/source name.
+	    \param type Normalized weapon/source name.
 	    \return string Formatted Prometheus labels.
 	*/
 	protected static string LabelsFor(string type)
@@ -230,7 +231,7 @@ class MetricZ_WeaponStats
 
 	/**
 	    \brief Determines the metric key from an Object source.
-	    \param source The killer Object.
+	    \param source Killer Object.
 	    \return string Normalized key (e.g., "akm", "zombie", "player_melee_item_heavy").
 	*/
 	protected static string ResolveSourceName(Object source)
@@ -295,7 +296,7 @@ class MetricZ_WeaponStats
 	/**
 	    \brief Helper to increment value in a specific map and pre-cache labels.
 	    \param metricsStore The registry map to update.
-	    \param key The normalized source key.
+	    \param key Normalized source key.
 	*/
 	protected static void IncMap(map<string, int> metricsStore, string key)
 	{

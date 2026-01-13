@@ -69,7 +69,7 @@ class MetricZ_CallbackBase : RestCallback
 			backoff = MetricZ_Config.Get().http.retry_max_backoff_ms;
 
 		// add random jitter (+/- 25%) to prevent thundering herd
-		int delay = Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
+		int delay = (int)Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
 		ErrorEx(
 		    string.Format("MetricZ: callback REST retry %1/%2 after %3ms", m_Attempt, MetricZ_Config.Get().http.max_retries, delay),
@@ -108,6 +108,7 @@ class MetricZ_CallbackBase : RestCallback
 
 	/**
 	    \brief Handler for REST API errors (transport/protocol errors).
+	    \param errorCode Error code
 	*/
 	override void OnError(int errorCode)
 	{
@@ -135,6 +136,8 @@ class MetricZ_CallbackBase : RestCallback
 
 	/**
 	    \brief Handler for successful REST API responses (HTTP 200-299).
+	    \param data Response data
+	    \param dataSize Response data size
 	*/
 	override void OnSuccess(string data, int dataSize)
 	{

@@ -120,7 +120,7 @@ class MetricZ_ObjectName
 
 	/**
 	    \brief Strips known suffixes recursively and cleans up the name.
-	    \param name String to process (modified in place).
+	    \param[inout] name String to process (modified in place).
 	    \return bool True if name is valid (not empty), false otherwise.
 	*/
 	static bool StripSuffix(inout string name)
@@ -173,6 +173,7 @@ class MetricZ_ObjectName
 
 	/**
 	    \brief Check that string consists only of digits 0-9.
+	    \param s String to check
 	*/
 	static bool IsDigits(string s)
 	{

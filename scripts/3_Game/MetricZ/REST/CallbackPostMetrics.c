@@ -20,6 +20,9 @@ class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 
 	/**
 	    \brief Configures the callback with payload and metadata.
+	    \param body Payload to send
+	    \param txn Transaction ID to associate with the chunk
+	    \param idx Sequence number of the chunk
 	*/
 	void Setup(string body, string txn, int idx)
 	{
@@ -31,6 +34,7 @@ class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 
 	/**
 	    \brief Checks if the callback has been configured.
+	    \return bool true if the callback has been configured.
 	*/
 	bool IsReady()
 	{
@@ -59,6 +63,8 @@ class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 
 	/**
 	    \brief Reports successful upload to the Transaction Manager.
+	    \param data Response data
+	    \param dataSize Response data size
 	*/
 	override void OnSuccess(string data, int dataSize)
 	{

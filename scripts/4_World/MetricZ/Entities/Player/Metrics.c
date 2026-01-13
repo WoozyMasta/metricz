@@ -14,16 +14,16 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 	// Spawn timestamp in seconds
 	protected int m_InitTick;
 
-	// ping & throttle
-	protected int m_PingMinWindow = -1;
-	protected int m_PingMaxWindow = -1;
-	protected int m_ThrottleWindow = -1;
-	protected float m_SampleAccTime;
+	// Ping & Throttle
+	protected int m_PingMinWindow = -1; //!< Min ping window.
+	protected int m_PingMaxWindow = -1; //!< Max ping window.
+	protected int m_ThrottleWindow = -1; //!< Throttle window.
+	protected float m_SampleAccTime; //!< Sample accumulation time.
 
-	// metrics cached labels
+	// Extra labels for the player.
 	protected string m_LabelsExtra;
 
-	// parent player
+	// Parent player instance.
 	protected PlayerBase m_Player;
 
 	// stats
@@ -348,7 +348,7 @@ class MetricZ_PlayerMetrics : MetricZ_EntityMetricsBase
 			m_PingMaxWindow = pMax;
 
 		if (throttle > 0 && (m_ThrottleWindow < 0 || throttle > m_ThrottleWindow))
-			m_ThrottleWindow = throttle;
+			m_ThrottleWindow = (int)throttle;
 	}
 
 	/**

@@ -6,7 +6,7 @@
 
 #ifdef SERVER
 /**
-    \brief Base class for MetricZ collectors.
+    \brief Collector for EffectArea stats.
 */
 class MetricZ_CollectorAreas : MetricZ_CollectorBase
 {

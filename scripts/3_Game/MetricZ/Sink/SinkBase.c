@@ -12,10 +12,10 @@
 */
 class MetricZ_SinkBase
 {
-	private int m_BufferLimit;
-	private bool m_IsBuffered;
-	private bool m_Busy;
-	private ref array<string> m_Buffer;
+	private int m_BufferLimit; //!< Buffer limit for the sink
+	private bool m_IsBuffered; //!< Buffered state of the sink
+	private bool m_Busy; //!< Busy state of the sink
+	private ref array<string> m_Buffer; //!< Buffer for the sink
 
 	private static ref JsonSerializer s_Serializer;
 
@@ -28,10 +28,11 @@ class MetricZ_SinkBase
 
 	/**
 	    \brief Constructor for the base sink.
-	    \param bufferLimit Defines the buffering strategy:
-	           0 - No buffering (flush every line immediately).
-	           > 0 - Buffered (flush automatically when the limit is reached).
-	           < 0 - Unlimited buffer (flush only on End() or manual call).
+	    \details Defines the buffering strategy:
+	        - 0 - No buffering (flush every line immediately).
+	        - > 0 - Buffered (flush automatically when the limit is reached).
+	        - < 0 - Unlimited buffer (flush only on End() or manual call).
+	    \param bufferLimit Buffer limit for the sink
 	*/
 	void SetBuffer(int bufferLimit)
 	{
@@ -49,7 +50,7 @@ class MetricZ_SinkBase
 	/**
 	    \brief Prepare the sink for writing a new batch of metrics (transaction start).
 	    \details Clears previous buffers and sets the busy state.
-	    \return bool True if the sink is ready, false if it is already busy or failed to initialize.
+	    \return bool True if the sink was successfully started, false otherwise.
 	*/
 	bool Begin()
 	{
@@ -175,6 +176,7 @@ class MetricZ_SinkBase
 	/**
 	    \brief Internal helper to add a line to the buffer.
 	    \details Automatically calls BufferFlush() if the buffer limit is reached.
+	    \param line Metric line to insert
 	*/
 	protected void BufferInsert(string line)
 	{

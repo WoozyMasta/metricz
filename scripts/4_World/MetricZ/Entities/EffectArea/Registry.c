@@ -17,7 +17,7 @@ class MetricZ_EffectAreaRegistry
 	/**
 	    \brief Register new EffectArea in the registry.
 	    \details Ignores duplicates and null references.
-	    \param EffectArea EffectArea instance
+	    \param area EffectArea instance
 	*/
 	static void Register(EffectArea area)
 	{
@@ -31,7 +31,7 @@ class MetricZ_EffectAreaRegistry
 	/**
 	    \brief Remove EffectArea from the registry.
 	    \details Does nothing if not found or null.
-	    \param EffectArea EffectArea instance
+	    \param area EffectArea instance
 	*/
 	static void Unregister(EffectArea area)
 	{

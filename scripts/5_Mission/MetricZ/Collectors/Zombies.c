@@ -6,7 +6,7 @@
 
 #ifdef SERVER
 /**
-    \brief Base class for MetricZ collectors.
+    \brief Collector for Zombie stats.
 */
 class MetricZ_CollectorZombies : MetricZ_CollectorBase
 {

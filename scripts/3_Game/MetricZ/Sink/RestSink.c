@@ -44,6 +44,10 @@ class MetricZ_RestSink : MetricZ_SinkBase
 		return true;
 	}
 
+	/**
+	    \brief Writes a metric line to the REST sink.
+	    \param line Metric line to write
+	*/
 	override void Line(string line)
 	{
 		if (m_Client)

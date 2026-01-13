@@ -10,23 +10,24 @@
 */
 class MetricZ_HttpStats
 {
-	protected static int s_TotalRetries;
-	protected static int s_TotalBytes;
+	// Stats
+	protected static int s_TotalRetries; //!< Total number of retries
+	protected static int s_TotalBytes; //!< Total number of bytes sent
 
-	protected static ref map<string, int> s_Lookup = new map<string, int>(); // map "type:status" -> index in arrays
-	protected static ref array<string> s_CacheLabels = new array<string>(); // label cache
-	protected static ref array<int> s_Counts = new array<int>(); // actual counters matched by index
+	// Caches
+	protected static ref map<string, int> s_Lookup = new map<string, int>(); //!< map `type:status` -> index in arrays
+	protected static ref array<string> s_CacheLabels = new array<string>(); //!< label cache
+	protected static ref array<int> s_Counts = new array<int>(); //!< actual counters matched by index
 
+	// Metrics
 	protected static ref MetricZ_MetricInt s_MetricRequests = new MetricZ_MetricInt(
 	    "http_requests",
 	    "Total HTTP requests by type and status",
 	    MetricZ_MetricType.COUNTER);
-
 	protected static ref MetricZ_MetricInt s_MetricRetries = new MetricZ_MetricInt(
 	    "http_retries",
 	    "Total HTTP callback retries",
 	    MetricZ_MetricType.COUNTER);
-
 	protected static ref MetricZ_MetricInt s_MetricBytes = new MetricZ_MetricInt(
 	    "http_sent_bytes",
 	    "Total bytes sent via HTTP body",
@@ -35,6 +36,8 @@ class MetricZ_HttpStats
 	/**
 	    \brief Increment request counter.
 	    \details Handles full label construction once per new type/status pair.
+	    \param type Request type
+	    \param status Request status
 	*/
 	static void IncRequest(string type, string status)
 	{
@@ -69,6 +72,7 @@ class MetricZ_HttpStats
 
 	/**
 	    \brief Add to total sent bytes.
+	    \param bytes Number of bytes to add
 	*/
 	static void AddBytes(int bytes)
 	{

@@ -17,7 +17,7 @@ class MetricZ_TerritoryRegistry
 	/**
 	    \brief Register new TerritoryFlag in the registry.
 	    \details Ignores duplicates and null references.
-	    \param territory TerritoryFlag instance
+	    \param territory TerritoryFlag instance to register.
 	*/
 	static void Register(TerritoryFlag territory)
 	{
@@ -31,7 +31,7 @@ class MetricZ_TerritoryRegistry
 	/**
 	    \brief Remove TerritoryFlag from the registry.
 	    \details Does nothing if not found or null.
-	    \param territory TerritoryFlag instance
+	    \param territory TerritoryFlag instance to unregister.
 	*/
 	static void Unregister(TerritoryFlag territory)
 	{

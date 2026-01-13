@@ -228,14 +228,14 @@ For DayZ metrics, we strongly recommend using
   (~9ms buffered, ~30ms unbuffered). Recommended: true (approx. 2x faster
   than buffered text and 5x faster than unbuffered).
 * **`http.buffer`** (`int`) = -1 -
-  Buffer size (in lines) per HTTP POST request. <= 0 - Disable buffer, send
-  all metrics in one request. > 0 - Send metrics chunked by the set line
-  count. With 'serialized=true', the buffer setting has minimal impact on
-  CPU performance. A value of -1 is recommended to reduce the number of HTTP
-  requests. Use chunking (e.g. 512) only if you encounter network payload
-  limits. With 'serialized=false' recommended range 64-512 for optimal
-  performance. HTTP POST is not disk-dependent, but building one huge
-  request body requires more CPU time.
+  Buffer size (in lines) per HTTP POST request. - <= 0 - Disable buffer,
+  send all metrics in one request. - > 0 - Send metrics chunked by the set
+  line count. With 'serialized=true', the buffer setting has minimal impact
+  on CPU performance. A value of -1 is recommended to reduce the number of
+  HTTP requests. Use chunking (e.g. 512) only if you encounter network
+  payload limits. With 'serialized=false' recommended range 64-512 for
+  optimal performance. HTTP POST is not disk-dependent, but building one
+  huge request body requires more CPU time.
 * **`http.url`** (`string`) = "http://127.0.0.1:8098" -
   Remote URL of the metricz-exporter instance.
 * **`http.user`** (`string`) = "metricz" -

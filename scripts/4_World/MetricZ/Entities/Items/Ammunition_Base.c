@@ -20,8 +20,8 @@ modded class Ammunition_Base
 		MetricZ_Storage.s_Ammo.Inc();
 	}
 
-	/** \brief
-	    Decrement ammo gauge on delete.
+	/**
+	    \brief Decrement ammo gauge on delete.
 	*/
 	override void EEDelete(EntityAI parent)
 	{

@@ -60,9 +60,9 @@ class MetricZ_Time
 
 	/**
 	    \brief Normalize year into safe epoch window [EPOCH_START_YEAR;EPOCH_MAX_YEAR].
-	    \details
-	        - If year already in window -> returned as-is.
-	        - Otherwise year is shifted
+	    \details If year already in window -> returned as-is. Otherwise year is shifted.
+	    \param year Year to normalize
+	    \return int Normalized year
 	*/
 	private static int NormalizeYearForEpoch(int year)
 	{
@@ -84,6 +84,13 @@ class MetricZ_Time
 
 	/**
 	    \brief Unix epoch seconds for given Y-M-D hh:mm:ss.
+	    \param y Year
+	    \param m Month
+	    \param d Day
+	    \param hh Hour
+	    \param mm Minute
+	    \param ss Second
+	    \return int Epoch seconds
 	*/
 	private static int EpochSecondsForDate(int y, int m, int d, int hh, int mm, int ss)
 	{

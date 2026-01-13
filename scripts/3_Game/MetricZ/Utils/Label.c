@@ -59,7 +59,7 @@ class MetricZ_LabelUtils
 	             Merges user labels without overwriting base keys.
 	             Skips empty world/host. Order is unspecified.
 	    \param labels Optional map of extra key->value pairs
-	    \return \p string "{k="v",...}"
+	    \return \p string Prometheus label block, e.g. `{k="v",...}`
 	*/
 	static string MakeLabels(map<string, string> labels = null)
 	{

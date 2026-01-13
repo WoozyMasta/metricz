@@ -274,6 +274,8 @@ DayZ server. Each metric includes its identifier, type
   Fog 0..1
 * **`dayz_metricz_weather_clouds`** (`GAUGE`) —
   Clouds 0..1
+* **`dayz_metricz_chat_messages_total`** (`COUNTER`) —
+  Total messages sent by players in the world
 * **`dayz_metricz_players_spawns_total`** (`COUNTER`) —
   Total new players spawns in the world
 * **`dayz_metricz_players_deaths_total`** (`COUNTER`) —

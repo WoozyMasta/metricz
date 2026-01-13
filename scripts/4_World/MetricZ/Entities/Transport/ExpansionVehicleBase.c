@@ -11,10 +11,8 @@
 */
 modded class ExpansionVehicleBase
 {
-	// prevent counting kills on destroyed vehicles
-	protected bool m_MetricZ_IsKilled;
-
-	protected ref MetricZ_TransportMetrics m_MetricZ;
+	protected bool m_MetricZ_IsKilled; //!< Prevent counting kills on destroyed vehicles.
+	protected ref MetricZ_TransportMetrics m_MetricZ; //!< Metrics for this expansion vehicle.
 
 	/**
 	    \brief Initialize transport metrics for expansion vehicle loaded from persistence.
@@ -40,6 +38,7 @@ modded class ExpansionVehicleBase
 
 	/**
 	    \brief Increment transport based counters.
+	    \details No-op if transport metrics disabled.
 	*/
 	override void EEInit()
 	{

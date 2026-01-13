@@ -15,6 +15,7 @@ class MetricZ_CallbackCommitMetrics: MetricZ_CallbackBase
 
 	/**
 	    \brief Sets the transaction ID for this commit request.
+	    \param txn Transaction ID to commit
 	*/
 	void SetTxn(string txn)
 	{

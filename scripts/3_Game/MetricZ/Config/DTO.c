@@ -6,7 +6,7 @@
 
 #ifdef SERVER
 /**
-    \brief MetricZ Config DTO
+    \brief MetricZ Config Data Transfer Object
 */
 class MetricZ_ConfigDTO
 {
@@ -64,6 +64,9 @@ class MetricZ_ConfigDTO
 	}
 }
 
+/**
+    \brief Base settings for metric collection.
+*/
 class MetricZ_ConfigDTO_BaseSettings
 {
 	// Overrides the Instance ID. By default, this is detected automatically from serverDZ.cfg instanceID,
@@ -108,11 +111,14 @@ class MetricZ_ConfigDTO_BaseSettings
 			host_name_resolved = host;
 		}
 
-		init_delay_sec = Math.Clamp(init_delay_sec, 0, 300);
-		collect_interval_sec = Math.Clamp(collect_interval_sec, 0, 900);
+		init_delay_sec = (int)Math.Clamp(init_delay_sec, 0, 300);
+		collect_interval_sec = (int)Math.Clamp(collect_interval_sec, 0, 900);
 	}
 }
 
+/**
+    \brief Settings for exporting metrics to a local file.
+*/
 class MetricZ_ConfigDTO_FileExport
 {
 	// Enables saving metrics to a local file (`metricz.prom`) for collection
@@ -157,10 +163,13 @@ class MetricZ_ConfigDTO_FileExport
 	*/
 	void Normalize()
 	{
-		buffer = Math.Clamp(buffer, -1, MetricZ_Constants.MAX_BUFFER_SIZE);
+		buffer = (int)Math.Clamp(buffer, -1, MetricZ_Constants.MAX_BUFFER_SIZE);
 	}
 }
 
+/**
+    \brief Settings for publishing metrics via HTTP.
+*/
 class MetricZ_ConfigDTO_HttpExport
 {
 	// Enables publishing metrics via HTTP POST to the metricz-exporter service.
@@ -175,8 +184,8 @@ class MetricZ_ConfigDTO_HttpExport
 	bool serialized = true;
 
 	// Buffer size (in lines) per HTTP POST request.
-	// <= 0 - Disable buffer, send all metrics in one request.
-	// > 0 - Send metrics chunked by the set line count.
+	// - <= 0 - Disable buffer, send all metrics in one request.
+	// - > 0 - Send metrics chunked by the set line count.
 	//
 	// With 'serialized=true', the buffer setting has minimal impact on CPU performance.
 	// A value of -1 is recommended to reduce the number of HTTP requests.
@@ -217,16 +226,16 @@ class MetricZ_ConfigDTO_HttpExport
 	*/
 	void Normalize()
 	{
-		buffer = Math.Clamp(buffer, -1, MetricZ_Constants.MAX_BUFFER_SIZE);
+		buffer = (int)Math.Clamp(buffer, -1, MetricZ_Constants.MAX_BUFFER_SIZE);
 		if (buffer == 0)
 			buffer = -1;
 
 		url = MetricZ_Helpers.GetActiveURL(url, user, password);
-		max_retries = Math.Clamp(max_retries, 0, 10);
-		retry_delay_ms = Math.Clamp(retry_delay_ms, 100, MetricZ_Config.Get().settings.init_delay_sec * 1000);
-		retry_max_backoff_ms = Math.Clamp(retry_max_backoff_ms, 1000, MetricZ_Config.Get().settings.collect_interval_sec * 1000);
-		read_timeout_sec = Math.Clamp(read_timeout_sec, 3, 120);
-		connect_timeout_sec = Math.Clamp(connect_timeout_sec, 3, 120);
+		max_retries = (int)Math.Clamp(max_retries, 0, 10);
+		retry_delay_ms = (int)Math.Clamp(retry_delay_ms, 100, MetricZ_Config.Get().settings.init_delay_sec * 1000);
+		retry_max_backoff_ms = (int)Math.Clamp(retry_max_backoff_ms, 1000, MetricZ_Config.Get().settings.collect_interval_sec * 1000);
+		read_timeout_sec = (int)Math.Clamp(read_timeout_sec, 3, 120);
+		connect_timeout_sec = (int)Math.Clamp(connect_timeout_sec, 3, 120);
 
 		if (url == string.Empty) {
 			enabled = false;
@@ -235,6 +244,9 @@ class MetricZ_ConfigDTO_HttpExport
 	}
 }
 
+/**
+    \brief Switches to disable specific metric series.
+*/
 class MetricZ_ConfigDTO_DisabledMetrics
 {
 	// Disables RPC metrics collection.
@@ -307,6 +319,9 @@ class MetricZ_ConfigDTO_DisabledMetrics
 	void Normalize() {}
 }
 
+/**
+    \brief Metric collection thresholds.
+*/
 class MetricZ_ConfigDTO_Thresholds
 {
 	// Minimum damage required to collect hit metrics in `EEHitBy()`.
@@ -327,6 +342,9 @@ class MetricZ_ConfigDTO_Thresholds
 	}
 }
 
+/**
+    \brief Geographic coordinate settings.
+*/
 class MetricZ_ConfigDTO_Geo
 {
 	// Disables conversion of coordinate metrics to the `EPSG:4326` (WGS84) format.

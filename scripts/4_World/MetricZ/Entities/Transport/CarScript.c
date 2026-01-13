@@ -10,10 +10,8 @@
 */
 modded class CarScript
 {
-	// prevent counting kills on destroyed vehicles
-	protected bool m_MetricZ_IsKilled;
-
-	protected ref MetricZ_TransportMetrics m_MetricZ;
+	protected bool m_MetricZ_IsKilled; //!< Prevent counting kills on destroyed vehicles.
+	protected ref MetricZ_TransportMetrics m_MetricZ; //!< Metrics for this car.
 
 	/**
 	    \brief Initialize transport metrics for car loaded from persistence.
@@ -38,6 +36,7 @@ modded class CarScript
 
 	/**
 	    \brief Register car in transport registry and create metrics.
+	    \details No-op if transport metrics disabled.
 	*/
 	override void EEInit()
 	{

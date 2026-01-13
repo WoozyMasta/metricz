@@ -17,6 +17,11 @@ Here is the updated changelog including the new changes.
 
 ## Unreleased
 
+### Added
+
+* Metric **`dayz_metricz_chat_messages_total`** (`COUNTER`) —
+  Total messages sent by players in the world
+
 ### Changed
 
 * refactor string concatenation and loops increment to improve performance

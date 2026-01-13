@@ -134,19 +134,7 @@ modded class ZombieBase
 
 	/**
 	    \brief Resolve canonical zombie type using ResistContaminatedEffect and aiAgentTemplate.
-	    \details
-	      1) If ResistContaminatedEffect() -> "contaminated"
-	      2) Read CFG_VEHICLESPATH <class> aiAgentTemplate
-	         - "Infected" / "InfectedFemale" / "InfectedMale":
-	             - if IsZombieMilitary() -> "military"
-	             - else -> "default" / "default_female" / "default_male"
-	         - any other template:
-	             - strip leading "Infected" if present
-	             - trim, lowercase
-	      3) If empty or missing template:
-	         - if IsZombieMilitary() -> "military"
-	         - else -> class name (lowercased)
-	      Result is cached per class name.
+	    \return \p string Canonical zombie type, or empty string on failure.
 	*/
 	protected string MetricZ_GetZombieTypeFromConfig()
 	{

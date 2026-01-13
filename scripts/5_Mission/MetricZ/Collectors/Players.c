@@ -6,7 +6,7 @@
 
 #ifdef SERVER
 /**
-    \brief Base class for MetricZ collectors.
+    \brief Collector for Player stats.
 */
 class MetricZ_CollectorPlayers : MetricZ_CollectorBase
 {

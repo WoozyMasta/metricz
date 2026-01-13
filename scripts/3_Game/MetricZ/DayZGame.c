@@ -16,6 +16,7 @@ modded class DayZGame
 
 	/**
 	    \brief Pump frame monitor each frame.
+	    \param doSim True if the simulation is running, false otherwise
 	    \param timeslice Delta time of the last frame in seconds.
 	*/
 	override void OnPostUpdate(bool doSim, float timeslice)
