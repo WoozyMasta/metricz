@@ -119,9 +119,9 @@ class MetricZ_ObjectName
 	}
 
 	/**
-	        \brief Strips known suffixes recursively and cleans up the name.
-	        \param name String to process (modified in place).
-	        \return bool True if name is valid (not empty), false otherwise.
+	    \brief Strips known suffixes recursively and cleans up the name.
+	    \param name String to process (modified in place).
+	    \return bool True if name is valid (not empty), false otherwise.
 	*/
 	static bool StripSuffix(inout string name)
 	{
@@ -188,3 +188,4 @@ class MetricZ_ObjectName
 		return true;
 	}
 }
+#endif
