@@ -51,8 +51,14 @@ class MetricZ_EntitiesWriter
 		for (int i = 0; i < metricsCount; ++i) {
 			s_PlayerMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_PlayerMetrics pmCurrent : s_PlayerMetricsBuffer)
-				pmCurrent.GetMetricDirect(i).Flush(sink);
+			foreach (MetricZ_PlayerMetrics pmCurrent : s_PlayerMetricsBuffer) {
+				if (i >= pmCurrent.Count())
+					continue;
+
+				MetricZ_MetricBase metric = pmCurrent.GetMetricDirect(i);
+				if (metric)
+					metric.Flush(sink);
+			}
 		}
 	}
 
@@ -112,8 +118,14 @@ class MetricZ_EntitiesWriter
 		for (int i = 0; i < metricsCount; ++i) {
 			s_TransportMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_TransportMetrics tmCurrent : s_TransportMetricsBuffer)
-				tmCurrent.GetMetricDirect(i).Flush(sink);
+			foreach (MetricZ_TransportMetrics tmCurrent : s_TransportMetricsBuffer) {
+				if (i >= tmCurrent.Count())
+					continue;
+
+				MetricZ_MetricBase metric = tmCurrent.GetMetricDirect(i);
+				if (metric)
+					metric.Flush(sink);
+			}
 		}
 	}
 
@@ -151,8 +163,14 @@ class MetricZ_EntitiesWriter
 		for (int i = 0; i < n; ++i) {
 			s_TerritoryMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_TerritoryMetrics fmCurrent : s_TerritoryMetricsBuffer)
-				fmCurrent.GetMetricDirect(i).Flush(sink);
+			foreach (MetricZ_TerritoryMetrics fmCurrent : s_TerritoryMetricsBuffer) {
+				if (i >= fmCurrent.Count())
+					continue;
+
+				MetricZ_MetricBase metric = fmCurrent.GetMetricDirect(i);
+				if (metric)
+					metric.Flush(sink);
+			}
 		}
 	}
 
@@ -202,8 +220,14 @@ class MetricZ_EntitiesWriter
 		for (int i = 0; i < n; ++i) {
 			s_AreaMetricsBuffer[0].WriteHeaderAt(sink, i);
 
-			foreach (MetricZ_EffectAreaMetrics amCurrent : s_AreaMetricsBuffer)
-				amCurrent.GetMetricDirect(i).Flush(sink);
+			foreach (MetricZ_EffectAreaMetrics amCurrent : s_AreaMetricsBuffer) {
+				if (i >= amCurrent.Count())
+					continue;
+
+				MetricZ_MetricBase metric = amCurrent.GetMetricDirect(i);
+				if (metric)
+					metric.Flush(sink);
+			}
 		}
 	}
 }

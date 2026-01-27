@@ -25,6 +25,7 @@ Here is the updated changelog including the new changes.
 ### Changed
 
 * refactor string concatenation and loops increment to improve performance
+* fixed possible NPE in `EntitiesWriter`
 
 ## [0.4.0][] - 2025-12-17
 
