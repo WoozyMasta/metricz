@@ -84,7 +84,7 @@ class MetricZ_LabelUtils
 			if (IsDenied(k))
 				continue;
 
-			result += string.Format(",%1=\"%2\"", k, Escape(v))
+			result += string.Format(",%1=\"%2\"", k, Escape(v));
 		}
 		result += "}";
 
