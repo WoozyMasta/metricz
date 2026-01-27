@@ -55,7 +55,8 @@ modded class MissionServer : MissionBase
 	{
 		super.UpdateCorpseStatesServer();
 
-		MetricZ_Storage.s_Corpses.Set(m_DeadPlayersArray.Count());
+		if (MetricZ_Storage.IsInitialized())
+			MetricZ_Storage.s_Corpses.Set(m_DeadPlayersArray.Count());
 	}
 
 	/**
