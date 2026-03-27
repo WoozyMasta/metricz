@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning][].
 
 Here is the updated changelog including the new changes.
 
-## Unreleased
+## [0.4.1][] - 2026-03-27
 
 ### Added
 
@@ -31,6 +31,8 @@ Here is the updated changelog including the new changes.
 
 * Removed `EngineIsOn()` in `ExpansionVehicleBase` replaced with
   `Expansion_EngineIsOn()`
+
+[0.4.1]: https://github.com/WoozyMasta/metricz/compare/0.4.0...0.4.1
 
 ## [0.4.0][] - 2025-12-17
 
