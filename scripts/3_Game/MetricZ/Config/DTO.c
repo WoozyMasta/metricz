@@ -221,6 +221,17 @@ class MetricZ_ConfigDTO_HttpExport
 	// Timeout in seconds for connection operations.
 	int connect_timeout_sec = 5;
 
+	// Minimum interval (in milliseconds) between repeated log entries of the same
+	// REST failure type (transport error, timeout, retry, all-retries-failed).
+	// Each ErrorEx call from the REST callbacks writes a full stack trace to
+	// `crash_*.log`. A misconfigured backend at the default 15s collect interval
+	// can otherwise inflate the crash log into the GB range within hours.
+	// A single WARNING/ERROR is emitted per throttle window per failure type,
+	// and the number of suppressed entries is appended to the next emitted line.
+	// - 0 - Disable throttling (log every occurrence, original behavior).
+	// - > 0 - Throttle window in ms. Recommended range 30000-300000.
+	int log_throttle_ms = 60000;
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
@@ -236,6 +247,7 @@ class MetricZ_ConfigDTO_HttpExport
 		retry_max_backoff_ms = (int)Math.Clamp(retry_max_backoff_ms, 1000, MetricZ_Config.Get().settings.collect_interval_sec * 1000);
 		read_timeout_sec = (int)Math.Clamp(read_timeout_sec, 3, 120);
 		connect_timeout_sec = (int)Math.Clamp(connect_timeout_sec, 3, 120);
+		log_throttle_ms = (int)Math.Clamp(log_throttle_ms, 0, 3600000);
 
 		if (url == string.Empty) {
 			enabled = false;

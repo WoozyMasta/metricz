@@ -54,7 +54,11 @@ class MetricZ_CallbackBase : RestCallback
 	protected void Retry()
 	{
 		if (m_Attempt >= MetricZ_Config.Get().http.max_retries) {
-			ErrorEx("MetricZ: callback REST all retries failed" + GetDuration(), ErrorExSeverity.ERROR);
+			MetricZ_LogThrottle.Emit(
+			    "rest.failed",
+			    "MetricZ: callback REST all retries failed" + GetDuration(),
+			    ErrorExSeverity.ERROR,
+			    MetricZ_Config.Get().http.log_throttle_ms);
 			OnDone();
 			return;
 		}
@@ -71,9 +75,11 @@ class MetricZ_CallbackBase : RestCallback
 		// add random jitter (+/- 25%) to prevent thundering herd
 		int delay = (int)Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
-		ErrorEx(
+		MetricZ_LogThrottle.Emit(
+		    "rest.retry",
 		    string.Format("MetricZ: callback REST retry %1/%2 after %3ms", m_Attempt, MetricZ_Config.Get().http.max_retries, delay),
-		    ErrorExSeverity.WARNING);
+		    ErrorExSeverity.WARNING,
+		    MetricZ_Config.Get().http.log_throttle_ms);
 
 		if (!g_Game) {
 			OnDone();
@@ -113,12 +119,12 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnError(int errorCode)
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "error");
-		ErrorEx(
-		    string.Format(
-		        "MetricZ: callback REST error %1 %2",
-		        EnumTools.EnumToString(ERestResultState, errorCode),
-		        GetDuration()),
-		    ErrorExSeverity.WARNING);
+		string errName = EnumTools.EnumToString(ERestResultState, errorCode);
+		MetricZ_LogThrottle.Emit(
+		    "rest.error:" + errName,
+		    string.Format("MetricZ: callback REST error %1 %2", errName, GetDuration()),
+		    ErrorExSeverity.WARNING,
+		    MetricZ_Config.Get().http.log_throttle_ms);
 		Retry();
 	}
 
@@ -128,9 +134,11 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnTimeout()
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "timeout");
-		ErrorEx(
+		MetricZ_LogThrottle.Emit(
+		    "rest.timeout",
 		    string.Format("MetricZ: callback REST timeout %1", GetDuration()),
-		    ErrorExSeverity.WARNING);
+		    ErrorExSeverity.WARNING,
+		    MetricZ_Config.Get().http.log_throttle_ms);
 		Retry();
 	}
 
