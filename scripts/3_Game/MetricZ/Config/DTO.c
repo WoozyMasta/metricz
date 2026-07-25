@@ -232,6 +232,28 @@ class MetricZ_ConfigDTO_HttpExport
 	// - > 0 - Throttle window in ms. Recommended range 30000-300000.
 	int log_throttle_ms = 60000;
 
+	// Number of consecutive failed requests (i.e. requests that already exhausted
+	// `max_retries`) after which metric collection is suspended entirely.
+	// While suspended, collectors are not iterated and no payloads are built, so
+	// no CPU is spent producing data that cannot be delivered. Availability is
+	// then polled via `health_path` until the backend answers again.
+	// If the file export is enabled, collection continues and only the HTTP
+	// transmission is paused.
+	// - 0 - Disable the circuit breaker (always collect, original behavior).
+	// - > 0 - Failure threshold. Recommended range 3-10.
+	int breaker_failures = 3;
+
+	// Base delay (in milliseconds) between backend availability probes.
+	// Doubles with each failed probe and is randomized within 0.75x and 1.25x.
+	int breaker_delay_ms = 5000;
+
+	// Maximum allowed delay (in milliseconds) between availability probes.
+	int breaker_max_delay_ms = 300000;
+
+	// Endpoint used to probe backend availability while collection is suspended.
+	// Must be a GET endpoint that answers 2xx when the backend is healthy.
+	string health_path = "/health/liveness";
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
@@ -248,6 +270,13 @@ class MetricZ_ConfigDTO_HttpExport
 		read_timeout_sec = (int)Math.Clamp(read_timeout_sec, 3, 120);
 		connect_timeout_sec = (int)Math.Clamp(connect_timeout_sec, 3, 120);
 		log_throttle_ms = (int)Math.Clamp(log_throttle_ms, 0, 3600000);
+
+		breaker_failures = (int)Math.Clamp(breaker_failures, 0, 100);
+		breaker_delay_ms = (int)Math.Clamp(breaker_delay_ms, 1000, 3600000);
+		breaker_max_delay_ms = (int)Math.Clamp(breaker_max_delay_ms, breaker_delay_ms, 3600000);
+
+		if (health_path == string.Empty)
+			health_path = "/health/liveness";
 
 		if (url == string.Empty) {
 			enabled = false;

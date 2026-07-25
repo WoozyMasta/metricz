@@ -120,6 +120,11 @@ class MetricZ_Exporter
 		ErrorEx("MetricZ: scrape shutting down", ErrorExSeverity.INFO);
 		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
 
+		// Stop availability probing and surface any log lines still held back by
+		// the throttle, so the shutdown log reflects what actually happened.
+		MetricZ_RestCircuitBreaker.Reset();
+		MetricZ_LogThrottle.FlushAll(ErrorExSeverity.WARNING, "exporter shutdown");
+
 		m_ActiveSink = null;
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ProcessFlushStep);
 
@@ -194,6 +199,14 @@ class MetricZ_Exporter
 
 		if (!MetricZ_Config.IsLoaded())
 			return;
+
+		// Backend is gone and there is no local sink to write to: skip the whole
+		// cycle instead of iterating collectors and building payloads that can
+		// only fail. The circuit breaker resumes us once /health answers again.
+		if (MetricZ_RestCircuitBreaker.IsOpen() && !MetricZ_Config.Get().file.enabled) {
+			MetricZ_RestCircuitBreaker.ReportSkippedCycle();
+			return;
+		}
 
 		if (s_Busy) {
 			MetricZ_Storage.s_ScrapeSkippedTotal.Inc();

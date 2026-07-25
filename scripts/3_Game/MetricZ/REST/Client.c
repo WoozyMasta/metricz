@@ -141,5 +141,32 @@ class MetricZ_RestClient : Managed
 		ErrorEx("MetricZ: commit POST " + url, ErrorExSeverity.INFO);
 #endif
 	}
+
+	/**
+	    \brief Probe backend availability via the exporter liveness endpoint.
+	    \details Used by `MetricZ_RestCircuitBreaker` while collection is suspended.
+	             Deliberately bypasses `MetricZ_CallbackBase` so a probe never
+	             feeds the retry/backoff machinery it is meant to replace.
+	    \param cb Callback handler receiving the probe result
+	*/
+	void CheckHealth(MetricZ_CallbackHealth cb)
+	{
+		if (!cb)
+			return;
+
+		Init();
+
+		if (!m_Ctx) {
+			cb.OnError(0);
+			return;
+		}
+
+		string url = MetricZ_Config.Get().http.health_path;
+		m_Ctx.GET(cb, url);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: health GET " + url, ErrorExSeverity.INFO);
+#endif
+	}
 }
 #endif

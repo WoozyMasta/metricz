@@ -59,6 +59,11 @@ class MetricZ_CallbackBase : RestCallback
 			    "MetricZ: callback REST all retries failed" + GetDuration(),
 			    ErrorExSeverity.ERROR,
 			    MetricZ_Config.Get().http.log_throttle_ms);
+
+			// A request that burned through all its retries is the signal the
+			// circuit breaker uses to decide the backend is gone.
+			MetricZ_RestCircuitBreaker.ReportFailure();
+
 			OnDone();
 			return;
 		}
@@ -154,6 +159,7 @@ class MetricZ_CallbackBase : RestCallback
 #endif
 
 		MetricZ_HttpStats.IncRequest(m_ReqType, "success");
+		MetricZ_RestCircuitBreaker.ReportSuccess();
 		OnDone();
 	}
 }

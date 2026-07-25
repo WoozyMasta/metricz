@@ -79,6 +79,13 @@ class MetricZ_RestSink : MetricZ_SinkBase
 	*/
 	override protected void BufferFlush()
 	{
+		// Reached only when the file sink keeps the cycle alive: the backend is
+		// down, so drop the payload instead of queueing doomed requests.
+		if (MetricZ_RestCircuitBreaker.IsOpen()) {
+			super.BufferFlush();
+			return;
+		}
+
 		if (m_Client && GetBufferCount() > 0) {
 			int chunkIdx = -1;
 			if (m_TxnId != string.Empty)

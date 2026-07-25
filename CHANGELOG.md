@@ -15,6 +15,34 @@ and this project adheres to [Semantic Versioning][].
 
 Here is the updated changelog including the new changes.
 
+## Unreleased
+
+### Added
+
+* Circuit breaker for the HTTP export. After `http.breaker_failures`
+  consecutive failed requests, metric collection is suspended instead of
+  building payloads that cannot be delivered. Backend availability is polled
+  via `http.health_path` with exponential backoff and jitter, and collection
+  resumes on the first successful response. If the file export is enabled,
+  collection continues and only HTTP transmission is paused.
+* Configuration options `http.breaker_failures`, `http.breaker_delay_ms`,
+  `http.breaker_max_delay_ms` and `http.health_path`
+* Configuration option `http.log_throttle_ms` to rate-limit repetitive REST
+  failure log lines
+* Metrics **`dayz_metricz_backend_unavailable`** (`GAUGE`),
+  **`dayz_metricz_backend_outages_total`** (`COUNTER`) and
+  **`dayz_metricz_scrape_suspended_total`** (`COUNTER`)
+
+### Fixed
+
+* Chunked ingest sent the `?format=json` query parameter inverted relative to
+  `http.serialized`. With the default `serialized=true`, JSON payloads were
+  posted to a URL without `format=json`, so the exporter parsed them as
+  Prometheus text and stored nothing. The following commit then failed with
+  `404 transaction not found or empty`, which the DayZ REST API cannot
+  distinguish from a transport error, producing a retry loop and flooding
+  `crash_*.log` with stack traces.
+
 ## [0.4.1][] - 2026-03-27
 
 ### Added
