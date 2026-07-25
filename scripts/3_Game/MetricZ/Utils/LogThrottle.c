@@ -60,7 +60,9 @@ class MetricZ_LogThrottle
 		if (insideWindow) {
 			int suppressed = 0;
 			s_SuppressedCount.Find(key, suppressed);
-			s_SuppressedCount.Insert(key, suppressed + 1);
+			// Set(), not Insert(): Insert() only adds new keys and would leave the
+			// counter pinned at its initial value for every following occurrence.
+			s_SuppressedCount.Set(key, suppressed + 1);
 			return;
 		}
 
@@ -71,12 +73,11 @@ class MetricZ_LogThrottle
 			ErrorEx(
 			    string.Format("%1 (previously suppressed %2 similar log entries)", message, totalSuppressed),
 			    severity);
-			s_SuppressedCount.Insert(key, 0);
-		} else {
+			s_SuppressedCount.Set(key, 0);
+		} else
 			ErrorEx(message, severity);
-		}
 
-		s_LastLoggedAt.Insert(key, now);
+		s_LastLoggedAt.Set(key, now);
 	}
 
 	/**
@@ -96,7 +97,26 @@ class MetricZ_LogThrottle
 		ErrorEx(
 		    string.Format("MetricZ: throttled log '%1' had %2 suppressed entries (%3)", key, suppressed, context),
 		    severity);
-		s_SuppressedCount.Insert(key, 0);
+		s_SuppressedCount.Set(key, 0);
+	}
+
+	/**
+	    \brief Force-emit pending suppressed counts for every known key.
+	    \details Called when the situation that produced the spam ends (backend
+	             recovered, exporter shutting down), so the tail counts are not
+	             silently lost.
+	    \param severity `ErrorEx` severity level for the flush lines.
+	    \param context Short human-readable context appended to each flush line.
+	*/
+	static void FlushAll(ErrorExSeverity severity, string context)
+	{
+		// Snapshot the keys: Flush() writes back into the map we would iterate.
+		array<string> keys = s_SuppressedCount.GetKeyArray();
+		if (!keys)
+			return;
+
+		for (int i = 0; i < keys.Count(); ++i)
+			Flush(keys.Get(i), severity, context);
 	}
 }
 #endif
