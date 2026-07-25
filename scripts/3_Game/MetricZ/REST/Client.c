@@ -100,9 +100,9 @@ class MetricZ_RestClient : Managed
 				url = string.Format("/api/v1/ingest/%1", instanceID);
 		} else {
 			if (MetricZ_Config.Get().http.serialized)
-				url = string.Format("/api/v1/ingest/%1/%2/%3", instanceID, txn, chunk);
-			else
 				url = string.Format("/api/v1/ingest/%1/%2/%3?format=json", instanceID, txn, chunk);
+			else
+				url = string.Format("/api/v1/ingest/%1/%2/%3", instanceID, txn, chunk);
 		}
 
 		// If callback is fresh (not a retry), configure it with current data
