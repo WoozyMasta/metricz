@@ -254,31 +254,22 @@ For DayZ metrics, we strongly recommend using
   Timeout in seconds for read operations.
 * **`http.connect_timeout_sec`** (`int`) = 5 -
   Timeout in seconds for connection operations.
-* **`http.log_throttle_ms`** (`int`) = 60000 -
-  Minimum interval (in milliseconds) between repeated log entries of the
-  same REST failure type (transport error, timeout, retry,
-  all-retries-failed). Each ErrorEx call from the REST callbacks writes a
-  full stack trace to `crash_*.log`. A misconfigured backend at the default
-  15s collect interval can otherwise inflate the crash log into the GB range
-  within hours. A single WARNING/ERROR is emitted per throttle window per
-  failure type, and the number of suppressed entries is appended to the next
-  emitted line. - 0 - Disable throttling (log every occurrence, original
-  behavior). - > 0 - Throttle window in ms. Recommended range 30000-300000.
 * **`http.breaker_failures`** (`int`) = 3 -
-  Number of consecutive failed requests (i.e. requests that already
-  exhausted `max_retries`) after which metric collection is suspended
-  entirely. While suspended, collectors are not iterated and no payloads are
-  built, so no CPU is spent producing data that cannot be delivered.
-  Availability is then polled via `health_path` until the backend answers
-  again. If the file export is enabled, collection continues and only the
-  HTTP transmission is paused. - 0 - Disable the circuit breaker (always
-  collect, original behavior). - > 0 - Failure threshold. Recommended range
-  3-10.
+  Number of consecutive failed scrapes after which metric collection is
+  suspended entirely. A scrape counts as failed when any of its chunk
+  uploads or its final commit exhausts `max_retries`; a successful chunk
+  upload alone does not reset the streak. While suspended, collectors are
+  not iterated and no payloads are built, so no CPU is spent producing data
+  that cannot be delivered. Availability is then probed via `health_path`
+  with exponential backoff. After a successful probe a single trial scrape
+  must be committed by the backend before normal collection resumes. If the
+  file export is enabled, collection continues and only the HTTP
+  transmission is paused. - 0 - Disable the circuit breaker (always collect,
+  original behavior). - > 0 - Failure threshold. Recommended range 3-10.
 * **`http.breaker_delay_ms`** (`int`) = 5000 -
   Base delay (in milliseconds) between backend availability probes. Doubles
-  with each failed probe and is randomized within 0.75x and 1.25x.
-* **`http.breaker_max_delay_ms`** (`int`) = 300000 -
-  Maximum allowed delay (in milliseconds) between availability probes.
+  with each failed probe, is randomized within 0.75x-1.25x and hard-capped
+  at 300000 ms (5 min).
 * **`http.health_path`** (`string`) = "/health/liveness" -
   Endpoint used to probe backend availability while collection is suspended.
   Must be a GET endpoint that answers 2xx when the backend is healthy.

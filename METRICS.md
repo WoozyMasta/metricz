@@ -8,12 +8,13 @@ DayZ server. Each metric includes its identifier, type
 
 ## [REST/CircuitBreaker.c](./scripts/3_Game/MetricZ/REST/CircuitBreaker.c)
 
-* **`dayz_metricz_backend_unavailable`** (`GAUGE`) —
-  1 while metric collection is suspended because the backend is unreachable
-* **`dayz_metricz_backend_outages_total`** (`COUNTER`) —
-  Total number of times collection was suspended due to backend unavailability
-* **`dayz_metricz_scrape_suspended_total`** (`COUNTER`) —
-  Total scrapes skipped because the backend was unavailable
+* **`dayz_metricz_http_circuit_breaker_opened_total`** (`COUNTER`) —
+  Total number of times the circuit breaker opened because the backend was
+  unavailable
+* **`dayz_metricz_http_circuit_breaker_skipped_scrapes_total`** (`COUNTER`) —
+  Total scrapes skipped while collection was suspended
+* **`dayz_metricz_http_circuit_breaker_suspended_ms_total`** (`COUNTER`) —
+  Total time in milliseconds metric collection spent suspended
 
 ## [REST/HttpStats.c](./scripts/3_Game/MetricZ/REST/HttpStats.c)
 

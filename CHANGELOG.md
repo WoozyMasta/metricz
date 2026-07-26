@@ -13,25 +13,24 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
-Here is the updated changelog including the new changes.
-
 ## Unreleased
 
 ### Added
 
-* Circuit breaker for the HTTP export. After `http.breaker_failures`
-  consecutive failed requests, metric collection is suspended instead of
-  building payloads that cannot be delivered. Backend availability is polled
-  via `http.health_path` with exponential backoff and jitter, and collection
-  resumes on the first successful response. If the file export is enabled,
-  collection continues and only HTTP transmission is paused.
-* Configuration options `http.breaker_failures`, `http.breaker_delay_ms`,
-  `http.breaker_max_delay_ms` and `http.health_path`
-* Configuration option `http.log_throttle_ms` to rate-limit repetitive REST
-  failure log lines
-* Metrics **`dayz_metricz_backend_unavailable`** (`GAUGE`),
-  **`dayz_metricz_backend_outages_total`** (`COUNTER`) and
-  **`dayz_metricz_scrape_suspended_total`** (`COUNTER`)
+* Three-state circuit breaker for the HTTP export. After
+  `http.breaker_failures` consecutive failed scrapes (a scrape fails when any
+  chunk upload or its final commit exhausts `http.max_retries`), metric
+  collection is suspended instead of building payloads that cannot be
+  delivered. Backend availability is then probed via `http.health_path` with
+  exponential backoff and jitter (hard-capped at 5 minutes), and after a
+  successful probe a single trial scrape must be committed by the backend
+  before normal collection resumes. If the file export is enabled, collection
+  continues and only the HTTP transmission is paused.
+* Configuration options `http.breaker_failures`, `http.breaker_delay_ms` and
+  `http.health_path`
+* Metrics **`dayz_metricz_http_circuit_breaker_opened_total`**,
+  **`dayz_metricz_http_circuit_breaker_skipped_scrapes_total`** and
+  **`dayz_metricz_http_circuit_breaker_suspended_ms_total`** (`COUNTER`)
 
 ### Fixed
 
@@ -42,6 +41,9 @@ Here is the updated changelog including the new changes.
   `404 transaction not found or empty`, which the DayZ REST API cannot
   distinguish from a transport error, producing a retry loop and flooding
   `crash_*.log` with stack traces.
+* A chunk upload that exhausted its retries left the active transaction open
+  forever; the transaction is now aborted and in-flight sibling uploads are
+  ignored, so a partially uploaded scrape can never be committed.
 
 ## [0.4.1][] - 2026-03-27
 
