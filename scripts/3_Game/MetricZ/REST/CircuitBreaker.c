@@ -5,81 +5,159 @@
 */
 
 #ifdef SERVER
+//! States of the REST circuit breaker
+enum MetricZ_EBreakerState {
+	CLOSED, //!< Normal operation, scrapes run and are delivered
+	OPEN, //!< Backend unavailable, collection suspended, health is probed
+	HALF_OPEN //!< Probe succeeded, one trial scrape must verify the ingest path
+}
+
 /**
     \brief Suspends metric collection while the backend is unavailable.
     \details Motivation: when the exporter is down or rejecting payloads, the
              previous behaviour kept the full pipeline running - every collect
              interval iterated all collectors, built payloads and issued HTTP
-             requests that were known to fail. That burns CPU on the server main
-             thread and produces nothing.
+             requests that were known to fail.
 
-             Behaviour: every REST request that exhausts its retries reports a
-             failure. After `http.breaker_failures` consecutive failures the
-             breaker opens. While open:
+             The breaker tracks results at the scrape level, not per request:
+             a scrape counts as failed when any chunk upload or the final
+             commit exhausts its retries; it counts as successful only when
+             the backend acknowledged the commit (or the single non-transacted
+             POST). A successful chunk upload alone never resets the streak.
 
-             - `MetricZ_Exporter.Update()` skips the whole cycle if the file sink
-               is disabled (nothing left to write to).
-             - `MetricZ_RestSink` stops emitting HTTP requests if the file sink is
-               enabled, so local export keeps working.
-             - A single GET against `http.health_path` is issued on an
-               exponential backoff with jitter, capped at
-               `http.breaker_max_delay_ms`.
+             State machine:
 
-             The first successful probe (or any successful regular request)
-             closes the breaker and resumes normal collection immediately.
+             - CLOSED: after `http.breaker_failures` consecutive failed
+               scrapes the breaker opens.
+             - OPEN: no REST requests except a GET against `http.health_path`
+               on an exponential backoff with jitter, hard-capped at
+               `MetricZ_Constants.BREAKER_MAX_DELAY_MS`. A successful probe
+               moves to HALF_OPEN.
+             - HALF_OPEN: exactly one trial scrape is allowed through. If its
+               commit succeeds the breaker closes; if it fails (or never
+               resolves within the trial deadline) the breaker reopens with a
+               grown backoff.
 
-             Set `http.breaker_failures = 0` to disable the breaker entirely and
-             restore the previous always-collect behaviour.
+             Every scrape draws a ticket (`BeginScrape`). Each state
+             transition raises a barrier that invalidates all previously
+             issued tickets, so stale callbacks from before the transition
+             can neither close nor trip the breaker.
+
+             Set `http.breaker_failures = 0` to disable the breaker entirely.
 */
 class MetricZ_RestCircuitBreaker
 {
-	protected static bool s_Open; //!< True while collection is suspended
-	protected static int s_ConsecutiveFailures; //!< Failed requests since last success
+	protected static MetricZ_EBreakerState s_State = MetricZ_EBreakerState.CLOSED; //!< Current breaker state
+	protected static int s_TicketCounter; //!< Last issued scrape ticket
+	protected static int s_TicketBarrier; //!< Tickets issued before the last state transition are <= barrier and invalid
+	protected static int s_ActiveTicket = -1; //!< Ticket of the currently running scrape, -1 if none
+	protected static int s_LastFailedTicket = -1; //!< Dedup: one scrape counts at most one failure
+	protected static int s_ConsecutiveFailures; //!< Failed scrapes since the last success (CLOSED only)
 	protected static int s_ProbeAttempt; //!< Probe counter, drives the backoff curve
-	protected static int s_SuspendedSince; //!< Timestamp (ms) when the breaker opened
-	protected static int s_OpenedTotal; //!< How often the breaker opened (metric)
-	protected static int s_SkippedCycles; //!< Collection cycles skipped while open (metric)
+	protected static int s_SuspendedSince; //!< Timestamp (ms) when the outage began
+	protected static bool s_TrialIssued; //!< HALF_OPEN: the trial ticket has been handed out
+	protected static int s_TrialDeadline; //!< HALF_OPEN: when an unresolved trial counts as failed
+	protected static int s_OpenedTotal; //!< closed -> open transitions (metric)
+	protected static int s_SkippedTotal; //!< Scrapes skipped while suspended (metric)
+	protected static int s_SuspendedMsTotal; //!< Cumulative suspension time in ms (metric)
 	protected static ref MetricZ_CallbackHealth s_Probe; //!< Owning reference to the in-flight probe
 
-	protected static ref MetricZ_MetricInt s_MetricState = new MetricZ_MetricInt(
-	    "backend_unavailable",
-	    "1 while metric collection is suspended because the backend is unreachable",
-	    MetricZ_MetricType.GAUGE);
 	protected static ref MetricZ_MetricInt s_MetricOpened = new MetricZ_MetricInt(
-	    "backend_outages",
-	    "Total number of times collection was suspended due to backend unavailability",
+	    "http_circuit_breaker_opened",
+	    "Total number of times the circuit breaker opened because the backend was unavailable",
 	    MetricZ_MetricType.COUNTER);
 	protected static ref MetricZ_MetricInt s_MetricSkipped = new MetricZ_MetricInt(
-	    "scrape_suspended",
-	    "Total scrapes skipped because the backend was unavailable",
+	    "http_circuit_breaker_skipped_scrapes",
+	    "Total scrapes skipped while collection was suspended",
+	    MetricZ_MetricType.COUNTER);
+	protected static ref MetricZ_MetricInt s_MetricSuspendedMs = new MetricZ_MetricInt(
+	    "http_circuit_breaker_suspended_ms",
+	    "Total time in milliseconds metric collection spent suspended",
 	    MetricZ_MetricType.COUNTER);
 
 	/**
-	    \brief Whether metric collection is currently suspended.
-	    \return bool true if the backend is considered unavailable.
+	    \brief Draw a ticket for a new scrape.
+	    \details CLOSED: always issues. HALF_OPEN: issues exactly one trial
+	             ticket; while the trial is unresolved further scrapes are
+	             refused, and once the trial deadline passes the trial counts
+	             as failed and the breaker reopens. OPEN: always refuses.
+	    \return int Ticket to pass to ReportScrapeSuccess/Failure, or -1 if
+	                no REST payload may be sent this cycle.
 	*/
-	static bool IsOpen()
+	static int BeginScrape()
 	{
-		return s_Open;
+		if (s_State == MetricZ_EBreakerState.CLOSED) {
+			s_TicketCounter++;
+			s_ActiveTicket = s_TicketCounter;
+			return s_ActiveTicket;
+		}
+
+		if (s_State == MetricZ_EBreakerState.HALF_OPEN) {
+			int now = 0;
+			if (g_Game)
+				now = g_Game.GetTime();
+
+			if (!s_TrialIssued) {
+				s_TrialIssued = true;
+				s_TrialDeadline = now + TrialTimeout();
+				s_TicketCounter++;
+				s_ActiveTicket = s_TicketCounter;
+				return s_ActiveTicket;
+			}
+
+			// The trial scrape never resolved (sink failed to start, client
+			// could not be created, callback lost): treat as failed recovery.
+			if (now > s_TrialDeadline)
+				Open();
+		}
+
+		s_ActiveTicket = -1;
+		return -1;
 	}
 
 	/**
-	    \brief Report a request that completed successfully.
-	    \details Closes the breaker if it was open and clears the failure streak.
+	    \brief Ticket of the scrape currently running.
+	    \return int Ticket issued by the last BeginScrape(), -1 if refused.
 	*/
-	static void ReportSuccess()
+	static int GetActiveTicket()
 	{
+		return s_ActiveTicket;
+	}
+
+	/**
+	    \brief Whether a ticket is still allowed to act on the breaker.
+	    \details Tickets issued before the last state transition are invalid,
+	             so stale in-flight callbacks cannot close or trip the breaker.
+	    \param ticket Ticket obtained from BeginScrape().
+	    \return bool true if the ticket is current.
+	*/
+	static bool IsTicketValid(int ticket)
+	{
+		return ticket > s_TicketBarrier;
+	}
+
+	/**
+	    \brief Report a scrape whose commit (or single POST) was acknowledged.
+	    \param ticket Ticket of the reporting scrape.
+	*/
+	static void ReportScrapeSuccess(int ticket)
+	{
+		if (!IsTicketValid(ticket))
+			return;
+
 		s_ConsecutiveFailures = 0;
 
-		if (s_Open)
+		if (s_State == MetricZ_EBreakerState.HALF_OPEN)
 			Close();
 	}
 
 	/**
-	    \brief Report a request that failed after exhausting all its retries.
-	    \details Opens the breaker once the configured threshold is reached.
+	    \brief Report a scrape that failed to reach the backend.
+	    \details Counted at most once per ticket: a scrape with several chunks
+	             must not count one failure per chunk.
+	    \param ticket Ticket of the reporting scrape.
 	*/
-	static void ReportFailure()
+	static void ReportScrapeFailure(int ticket)
 	{
 		if (!MetricZ_Config.IsLoaded())
 			return;
@@ -88,40 +166,46 @@ class MetricZ_RestCircuitBreaker
 		if (threshold <= 0)
 			return;
 
-		// Already suspended: further failures are expected, the probe drives recovery.
-		if (s_Open)
+		if (!IsTicketValid(ticket))
 			return;
+
+		if (ticket == s_LastFailedTicket)
+			return;
+		s_LastFailedTicket = ticket;
+
+		if (s_State == MetricZ_EBreakerState.HALF_OPEN) {
+			Open();
+			return;
+		}
 
 		s_ConsecutiveFailures++;
-		if (s_ConsecutiveFailures < threshold)
-			return;
-
-		Open();
+		if (s_ConsecutiveFailures >= threshold)
+			Open();
 	}
 
 	/**
 	    \brief Account for a collection cycle that was skipped while suspended.
 	*/
-	static void ReportSkippedCycle()
+	static void ReportSkippedScrape()
 	{
-		s_SkippedCycles++;
+		s_SkippedTotal++;
 	}
 
 	/**
 	    \brief Result handler for a liveness probe.
-	    \details Called by `MetricZ_CallbackHealth`. Any 2xx response resumes
-	             collection, anything else schedules the next probe.
+	    \details Called by `MetricZ_CallbackHealth`. A 2xx response moves the
+	             breaker to HALF_OPEN, anything else schedules the next probe.
 	    \param ok true if the backend answered successfully.
 	*/
 	static void OnProbeResult(bool ok)
 	{
 		s_Probe = null;
 
-		if (!s_Open)
+		if (s_State != MetricZ_EBreakerState.OPEN)
 			return;
 
 		if (ok) {
-			ReportSuccess();
+			HalfOpen();
 			return;
 		}
 
@@ -136,9 +220,13 @@ class MetricZ_RestCircuitBreaker
 		if (g_Game)
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Probe);
 
-		s_Open = false;
+		s_State = MetricZ_EBreakerState.CLOSED;
+		s_TicketBarrier = s_TicketCounter;
+		s_ActiveTicket = -1;
+		s_LastFailedTicket = -1;
 		s_ConsecutiveFailures = 0;
 		s_ProbeAttempt = 0;
+		s_TrialIssued = false;
 		s_Probe = null;
 	}
 
@@ -151,44 +239,74 @@ class MetricZ_RestCircuitBreaker
 		if (!sink || !MetricZ_Config.IsLoaded())
 			return;
 
-		int state = 0;
-		if (s_Open)
-			state = 1;
-
-		s_MetricState.Set(state);
-		s_MetricState.FlushWithHead(sink);
-
 		s_MetricOpened.Set(s_OpenedTotal);
 		s_MetricOpened.FlushWithHead(sink);
 
-		s_MetricSkipped.Set(s_SkippedCycles);
+		s_MetricSkipped.Set(s_SkippedTotal);
 		s_MetricSkipped.FlushWithHead(sink);
+
+		s_MetricSuspendedMs.Set(s_SuspendedMsTotal);
+		s_MetricSuspendedMs.FlushWithHead(sink);
 	}
 
 	/**
 	    \brief Suspend collection and start probing the backend.
+	    \details Reached from CLOSED (failure threshold hit) and from
+	             HALF_OPEN (trial scrape failed). Reopening keeps the probe
+	             attempt counter, so the backoff keeps growing across failed
+	             recoveries within the same outage.
 	*/
 	protected static void Open()
 	{
-		s_Open = true;
-		s_ProbeAttempt = 0;
-		s_OpenedTotal++;
+		bool fromClosed = (s_State == MetricZ_EBreakerState.CLOSED);
 
-		if (g_Game)
-			s_SuspendedSince = g_Game.GetTime();
+		s_State = MetricZ_EBreakerState.OPEN;
+		s_TicketBarrier = s_TicketCounter;
+		s_ActiveTicket = -1;
+		s_TrialIssued = false;
 
-		ErrorEx(
-		    string.Format(
-		        "MetricZ: backend unavailable after %1 consecutive failed requests, suspending collection until %2 responds",
-		        s_ConsecutiveFailures,
-		        MetricZ_Config.Get().http.health_path),
-		    ErrorExSeverity.WARNING);
+		if (fromClosed) {
+			s_OpenedTotal++;
+			s_ProbeAttempt = 0;
+
+			if (g_Game)
+				s_SuspendedSince = g_Game.GetTime();
+
+			ErrorEx(
+			    string.Format(
+			        "MetricZ: circuit breaker closed -> open after %1 consecutive failed scrapes, probing %2",
+			        s_ConsecutiveFailures,
+			        MetricZ_Config.Get().http.health_path),
+			    ErrorExSeverity.WARNING);
+		} else {
+			ErrorEx(
+			    "MetricZ: circuit breaker half-open -> open, trial scrape failed",
+			    ErrorExSeverity.WARNING);
+		}
 
 		ScheduleProbe();
 	}
 
 	/**
-	    \brief Resume normal collection.
+	    \brief A probe succeeded: allow a single trial scrape.
+	*/
+	protected static void HalfOpen()
+	{
+		s_State = MetricZ_EBreakerState.HALF_OPEN;
+		s_TicketBarrier = s_TicketCounter;
+		s_ActiveTicket = -1;
+		s_TrialIssued = false;
+
+		if (g_Game)
+			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Probe);
+
+		ErrorEx(
+		    "MetricZ: circuit breaker open -> half-open, next scrape verifies the ingest path",
+		    ErrorExSeverity.INFO);
+	}
+
+	/**
+	    \brief The trial scrape was committed: resume normal collection.
 	*/
 	protected static void Close()
 	{
@@ -198,20 +316,43 @@ class MetricZ_RestCircuitBreaker
 			g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(Probe);
 		}
 
-		s_Open = false;
+		if (downtime > 0)
+			s_SuspendedMsTotal += downtime;
+
+		s_State = MetricZ_EBreakerState.CLOSED;
+		s_TicketBarrier = s_TicketCounter;
+		s_ActiveTicket = -1;
+		s_ConsecutiveFailures = 0;
 		s_ProbeAttempt = 0;
+		s_TrialIssued = false;
 		s_Probe = null;
 
-		// Any log line suppressed during the outage is worth seeing now that it ended.
-		MetricZ_LogThrottle.FlushAll(ErrorExSeverity.WARNING, "backend recovered");
-
 		ErrorEx(
-		    string.Format("MetricZ: backend available again after %1 ms, resuming collection", downtime),
+		    string.Format(
+		        "MetricZ: circuit breaker half-open -> closed, backend available again after %1 ms",
+		        downtime),
 		    ErrorExSeverity.INFO);
 	}
 
 	/**
+	    \brief Deadline for an issued trial scrape to resolve.
+	    \details Three collect intervals cover a full scrape including retry
+	             chains; never below one minute.
+	    \return int Timeout in milliseconds.
+	*/
+	protected static int TrialTimeout()
+	{
+		int timeout = MetricZ_Config.Get().settings.collect_interval_sec * 3000;
+		if (timeout < 60000)
+			timeout = 60000;
+
+		return timeout;
+	}
+
+	/**
 	    \brief Queue the next liveness probe using exponential backoff with jitter.
+	    \details Jitter is applied before the clamp, so the final delay never
+	             exceeds `MetricZ_Constants.BREAKER_MAX_DELAY_MS`.
 	*/
 	protected static void ScheduleProbe()
 	{
@@ -224,11 +365,14 @@ class MetricZ_RestCircuitBreaker
 		if (s_ProbeAttempt > 0 && s_ProbeAttempt < 31)
 			backoff = cfg.breaker_delay_ms << s_ProbeAttempt;
 
-		if (backoff > cfg.breaker_max_delay_ms || backoff <= 0)
-			backoff = cfg.breaker_max_delay_ms;
+		// Shift overflow yields a negative value: fall back to the cap.
+		if (backoff <= 0)
+			backoff = MetricZ_Constants.BREAKER_MAX_DELAY_MS;
 
-		// Jitter (+/- 25%) so a fleet of servers does not stampede a recovering backend.
+		// Jitter (+/- 25%) so a fleet of servers does not stampede a
+		// recovering backend, then clamp to the hard cap.
 		int delay = (int)Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
+		delay = (int)Math.Clamp(delay, cfg.breaker_delay_ms, MetricZ_Constants.BREAKER_MAX_DELAY_MS);
 
 		s_ProbeAttempt++;
 
@@ -241,7 +385,7 @@ class MetricZ_RestCircuitBreaker
 	*/
 	protected static void Probe()
 	{
-		if (!s_Open)
+		if (s_State != MetricZ_EBreakerState.OPEN)
 			return;
 
 		// A probe is still in flight, do not pile up requests.

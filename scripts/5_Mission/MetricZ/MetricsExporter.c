@@ -200,11 +200,13 @@ class MetricZ_Exporter
 		if (!MetricZ_Config.IsLoaded())
 			return;
 
-		// Backend is gone and there is no local sink to write to: skip the whole
-		// cycle instead of iterating collectors and building payloads that can
-		// only fail. The circuit breaker resumes us once /health answers again.
-		if (MetricZ_RestCircuitBreaker.IsOpen() && !MetricZ_Config.Get().file.enabled) {
-			MetricZ_RestCircuitBreaker.ReportSkippedCycle();
+		// Draw the circuit breaker ticket for this cycle. Invalid while the
+		// backend is unavailable (or a trial scrape is already running): with
+		// no file sink to write to, skip the whole cycle instead of iterating
+		// collectors and building payloads that would only be dropped.
+		int ticket = MetricZ_RestCircuitBreaker.BeginScrape();
+		if (!MetricZ_RestCircuitBreaker.IsTicketValid(ticket) && !MetricZ_Config.Get().file.enabled) {
+			MetricZ_RestCircuitBreaker.ReportSkippedScrape();
 			return;
 		}
 

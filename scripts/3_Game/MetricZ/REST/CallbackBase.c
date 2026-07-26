@@ -17,6 +17,16 @@ class MetricZ_CallbackBase : RestCallback
 	private int m_StartedAt; //!< Timestamp when the callback was created (request started)
 	protected ref MetricZ_RestClient m_Client; //!< Reference to client for re-sending requests
 	protected string m_ReqType; //!< Class name of the callback (used for stats tagging)
+	protected int m_Ticket = -1; //!< Circuit breaker ticket of the scrape this request belongs to
+
+	/**
+	    \brief Attach the circuit breaker ticket of the owning scrape.
+	    \param ticket Ticket obtained via MetricZ_RestCircuitBreaker.BeginScrape().
+	*/
+	void SetTicket(int ticket)
+	{
+		m_Ticket = ticket;
+	}
 
 	/**
 	    \brief Constructor.
@@ -60,10 +70,7 @@ class MetricZ_CallbackBase : RestCallback
 			    ErrorExSeverity.ERROR,
 			    MetricZ_Config.Get().http.log_throttle_ms);
 
-			// A request that burned through all its retries is the signal the
-			// circuit breaker uses to decide the backend is gone.
-			MetricZ_RestCircuitBreaker.ReportFailure();
-
+			OnFinalFailure();
 			OnDone();
 			return;
 		}
@@ -101,6 +108,16 @@ class MetricZ_CallbackBase : RestCallback
 	protected void SendAgain()
 	{
 		OnDone();
+	}
+
+	/**
+	    \brief Called exactly once when the request has exhausted all retries.
+	    \details Subclasses report the outcome to the transaction manager and
+	             the circuit breaker here. Runs right before OnDone(), so no
+	             member access after returning.
+	*/
+	protected void OnFinalFailure()
+	{
 	}
 
 	/**
@@ -159,7 +176,6 @@ class MetricZ_CallbackBase : RestCallback
 #endif
 
 		MetricZ_HttpStats.IncRequest(m_ReqType, "success");
-		MetricZ_RestCircuitBreaker.ReportSuccess();
 		OnDone();
 	}
 }

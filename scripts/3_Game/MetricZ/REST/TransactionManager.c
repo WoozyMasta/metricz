@@ -16,15 +16,18 @@ class MetricZ_RestTransactionManager
 	protected static string s_CurrentTxn; //!< The currently active transaction ID
 	protected static bool s_Sealed; //!< True if Sink has finished generating all chunks
 	protected static ref array<bool> s_Chunks; //!< Status of each chunk (true = uploaded)
+	protected static int s_Ticket = -1; //!< Breaker ticket of the scrape that owns s_CurrentTxn
 
 	/**
 	    \brief Start a new transaction.
 	    \details Resets state. Any old callbacks will be ignored after this.
 	    \param txn Transaction ID to start
+	    \param ticket Circuit breaker ticket of the owning scrape
 	*/
-	static void Start(string txn)
+	static void Start(string txn, int ticket)
 	{
 		s_CurrentTxn = txn;
+		s_Ticket = ticket;
 		s_Sealed = false;
 
 		if (!s_Chunks)
@@ -62,6 +65,31 @@ class MetricZ_RestTransactionManager
 
 		s_Sealed = true;
 		CheckCommit();
+	}
+
+	/**
+	    \brief Invalidate the active transaction.
+	    \details Called when any chunk exhausts its retries or the circuit
+	             breaker opens mid-scrape. Clearing `s_CurrentTxn` turns all
+	             in-flight chunk callbacks into ignored zombies and blocks
+	             both Seal() and the commit, so a partially uploaded
+	             transaction can never be committed.
+	    \param txn Transaction ID to abort
+	*/
+	static void Abort(string txn)
+	{
+		if (txn == string.Empty || txn != s_CurrentTxn)
+			return;
+
+		s_CurrentTxn = string.Empty;
+		s_Sealed = false;
+
+		if (s_Chunks)
+			s_Chunks.Clear();
+
+#ifdef DIAG
+		ErrorEx("MetricZ: Txn aborted: " + txn, ErrorExSeverity.INFO);
+#endif
 	}
 
 	/**
@@ -112,6 +140,7 @@ class MetricZ_RestTransactionManager
 		MetricZ_RestClient client = MetricZ_RestClient.Get();
 		if (client) {
 			MetricZ_CallbackCommitMetrics cb = new MetricZ_CallbackCommitMetrics(client);
+			cb.SetTicket(s_Ticket);
 			client.CommitMetrics(s_CurrentTxn, cb);
 
 			s_CurrentTxn = string.Empty;
