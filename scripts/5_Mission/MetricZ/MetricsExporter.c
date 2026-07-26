@@ -120,10 +120,8 @@ class MetricZ_Exporter
 		ErrorEx("MetricZ: scrape shutting down", ErrorExSeverity.INFO);
 		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
 
-		// Stop availability probing and surface any log lines still held back by
-		// the throttle, so the shutdown log reflects what actually happened.
+		// Stop availability probing.
 		MetricZ_RestCircuitBreaker.Reset();
-		MetricZ_LogThrottle.FlushAll(ErrorExSeverity.WARNING, "exporter shutdown");
 
 		m_ActiveSink = null;
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ProcessFlushStep);

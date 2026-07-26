@@ -64,11 +64,9 @@ class MetricZ_CallbackBase : RestCallback
 	protected void Retry()
 	{
 		if (m_Attempt >= MetricZ_Config.Get().http.max_retries) {
-			MetricZ_LogThrottle.Emit(
-			    "rest.failed",
+			ErrorEx(
 			    "MetricZ: callback REST all retries failed" + GetDuration(),
-			    ErrorExSeverity.ERROR,
-			    MetricZ_Config.Get().http.log_throttle_ms);
+			    ErrorExSeverity.WARNING);
 
 			OnFinalFailure();
 			OnDone();
@@ -87,11 +85,11 @@ class MetricZ_CallbackBase : RestCallback
 		// add random jitter (+/- 25%) to prevent thundering herd
 		int delay = (int)Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
-		MetricZ_LogThrottle.Emit(
-		    "rest.retry",
+#ifdef DIAG
+		ErrorEx(
 		    string.Format("MetricZ: callback REST retry %1/%2 after %3ms", m_Attempt, MetricZ_Config.Get().http.max_retries, delay),
-		    ErrorExSeverity.WARNING,
-		    MetricZ_Config.Get().http.log_throttle_ms);
+		    ErrorExSeverity.INFO);
+#endif
 
 		if (!g_Game) {
 			OnDone();
@@ -136,17 +134,22 @@ class MetricZ_CallbackBase : RestCallback
 
 	/**
 	    \brief Handler for REST API errors (transport/protocol errors).
+	    \details Per-request errors are DIAG-only: the circuit breaker stops
+	             the request flow after a few failed scrapes, and the final
+	             failure of a retry chain is logged unconditionally in Retry().
 	    \param errorCode Error code
 	*/
 	override void OnError(int errorCode)
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "error");
+
+#ifdef DIAG
 		string errName = EnumTools.EnumToString(ERestResultState, errorCode);
-		MetricZ_LogThrottle.Emit(
-		    "rest.error:" + errName,
+		ErrorEx(
 		    string.Format("MetricZ: callback REST error %1 %2", errName, GetDuration()),
-		    ErrorExSeverity.WARNING,
-		    MetricZ_Config.Get().http.log_throttle_ms);
+		    ErrorExSeverity.INFO);
+#endif
+
 		Retry();
 	}
 
@@ -156,11 +159,11 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnTimeout()
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "timeout");
-		MetricZ_LogThrottle.Emit(
-		    "rest.timeout",
-		    string.Format("MetricZ: callback REST timeout %1", GetDuration()),
-		    ErrorExSeverity.WARNING,
-		    MetricZ_Config.Get().http.log_throttle_ms);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: callback REST timeout " + GetDuration(), ErrorExSeverity.INFO);
+#endif
+
 		Retry();
 	}
 
