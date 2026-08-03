@@ -159,7 +159,7 @@ modded class PlayerBase
 			return;
 #endif
 
-		if (m_MetricZ || !MetricZ_Config.Get().disabled_metrics.players)
+		if (m_MetricZ && !MetricZ_Config.Get().disabled_metrics.players)
 			m_MetricZ.SampleNetwork();
 	}
 }
