@@ -75,6 +75,8 @@ modded class ExpansionVehicleBase
 	override void EEDelete(EntityAI parent)
 	{
 		if (MetricZ_Config.IsLoaded() && !MetricZ_Config.Get().disabled_metrics.transports) {
+			m_MetricZ = null;
+
 			if (Expansion_IsBoat())
 				MetricZ_Storage.s_Boats.Dec();
 			else if (Expansion_IsHelicopter() || Expansion_IsPlane())
