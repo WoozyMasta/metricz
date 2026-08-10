@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning][].
 
 Here is the updated changelog including the new changes.
 
+## Unreleased
+
+### Fixed
+
+* possible NPE when collecting player network metrics #10 (@bzed)
+* metrics cleanup for Expansion vehicles on deletion #11 (@bzed)
+
 ## [0.4.1][] - 2026-03-27
 
 ### Added
