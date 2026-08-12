@@ -100,9 +100,9 @@ class MetricZ_RestClient : Managed
 				url = string.Format("/api/v1/ingest/%1", instanceID);
 		} else {
 			if (MetricZ_Config.Get().http.serialized)
-				url = string.Format("/api/v1/ingest/%1/%2/%3", instanceID, txn, chunk);
-			else
 				url = string.Format("/api/v1/ingest/%1/%2/%3?format=json", instanceID, txn, chunk);
+			else
+				url = string.Format("/api/v1/ingest/%1/%2/%3", instanceID, txn, chunk);
 		}
 
 		// If callback is fresh (not a retry), configure it with current data
@@ -139,6 +139,33 @@ class MetricZ_RestClient : Managed
 
 #ifdef DIAG
 		ErrorEx("MetricZ: commit POST " + url, ErrorExSeverity.INFO);
+#endif
+	}
+
+	/**
+	    \brief Probe backend availability via the exporter liveness endpoint.
+	    \details Used by `MetricZ_RestCircuitBreaker` while collection is suspended.
+	             Deliberately bypasses `MetricZ_CallbackBase` so a probe never
+	             feeds the retry/backoff machinery it is meant to replace.
+	    \param cb Callback handler receiving the probe result
+	*/
+	void CheckHealth(MetricZ_CallbackHealth cb)
+	{
+		if (!cb)
+			return;
+
+		Init();
+
+		if (!m_Ctx) {
+			cb.OnError(0);
+			return;
+		}
+
+		string url = MetricZ_Config.Get().http.health_path;
+		m_Ctx.GET(cb, url);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: health GET " + url, ErrorExSeverity.INFO);
 #endif
 	}
 }

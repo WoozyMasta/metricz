@@ -13,6 +13,7 @@
 class MetricZ_RestSink : MetricZ_SinkBase
 {
 	private string m_TxnId;
+	private int m_Ticket = -1; //!< Circuit breaker ticket drawn by the exporter for this scrape
 	private ref MetricZ_RestClient m_Client;
 
 	/**
@@ -34,11 +35,16 @@ class MetricZ_RestSink : MetricZ_SinkBase
 		if (!m_Client)
 			return false;
 
-		if (GetBufferLimit() > 0) {
+		// Ticket drawn by the exporter for this scrape. Invalid while the
+		// breaker refuses REST traffic (open, or a trial already running):
+		// keep collecting for the file sink, but never open a transaction.
+		m_Ticket = MetricZ_RestCircuitBreaker.GetActiveTicket();
+
+		if (MetricZ_RestCircuitBreaker.IsTicketValid(m_Ticket) && GetBufferLimit() > 0) {
 			int uuid[4];
 			UUIDApi.Generate(uuid);
 			m_TxnId = UUIDApi.FormatString(uuid);
-			MetricZ_RestTransactionManager.Start(m_TxnId);
+			MetricZ_RestTransactionManager.Start(m_TxnId, m_Ticket);
 		}
 
 		return true;
@@ -56,7 +62,10 @@ class MetricZ_RestSink : MetricZ_SinkBase
 
 	/**
 	    \brief Ends the transaction.
-	    \details Flushes remaining buffer and tells `TransactionManager` to Seal the transaction.
+	    \details Flushes the remaining buffer and seals the transaction.
+	             If the ticket became invalid, BufferFlush() has already
+	             aborted the transaction and cleared m_TxnId, so a partial
+	             scrape is never sealed here.
 	*/
 	override bool End()
 	{
@@ -75,10 +84,23 @@ class MetricZ_RestSink : MetricZ_SinkBase
 
 	/**
 	    \brief Flushes buffer as a single HTTP request chunk.
-	    \details Registers the chunk with `TransactionManager` to get a sequence ID.
+	    \details Registers the chunk with `TransactionManager` to get a
+	             sequence ID. If the breaker invalidated the ticket before or
+	             during this scrape, the active transaction is aborted so a
+	             partially uploaded scrape can never be sealed or committed.
 	*/
 	override protected void BufferFlush()
 	{
+		if (!MetricZ_RestCircuitBreaker.IsTicketValid(m_Ticket)) {
+			if (m_TxnId != string.Empty) {
+				MetricZ_RestTransactionManager.Abort(m_TxnId);
+				m_TxnId = string.Empty;
+			}
+
+			super.BufferFlush();
+			return;
+		}
+
 		if (m_Client && GetBufferCount() > 0) {
 			int chunkIdx = -1;
 			if (m_TxnId != string.Empty)
@@ -88,6 +110,7 @@ class MetricZ_RestSink : MetricZ_SinkBase
 			if (!cb)
 				ErrorEx("MetricZ: callback not created", ErrorExSeverity.ERROR);
 			else {
+				cb.SetTicket(m_Ticket);
 				if (MetricZ_Config.Get().http.serialized)
 					m_Client.PostMetrics(GetJsonBufferChunk(), m_TxnId, chunkIdx, cb);
 				else

@@ -17,6 +17,16 @@ class MetricZ_CallbackBase : RestCallback
 	private int m_StartedAt; //!< Timestamp when the callback was created (request started)
 	protected ref MetricZ_RestClient m_Client; //!< Reference to client for re-sending requests
 	protected string m_ReqType; //!< Class name of the callback (used for stats tagging)
+	protected int m_Ticket = -1; //!< Circuit breaker ticket of the scrape this request belongs to
+
+	/**
+	    \brief Attach the circuit breaker ticket of the owning scrape.
+	    \param ticket Ticket obtained via MetricZ_RestCircuitBreaker.BeginScrape().
+	*/
+	void SetTicket(int ticket)
+	{
+		m_Ticket = ticket;
+	}
 
 	/**
 	    \brief Constructor.
@@ -54,7 +64,11 @@ class MetricZ_CallbackBase : RestCallback
 	protected void Retry()
 	{
 		if (m_Attempt >= MetricZ_Config.Get().http.max_retries) {
-			ErrorEx("MetricZ: callback REST all retries failed" + GetDuration(), ErrorExSeverity.ERROR);
+			ErrorEx(
+			    "MetricZ: callback REST all retries failed" + GetDuration(),
+			    ErrorExSeverity.WARNING);
+
+			OnFinalFailure();
 			OnDone();
 			return;
 		}
@@ -71,9 +85,11 @@ class MetricZ_CallbackBase : RestCallback
 		// add random jitter (+/- 25%) to prevent thundering herd
 		int delay = (int)Math.Floor(backoff * Math.RandomFloat(0.75, 1.25));
 
+#ifdef DIAG
 		ErrorEx(
 		    string.Format("MetricZ: callback REST retry %1/%2 after %3ms", m_Attempt, MetricZ_Config.Get().http.max_retries, delay),
-		    ErrorExSeverity.WARNING);
+		    ErrorExSeverity.INFO);
+#endif
 
 		if (!g_Game) {
 			OnDone();
@@ -93,6 +109,16 @@ class MetricZ_CallbackBase : RestCallback
 	}
 
 	/**
+	    \brief Called exactly once when the request has exhausted all retries.
+	    \details Subclasses report the outcome to the transaction manager and
+	             the circuit breaker here. Runs right before OnDone(), so no
+	             member access after returning.
+	*/
+	protected void OnFinalFailure()
+	{
+	}
+
+	/**
 	    \brief Finalizes the callback lifecycle.
 	    \details Removes any pending calls and destroys the object.
 	             WARNING: 'delete this' is called here. Do not access members after calling OnDone.
@@ -108,17 +134,22 @@ class MetricZ_CallbackBase : RestCallback
 
 	/**
 	    \brief Handler for REST API errors (transport/protocol errors).
+	    \details Per-request errors are DIAG-only: the circuit breaker stops
+	             the request flow after a few failed scrapes, and the final
+	             failure of a retry chain is logged unconditionally in Retry().
 	    \param errorCode Error code
 	*/
 	override void OnError(int errorCode)
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "error");
+
+#ifdef DIAG
+		string errName = EnumTools.EnumToString(ERestResultState, errorCode);
 		ErrorEx(
-		    string.Format(
-		        "MetricZ: callback REST error %1 %2",
-		        EnumTools.EnumToString(ERestResultState, errorCode),
-		        GetDuration()),
-		    ErrorExSeverity.WARNING);
+		    string.Format("MetricZ: callback REST error %1 %2", errName, GetDuration()),
+		    ErrorExSeverity.INFO);
+#endif
+
 		Retry();
 	}
 
@@ -128,9 +159,11 @@ class MetricZ_CallbackBase : RestCallback
 	override void OnTimeout()
 	{
 		MetricZ_HttpStats.IncRequest(m_ReqType, "timeout");
-		ErrorEx(
-		    string.Format("MetricZ: callback REST timeout %1", GetDuration()),
-		    ErrorExSeverity.WARNING);
+
+#ifdef DIAG
+		ErrorEx("MetricZ: callback REST timeout " + GetDuration(), ErrorExSeverity.INFO);
+#endif
+
 		Retry();
 	}
 

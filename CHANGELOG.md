@@ -13,7 +13,37 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
-Here is the updated changelog including the new changes.
+## Unreleased
+
+### Added
+
+* Three-state circuit breaker for the HTTP export. After
+  `http.breaker_failures` consecutive failed scrapes (a scrape fails when any
+  chunk upload or its final commit exhausts `http.max_retries`), metric
+  collection is suspended instead of building payloads that cannot be
+  delivered. Backend availability is then probed via `http.health_path` with
+  exponential backoff and jitter (hard-capped at 5 minutes), and after a
+  successful probe a single trial scrape must be committed by the backend
+  before normal collection resumes. If the file export is enabled, collection
+  continues and only the HTTP transmission is paused.
+* Configuration options `http.breaker_failures`, `http.breaker_delay_ms` and
+  `http.health_path`
+* Metrics **`dayz_metricz_http_circuit_breaker_opened_total`**,
+  **`dayz_metricz_http_circuit_breaker_skipped_scrapes_total`** and
+  **`dayz_metricz_http_circuit_breaker_suspended_ms_total`** (`COUNTER`)
+
+### Fixed
+
+* Chunked ingest sent the `?format=json` query parameter inverted relative to
+  `http.serialized`. With the default `serialized=true`, JSON payloads were
+  posted to a URL without `format=json`, so the exporter parsed them as
+  Prometheus text and stored nothing. The following commit then failed with
+  `404 transaction not found or empty`, which the DayZ REST API cannot
+  distinguish from a transport error, producing a retry loop and flooding
+  `crash_*.log` with stack traces.
+* A chunk upload that exhausted its retries left the active transaction open
+  forever; the transaction is now aborted and in-flight sibling uploads are
+  ignored, so a partially uploaded scrape can never be committed.
 
 ## Unreleased
 

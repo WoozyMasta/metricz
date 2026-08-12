@@ -62,7 +62,11 @@ class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 	}
 
 	/**
-	    \brief Reports successful upload to the Transaction Manager.
+	    \brief Reports successful upload.
+	    \details Chunked: only the transaction manager is notified - a chunk
+	             success alone must not touch the breaker (the commit decides).
+	             Non-transacted single POST: this is the whole scrape, report
+	             success to the breaker directly.
 	    \param data Response data
 	    \param dataSize Response data size
 	*/
@@ -70,8 +74,23 @@ class MetricZ_CallbackPostMetrics : MetricZ_CallbackBase
 	{
 		if (m_TxnId != string.Empty)
 			MetricZ_RestTransactionManager.OnChunkSuccess(m_TxnId, m_Idx);
+		else
+			MetricZ_RestCircuitBreaker.ReportScrapeSuccess(m_Ticket);
 
 		super.OnSuccess(data, dataSize);
+	}
+
+	/**
+	    \brief A chunk upload exhausted its retries: the scrape has failed.
+	    \details Aborting the transaction turns sibling chunk callbacks into
+	             ignored zombies and prevents a partial commit.
+	*/
+	override protected void OnFinalFailure()
+	{
+		if (m_TxnId != string.Empty)
+			MetricZ_RestTransactionManager.Abort(m_TxnId);
+
+		MetricZ_RestCircuitBreaker.ReportScrapeFailure(m_Ticket);
 	}
 }
 #endif

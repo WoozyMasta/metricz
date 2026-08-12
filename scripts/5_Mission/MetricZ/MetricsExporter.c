@@ -120,6 +120,9 @@ class MetricZ_Exporter
 		ErrorEx("MetricZ: scrape shutting down", ErrorExSeverity.INFO);
 		MetricZ_ConfigDTO cfg = MetricZ_Config.Get();
 
+		// Stop availability probing.
+		MetricZ_RestCircuitBreaker.Reset();
+
 		m_ActiveSink = null;
 		g_Game.GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(ProcessFlushStep);
 
@@ -198,6 +201,18 @@ class MetricZ_Exporter
 		if (s_Busy) {
 			MetricZ_Storage.s_ScrapeSkippedTotal.Inc();
 			ErrorEx("MetricZ: skip scrape, previous cycle still running", ErrorExSeverity.WARNING);
+			return;
+		}
+
+		// Draw the circuit breaker ticket for this cycle. Invalid while the
+		// backend is unavailable (or a trial scrape is already running): with
+		// no file sink to write to, skip the whole cycle instead of iterating
+		// collectors and building payloads that would only be dropped.
+		// Drawn after the busy check, so a cycle that cannot run does not
+		// consume the single trial ticket handed out while half-open.
+		int ticket = MetricZ_RestCircuitBreaker.BeginScrape();
+		if (!MetricZ_RestCircuitBreaker.IsTicketValid(ticket) && !MetricZ_Config.Get().file.enabled) {
+			MetricZ_RestCircuitBreaker.ReportSkippedScrape();
 			return;
 		}
 

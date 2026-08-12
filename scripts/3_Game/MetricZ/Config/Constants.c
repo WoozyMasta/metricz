@@ -19,6 +19,9 @@ class MetricZ_Constants
 	// Default buffer size limit
 	static const int MAX_BUFFER_SIZE = 65536;
 
+	// Hard cap (ms) for the delay between backend availability probes
+	static const int BREAKER_MAX_DELAY_MS = 300000;
+
 	// Metrics prefix
 	static const string NAMESPACE = "dayz_metricz_";
 

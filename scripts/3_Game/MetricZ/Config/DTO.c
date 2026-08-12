@@ -221,6 +221,30 @@ class MetricZ_ConfigDTO_HttpExport
 	// Timeout in seconds for connection operations.
 	int connect_timeout_sec = 5;
 
+	// Number of consecutive failed scrapes after which metric collection is
+	// suspended entirely. A scrape counts as failed when any of its chunk
+	// uploads or its final commit exhausts `max_retries`; a successful chunk
+	// upload alone does not reset the streak.
+	// While suspended, collectors are not iterated and no payloads are built,
+	// so no CPU is spent producing data that cannot be delivered. Availability
+	// is then probed via `health_path` with exponential backoff. After a
+	// successful probe a single trial scrape must be committed by the backend
+	// before normal collection resumes.
+	// If the file export is enabled, collection continues and only the HTTP
+	// transmission is paused.
+	// - 0 - Disable the circuit breaker (always collect, original behavior).
+	// - > 0 - Failure threshold. Recommended range 3-10.
+	int breaker_failures = 3;
+
+	// Base delay (in milliseconds) between backend availability probes.
+	// Doubles with each failed probe, is randomized within 0.75x-1.25x and
+	// hard-capped at 300000 ms (5 min).
+	int breaker_delay_ms = 5000;
+
+	// Endpoint used to probe backend availability while collection is suspended.
+	// Must be a GET endpoint that answers 2xx when the backend is healthy.
+	string health_path = "/health/liveness";
+
 	/**
 	    \brief Normalizes configuration values within valid ranges.
 	*/
@@ -236,6 +260,12 @@ class MetricZ_ConfigDTO_HttpExport
 		retry_max_backoff_ms = (int)Math.Clamp(retry_max_backoff_ms, 1000, MetricZ_Config.Get().settings.collect_interval_sec * 1000);
 		read_timeout_sec = (int)Math.Clamp(read_timeout_sec, 3, 120);
 		connect_timeout_sec = (int)Math.Clamp(connect_timeout_sec, 3, 120);
+
+		breaker_failures = (int)Math.Clamp(breaker_failures, 0, 100);
+		breaker_delay_ms = (int)Math.Clamp(breaker_delay_ms, 1000, MetricZ_Constants.BREAKER_MAX_DELAY_MS);
+
+		if (health_path == string.Empty)
+			health_path = "/health/liveness";
 
 		if (url == string.Empty) {
 			enabled = false;

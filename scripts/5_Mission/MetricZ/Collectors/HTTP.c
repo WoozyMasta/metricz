@@ -27,6 +27,7 @@ class MetricZ_CollectorHTTP : MetricZ_CollectorBase
 	override void Flush(MetricZ_SinkBase sink)
 	{
 		MetricZ_HttpStats.Flush(sink);
+		MetricZ_RestCircuitBreaker.Flush(sink);
 	}
 }
 #endif

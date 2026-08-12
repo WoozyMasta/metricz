@@ -32,5 +32,24 @@ class MetricZ_CallbackCommitMetrics: MetricZ_CallbackBase
 		else
 			OnDone();
 	}
+
+	/**
+	    \brief The backend acknowledged the commit: the scrape succeeded.
+	    \param data Response data
+	    \param dataSize Response data size
+	*/
+	override void OnSuccess(string data, int dataSize)
+	{
+		MetricZ_RestCircuitBreaker.ReportScrapeSuccess(m_Ticket);
+		super.OnSuccess(data, dataSize);
+	}
+
+	/**
+	    \brief The commit exhausted its retries: the scrape has failed.
+	*/
+	override protected void OnFinalFailure()
+	{
+		MetricZ_RestCircuitBreaker.ReportScrapeFailure(m_Ticket);
+	}
 }
 #endif

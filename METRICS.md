@@ -6,6 +6,16 @@ This document lists all metrics exposed by the **MetricZ** mod for
 DayZ server. Each metric includes its identifier, type
 (`GAUGE` or `COUNTER`), and description as defined in the source code.
 
+## [REST/CircuitBreaker.c](./scripts/3_Game/MetricZ/REST/CircuitBreaker.c)
+
+* **`dayz_metricz_http_circuit_breaker_opened_total`** (`COUNTER`) —
+  Total number of times the circuit breaker opened because the backend was
+  unavailable
+* **`dayz_metricz_http_circuit_breaker_skipped_scrapes_total`** (`COUNTER`) —
+  Total scrapes skipped while collection was suspended
+* **`dayz_metricz_http_circuit_breaker_suspended_ms_total`** (`COUNTER`) —
+  Total time in milliseconds metric collection spent suspended
+
 ## [REST/HttpStats.c](./scripts/3_Game/MetricZ/REST/HttpStats.c)
 
 * **`dayz_metricz_http_requests_total`** (`COUNTER`) —
